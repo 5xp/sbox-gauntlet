@@ -1,0 +1,214 @@
+{
+  "RootObject": {
+    "Id": "2125b209-cc62-4bfd-8dfb-418ab3462cb9",
+    "Name": "player",
+    "Position": "-299.0339,-9.382681,44.8205",
+    "Tags": "player",
+    "Enabled": true,
+    "Components": [
+      {
+        "__type": "PlayerController",
+        "AnimationHelper": {
+          "_type": "component",
+          "go": "609c446a-37ae-44cb-a8a7-76ae0bbed6ec",
+          "component_type": "AnimationHelper"
+        },
+        "Body": {
+          "_type": "gameobject",
+          "go": "609c446a-37ae-44cb-a8a7-76ae0bbed6ec"
+        },
+        "CameraController": {
+          "_type": "component",
+          "go": "2125b209-cc62-4bfd-8dfb-418ab3462cb9",
+          "component_type": "CameraController"
+        },
+        "CharacterController": {
+          "_type": "component",
+          "go": "2125b209-cc62-4bfd-8dfb-418ab3462cb9",
+          "component_type": "CharacterController"
+        },
+        "CurrentHoldType": "None",
+        "Gravity": "0,0,800",
+        "Head": {
+          "_type": "gameobject",
+          "go": "361a1c3a-9541-4016-9295-a52b1191f201"
+        },
+        "IsAiming": false,
+        "OnJump": null
+      },
+      {
+        "__type": "CameraController",
+        "Camera": {
+          "_type": "component",
+          "go": "f6519c82-b1d7-4cde-9cdf-7e75048caf3d",
+          "component_type": "CameraComponent"
+        },
+        "HideBody": true,
+        "PlayerController": {
+          "_type": "component",
+          "go": "2125b209-cc62-4bfd-8dfb-418ab3462cb9",
+          "component_type": "PlayerController"
+        }
+      },
+      {
+        "__type": "CharacterController",
+        "Acceleration": 10,
+        "GroundAngle": 45,
+        "Height": 64,
+        "IgnoreLayers": "player",
+        "Radius": 16,
+        "StepHeight": 18
+      }
+    ],
+    "Children": [
+      {
+        "Id": "361a1c3a-9541-4016-9295-a52b1191f201",
+        "Name": "Head",
+        "Position": "0,0,60",
+        "Enabled": true,
+        "Children": [
+          {
+            "Id": "f6519c82-b1d7-4cde-9cdf-7e75048caf3d",
+            "Name": "Player Camera",
+            "Position": "0,0,-0.00006103516",
+            "Rotation": "-0.0690052,0.07022043,0.697503,0.7097865",
+            "Enabled": true,
+            "Components": [
+              {
+                "__type": "CameraComponent",
+                "BackgroundColor": "0.75478,0.83828,0.87624,1",
+                "ClearFlags": "All",
+                "FieldOfView": 90,
+                "IsMainCamera": true,
+                "Orthographic": false,
+                "OrthographicHeight": 1204,
+                "Priority": 1,
+                "RenderExcludeTags": "viewmodel",
+                "RenderTags": "",
+                "TargetEye": "None",
+                "Viewport": "0,0,1,1",
+                "ZFar": 10000,
+                "ZNear": 0.5
+              },
+              {
+                "__type": "AudioListener"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "Id": "609c446a-37ae-44cb-a8a7-76ae0bbed6ec",
+        "Name": "Body",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0.699617,0.7145181",
+        "Enabled": true,
+        "Components": [
+          {
+            "__type": "SkinnedModelRenderer",
+            "BodyGroups": 18446744073709551615,
+            "BoneMergeTarget": null,
+            "CreateBoneObjects": false,
+            "MaterialGroup": null,
+            "MaterialOverride": null,
+            "Model": "models/citizen/citizen.vmdl",
+            "RenderType": "ShadowsOnly",
+            "Tint": "1,1,1,1"
+          },
+          {
+            "__type": "ModelHitboxes",
+            "Renderer": {
+              "_type": "component",
+              "go": "609c446a-37ae-44cb-a8a7-76ae0bbed6ec",
+              "component_type": "SkinnedModelRenderer"
+            },
+            "Target": {
+              "_type": "gameobject",
+              "go": "609c446a-37ae-44cb-a8a7-76ae0bbed6ec"
+            }
+          },
+          {
+            "__type": "AnimationHelper",
+            "EyeSource": {
+              "_type": "gameobject",
+              "go": "f6519c82-b1d7-4cde-9cdf-7e75048caf3d"
+            },
+            "Height": 1,
+            "IkLeftFoot": null,
+            "IkLeftHand": null,
+            "IkRightFoot": null,
+            "IkRightHand": null,
+            "LookAtObject": {
+              "_type": "gameobject",
+              "go": "f6519c82-b1d7-4cde-9cdf-7e75048caf3d"
+            },
+            "Target": {
+              "_type": "component",
+              "go": "609c446a-37ae-44cb-a8a7-76ae0bbed6ec",
+              "component_type": "SkinnedModelRenderer"
+            }
+          }
+        ]
+      },
+      {
+        "Id": "620b477c-76c6-4b70-9243-5f9e99b7c139",
+        "Name": "Mechanics",
+        "Position": "0,0,0",
+        "Enabled": true,
+        "Components": [
+          {
+            "__type": "CrouchMechanic",
+            "IsActive": false,
+            "PlayerController": {
+              "_type": "component",
+              "go": "2125b209-cc62-4bfd-8dfb-418ab3462cb9",
+              "component_type": "PlayerController"
+            },
+            "Priority": 0,
+            "TimeSinceActiveChanged": {
+              "Absolute": 3.899997,
+              "Relative": 1199.7715
+            }
+          },
+          {
+            "__type": "SprintMechanic",
+            "IsActive": false,
+            "PlayerController": {
+              "_type": "component",
+              "go": "2125b209-cc62-4bfd-8dfb-418ab3462cb9",
+              "component_type": "PlayerController"
+            },
+            "Priority": 1,
+            "TimeSinceActiveChanged": {
+              "Absolute": 11.580075,
+              "Relative": 1192.0914
+            }
+          },
+          {
+            "__type": "SlideMechanic",
+            "EyeHeight": -20,
+            "IsActive": false,
+            "MinimumSlideLength": 1,
+            "NextSlideCooldown": 0.5,
+            "PlayerController": {
+              "_type": "component",
+              "go": "2125b209-cc62-4bfd-8dfb-418ab3462cb9",
+              "component_type": "PlayerController"
+            },
+            "Priority": 100,
+            "SlideFriction": 0.01,
+            "SlideSpeed": 300,
+            "TimeSinceActiveChanged": {
+              "Relative": 1203.6715
+            },
+            "WishDirectionScale": 0.4
+          }
+        ]
+      }
+    ]
+  },
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "__references": []
+}
