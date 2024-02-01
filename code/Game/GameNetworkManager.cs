@@ -14,7 +14,11 @@ public sealed class GameNetworkManager : Component, Component.INetworkListener
 
 	protected override void OnStart()
 	{
-		if ( !IsMultiplayer ) return;
+		if ( !IsMultiplayer )
+		{
+			SpawnPlayer();
+			return;
+		}
 
 		//
 		// Create a lobby if we're not connected
@@ -31,11 +35,18 @@ public sealed class GameNetworkManager : Component, Component.INetworkListener
 
 		Log.Info( $"Player '{channel.DisplayName}' is becoming active" );
 
-		var player = PlayerPrefab.Clone( SpawnPoint.Transform.World );
+		var player = SpawnPlayer();
 
 		var cl = player.Components.Create<Client>();
 		cl.Setup( channel );
 
 		player.NetworkSpawn( channel );
+	}
+
+	private GameObject SpawnPlayer()
+	{
+		var player = PlayerPrefab.Clone(SpawnPoint.Transform.World);
+		player.BreakFromPrefab();
+		return player;
 	}
 }

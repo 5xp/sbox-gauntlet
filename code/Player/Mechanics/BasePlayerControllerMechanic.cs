@@ -1,3 +1,5 @@
+using Sandbox.VR;
+
 namespace Tf;
 
 /// <summary>
@@ -5,7 +7,7 @@ namespace Tf;
 /// </summary>
 public abstract partial class BasePlayerControllerMechanic : Component
 {
-	[Property, Category( "Base" )] public PlayerController PlayerController { get; set; }
+	[Property, Category( "Base" )] public PlayerController Controller { get; set; }
 
 	/// <summary>
 	/// A priority for the controller mechanic.
@@ -17,12 +19,35 @@ public abstract partial class BasePlayerControllerMechanic : Component
 	/// </summary>
 	[Property, Category( "Base" ), ReadOnly] protected TimeSince TimeSinceActiveChanged { get; set; }
 
-	private bool isActive; 
+	public Vector3 Position
+	{
+		get => Controller.Position;
+		set => Controller.Position = value;
+	}
+
+	public Vector3 Velocity
+	{
+		get => Controller.Velocity;
+		set => Controller.Velocity = value;
+	}
+
+	public Vector3 HorzVelocity
+	{
+		get => Controller.HorzVelocity;
+	}
+
+	public PlayerSettings PlayerSettings
+	{
+		get => Controller.PlayerSettings;
+	}
+
+	private bool isActive;
 
 	/// <summary>
 	/// Is this mechanic active?
 	/// </summary>
-	[Property, Category( "Base" ), ReadOnly] public bool IsActive
+	[Property, Category( "Base" ), ReadOnly]
+	public bool IsActive
 	{
 		get => isActive;
 		set
@@ -41,9 +66,9 @@ public abstract partial class BasePlayerControllerMechanic : Component
 	protected override void OnAwake()
 	{
 		// If we don't have the player controller defined, let's have a look for it
-		if ( !PlayerController.IsValid() )
+		if ( !Controller.IsValid() )
 		{
-			PlayerController = Components.Get<PlayerController>( FindMode.EverythingInSelfAndAncestors );
+			Controller = Components.Get<PlayerController>( FindMode.EverythingInSelfAndAncestors );
 		}
 	}
 
@@ -55,27 +80,27 @@ public abstract partial class BasePlayerControllerMechanic : Component
 	{
 		return Enumerable.Empty<string>();
 	}
-	
+
 	/// <summary>
 	/// An accessor to see if the player controller has a tag.
 	/// </summary>
 	/// <param name="tag"></param>
 	/// <returns></returns>
-	public bool HasTag( string tag ) => PlayerController.HasTag( tag );
+	public bool HasTag( string tag ) => Controller.HasTag( tag );
 
 	/// <summary>
 	/// An accessor to see if the player controller has all matched tags.
 	/// </summary>
 	/// <param name="tags"></param>
 	/// <returns></returns>
-	public bool HasAllTags( params string[] tags ) => PlayerController.HasAllTags( tags );
+	public bool HasAllTags( params string[] tags ) => Controller.HasAllTags( tags );
 
 	/// <summary>
 	/// An accessor to see if the player controller has any tag.
 	/// </summary>
 	/// <param name="tags"></param>
 	/// <returns></returns>
-	public bool HasAnyTag( params string[] tags ) => PlayerController.HasAnyTag( tags );
+	public bool HasAnyTag( params string[] tags ) => Controller.HasAnyTag( tags );
 
 	/// <summary>
 	/// Called when <see cref="IsActive"/> changes.
@@ -88,7 +113,7 @@ public abstract partial class BasePlayerControllerMechanic : Component
 	}
 
 	/// <summary>
-	/// Called by <see cref="PlayerController"/>, treat this like a Tick/Update while the mechanic is active.
+	/// Called by <see cref="Controller"/>, treat this like a Tick/Update while the mechanic is active.
 	/// </summary>
 	public virtual void OnActiveUpdate()
 	{
@@ -127,6 +152,15 @@ public abstract partial class BasePlayerControllerMechanic : Component
 	/// </summary>
 	/// <returns></returns>
 	public virtual float? GetEyeHeight()
+	{
+		return null;
+	}
+
+	/// <summary>
+	/// Mechanics can override the player's hull height.
+	/// </summary>
+	/// <returns></returns>
+	public virtual float? GetHullHeight()
 	{
 		return null;
 	}

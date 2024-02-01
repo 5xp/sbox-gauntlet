@@ -2,9 +2,26 @@ namespace Tf;
 
 public partial class CrouchMechanic : BasePlayerControllerMechanic
 {
+	public bool ForceDuck { get; set; } = false;
+
 	public override bool ShouldBecomeActive()
 	{
-		return Input.Down( "Duck" ) && !HasAnyTag( "sprint", "slide" );
+		if ( ForceDuck ) return true;
+
+		if ( ShouldStayDucked() ) return true;
+
+		if ( !Input.Down( "Duck" ) ) return false;
+
+		return true;
+	}
+
+	private bool ShouldStayDucked()
+	{
+		if ( !HasTag( "slide" ) ) return false;
+
+		if ( Controller.IsGrounded ) return false;
+
+		return true;
 	}
 
 	public override IEnumerable<string> GetTags()
@@ -14,11 +31,16 @@ public partial class CrouchMechanic : BasePlayerControllerMechanic
 
 	public override float? GetEyeHeight()
 	{
-		return -32.0f;
+		return PlayerSettings.ViewHeightCrouching;
 	}
 
 	public override float? GetSpeed()
 	{
-		return 65.0f;
+		return PlayerSettings.CrouchSpeed;
+	}
+
+	public override float? GetHullHeight()
+	{
+		return PlayerSettings.HullHeightCrouching;
 	}
 }

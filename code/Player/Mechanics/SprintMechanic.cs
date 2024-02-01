@@ -7,9 +7,9 @@ public partial class SprintMechanic : BasePlayerControllerMechanic
 {
 	public override bool ShouldBecomeActive()
 	{
-		if ( !PlayerController.IsGrounded ) return false;
+		if ( !Controller.IsGrounded ) return false;
 
-		var wish = PlayerController.WishMove;
+		var wish = Controller.WishMove;
 
 		// Can't sprint backward
 		if ( wish.x < 0.0f ) return false;
@@ -31,11 +31,11 @@ public partial class SprintMechanic : BasePlayerControllerMechanic
 	public override void BuildWishInput( ref Vector3 wish )
 	{
 		// Clamp the horizontal wish direction by half if we're sprinting
-		wish.y *= 0.5f;
+		//wish.y *= 0.5f;
 	}
 
 	public override float? GetSpeed()
 	{
-		return 300.0f;
+		return PlayerSettings.SprintSpeed;
 	}
 }

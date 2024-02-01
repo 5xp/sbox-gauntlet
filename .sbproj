@@ -108,7 +108,7 @@
       "SoftBodySubsteps": 1
     },
     "Compiler": {
-      "RootNamespace": "Gunfight",
+      "RootNamespace": "Tf",
       "DefineConstants": "SANDBOX;ADDON;DEBUG",
       "NoWarn": "1701;1702;1591;",
       "WarningsAsErrors": "",
@@ -329,12 +329,6 @@
           "KeyboardCode": "2",
           "GamepadCode": "DpadSouth",
           "GroupName": "Weapon Handling"
-        },
-        {
-          "Name": "Slide",
-          "KeyboardCode": "C",
-          "GamepadCode": "B",
-          "GroupName": "Movement"
         },
         {
           "Name": "FireMode",

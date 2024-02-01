@@ -8,24 +8,9 @@ public partial class PlayerController : Component
 	[Property] public GameObject Body { get; set; }
 
 	/// <summary>
-	/// A reference to the player's head (the GameObject)
-	/// </summary>
-	[Property] public GameObject Head { get; set; }
-
-	/// <summary>
 	/// A reference to the animation helper (normally on the Body GameObject)
 	/// </summary>
 	[Property] public AnimationHelper AnimationHelper { get; set; }
-
-	/// <summary>
-	/// The current gravity. Make this a gamerule thing later?
-	/// </summary>
-	[Property] public Vector3 Gravity { get; set; } = new Vector3( 0, 0, 800 );
-
-	/// <summary>
-	/// The current character controller for this player.
-	/// </summary>
-	[Property] public CharacterController CharacterController { get; set; }
 
 	/// <summary>
 	/// The current camera controller for this player.
@@ -37,6 +22,17 @@ public partial class PlayerController : Component
 	/// </summary>
 	public GameObject CameraGameObject => CameraController.Camera.GameObject;
 
+	public GameObject LastGroundObject { get; set; }
+	public GameObject GroundObject { get; set; }
+	[Property, ReadOnly] public bool IsGrounded => GroundObject is not null;
+	public TimeSince TimeSinceLastOnGround { get; set; }
+	public TimeSince TimeSinceLastLanding { get; set; }
+
+	public float CurrentEyeHeight { get; set; }
+	public float CurrentHullHeight { get; set; }
+	public float DuckFraction { get; set; }
+
+
 	/// <summary>
 	/// Finds the first <see cref="SkinnedModelRenderer"/> on <see cref="Body"/>
 	/// </summary>
@@ -47,51 +43,66 @@ public partial class PlayerController : Component
 	/// </summary>
 	public Ray AimRay => CameraController.AimRay;
 
+	public Vector3 Position
+	{
+		get => GameObject.Transform.Position;
+		set => GameObject.Transform.Position = value;
+	}
+
+	public Vector3 Velocity { get; set; }
+	public Vector3 HorzVelocity => Velocity.WithZ( 0f );
+
+	public PlayerSettings PlayerSettings { get; set; } = PlayerSettings.Faster;
+
 	/// <summary>
 	/// The current holdtype for the player.
 	/// </summary>
 	[Property] AnimationHelper.HoldTypes CurrentHoldType { get; set; } = AnimationHelper.HoldTypes.None;
-
-	[Property, ReadOnly] public bool IsAiming { get; private set; }
 
 	/// <summary>
 	/// Called when the player jumps.
 	/// </summary>
 	[Property] public Action OnJump { get; set; }
 
+	public BBox Hull
+	{
+		get
+		{
+			float radius = PlayerSettings.HullRadius;
+			float height = CurrentHullHeight;
+
+			Vector3 mins = new Vector3( -radius, -radius, 0 );
+			Vector3 maxs = new( radius, radius, height );
+
+			return new BBox( mins, maxs );
+		}
+	}
+
+
 	// Properties used only in this component.
 	Vector3 WishVelocity;
 	public Angles EyeAngles;
 
-	public bool IsGrounded { get; set; }
 
-	protected float GetEyeHeightOffset()
+	protected float GetTargetEyeHeight()
 	{
 		if ( CurrentEyeHeightOverride is not null ) return CurrentEyeHeightOverride.Value;
-		return 0f;
+		return PlayerSettings.ViewHeightStanding;
 	}
 
-	float SmoothEyeHeight = 0f;
-
-	protected override void OnAwake()
+	protected float GetTargetHullHeight()
 	{
-		baseAcceleration = CharacterController.Acceleration;
+		if ( CurrentHullHeightOverride is not null ) return CurrentHullHeightOverride.Value;
+		return PlayerSettings.HullHeightStanding;
 	}
 
 	protected override void OnUpdate()
 	{
-		var cc = CharacterController;
 
 		// Eye input
-		if ( !IsProxy && cc != null )
+		if ( !IsProxy )
 		{
-			var cameraGameObject = CameraController.Camera.GameObject;
-
-			var eyeHeightOffset = GetEyeHeightOffset();
-
-			SmoothEyeHeight = SmoothEyeHeight.LerpTo( eyeHeightOffset, Time.Delta * 10f );
-
-			cameraGameObject.Transform.LocalPosition = Vector3.Zero.WithZ( SmoothEyeHeight );
+			SimulateEyes();
 
 			EyeAngles.pitch += Input.MouseDelta.y * 0.1f;
 			EyeAngles.yaw -= Input.MouseDelta.x * 0.1f;
@@ -104,8 +115,6 @@ public partial class PlayerController : Component
 			var lookDir = EyeAngles.ToRotation();
 
 			cam.Transform.Rotation = lookDir;
-
-			IsAiming = Input.Down( "Attack2" );
 		}
 
 		float rotateDifference = 0;
@@ -117,23 +126,15 @@ public partial class PlayerController : Component
 
 			rotateDifference = Body.Transform.Rotation.Distance( targetAngle );
 
-			if ( rotateDifference > 50.0f || ( cc != null && cc.Velocity.Length > 10.0f ) )
+			if ( rotateDifference > 50.0f || (Velocity.Length > 10.0f) )
 			{
 				Body.Transform.Rotation = Rotation.Lerp( Body.Transform.Rotation, targetAngle, Time.Delta * 10.0f );
 			}
 		}
 
-		var wasGrounded = IsGrounded;
-		IsGrounded = cc.IsOnGround;
-
-		if ( wasGrounded != IsGrounded )
+		if ( AnimationHelper is not null )
 		{
-			GroundedChanged();
-		}
-
-		if ( AnimationHelper is not null && cc is not null )
-		{
-			AnimationHelper.WithVelocity( cc.Velocity );
+			AnimationHelper.WithVelocity( Velocity );
 			AnimationHelper.WithWishVelocity( WishVelocity );
 			AnimationHelper.IsGrounded = IsGrounded;
 			AnimationHelper.FootShuffle = rotateDifference;
@@ -145,9 +146,88 @@ public partial class PlayerController : Component
 		}
 	}
 
-	private void GroundedChanged()
+	public void SimulateEyes()
 	{
-		var nowOffGround = IsGrounded == false;
+		float targetHullHeight = GetTargetHullHeight();
+		float targetEyeHeight = GetTargetEyeHeight();
+		bool forceDuck = false;
+
+		// Unducking
+		if ( CurrentEyeHeight < targetEyeHeight )
+		{
+			float liftHead = targetHullHeight - CurrentHullHeight;
+			SceneTraceResult tr = TraceBBox( Position, Position, 0, liftHead );
+			if ( tr.Hit )
+			{
+				forceDuck = true;
+				DuckFraction = 1f;
+			}
+			else
+			{
+				DuckFraction = DuckFraction.Approach( 0f, PlayerSettings.UnduckSpeed * Time.Delta );
+			}
+		}
+		// Ducking
+		else if ( CurrentEyeHeight > targetEyeHeight )
+		{
+			float duckSpeed = HasTag( "slide" ) ? PlayerSettings.UnduckSpeed : PlayerSettings.DuckSpeed;
+			DuckFraction = DuckFraction.Approach( 1f, duckSpeed * Time.Delta );
+		}
+		// Finished unducking or ducking
+		else
+		{
+			CurrentHullHeight = targetHullHeight;
+		}
+
+		GetMechanic<CrouchMechanic>().ForceDuck = forceDuck;
+
+		// Smooth step
+		float duckTime = DuckFraction * DuckFraction * (3f - 2f * DuckFraction);
+		CurrentEyeHeight = PlayerSettings.ViewHeightStanding.LerpTo( PlayerSettings.ViewHeightCrouching, duckTime );
+		CameraGameObject.Transform.LocalPosition = Vector3.Up * CurrentEyeHeight;
+	}
+
+	public void StepMove( float groundAngle = 46f, float stepSize = 18f )
+	{
+		MoveHelper mover = new( Position, Velocity )
+		{
+			Trace = Scene.Trace.Size( Hull )
+			.WithoutTags( "player" ),
+			MaxStandableAngle = groundAngle
+		};
+
+		mover.TryMoveWithStep( Time.Delta, stepSize, Vector3.Up, out float _ );
+		Position = mover.Position;
+		Velocity = mover.Velocity;
+	}
+
+	public void Move( float groundAngle = 46f )
+	{
+		MoveHelper mover = new( Position, Velocity )
+		{
+			Trace = Scene.Trace.Size( Hull )
+			.WithoutTags( "player" ),
+			MaxStandableAngle = groundAngle
+		};
+
+		mover.TryMove( Time.Delta, Vector3.Up );
+
+		if ( mover.HitWall )
+		{
+			// We hit the wall!
+		}
+
+		Position = mover.Position;
+		Velocity = mover.Velocity;
+	}
+
+	public void ClearGroundObject()
+	{
+		if ( GroundObject is null ) return;
+
+		LastGroundObject = GroundObject;
+		GroundObject = null;
+		TimeSinceLastOnGround = 0;
 	}
 
 	/// <summary>
@@ -160,29 +240,40 @@ public partial class PlayerController : Component
 		OnJump?.Invoke();
 	}
 
-	/// <summary>
-	/// Get the current friction.
-	/// </summary>
-	/// <returns></returns>
-	private float GetFriction()
+	public SceneTraceResult TraceBBox( Vector3 start, Vector3 end, Vector3 mins, Vector3 maxs, float liftFeet = 0.0f, float liftHead = 0.0f )
 	{
-		if ( !CharacterController.IsOnGround ) return 0.1f;
-		if ( CurrentFrictionOverride is not null ) return CurrentFrictionOverride.Value;
+		if ( liftFeet > 0 )
+		{
+			start += Vector3.Up * liftFeet;
+			maxs = maxs.WithZ( maxs.z - liftFeet );
+		}
 
-		return 4.0f;
+		if ( liftHead > 0 )
+		{
+			end += Vector3.Up * liftHead;
+		}
+
+		SceneTraceResult tr = Scene.Trace.Ray( start, end )
+			.Size( mins, maxs )
+			.IgnoreGameObjectHierarchy( GameObject )
+			.Run();
+
+		return tr;
 	}
 
-	private float baseAcceleration = 10;
-	private void ApplyAccceleration()
+	public SceneTraceResult TraceBBox( Vector3 start, Vector3 end, float liftFeet = 0.0f, float liftHead = 0.0f )
 	{
-		if ( CurrentAccelerationOverride is not null )
-		{
-			CharacterController.Acceleration = CurrentAccelerationOverride.Value;
-		}
-		else
-		{
-			CharacterController.Acceleration = baseAcceleration;
-		}
+		return TraceBBox( start, end, Hull.Mins, Hull.Maxs, liftFeet, liftHead );
+	}
+
+	public void Accelerate( Vector3 wishDir, float wishSpeed, float acceleration, float extraAcceleration = 0f )
+	{
+		float currentSpeed = Velocity.Dot( wishDir );
+		float addSpeed = MathF.Max( extraAcceleration * Time.Delta, wishSpeed - currentSpeed );
+
+		float accelSpeed = MathF.Min( acceleration * Time.Delta, addSpeed );
+
+		Velocity += wishDir * accelSpeed;
 	}
 
 	protected override void OnFixedUpdate()
@@ -190,59 +281,18 @@ public partial class PlayerController : Component
 		if ( IsProxy )
 			return;
 
-		var cc = CharacterController;
-		if ( cc == null )
-			return;
-
 		BuildWishInput();
-
 		// Wish direction could change here
 		OnUpdateMechanics();
-
 		BuildWishVelocity();
-
-		if ( cc.IsOnGround && Input.Down( "Jump" ) )
-		{
-			float flGroundFactor = 1.0f;
-			float flMul = 268.3281572999747f * 1.2f;
-
-			cc.Punch( Vector3.Up * flMul * flGroundFactor );
-
-			BroadcastPlayerJumped();
-		}
-
-		ApplyAccceleration();
-
-		if ( cc.IsOnGround )
-		{
-			cc.Velocity = cc.Velocity.WithZ( 0 );
-			cc.Accelerate( WishVelocity );
-		}
-		else
-		{
-			cc.Velocity -= Gravity * Time.Delta * 0.5f;
-			cc.Accelerate( WishVelocity.ClampLength( 50 ) );
-		}
-
-		cc.ApplyFriction( GetFriction() );
-		cc.Move();
-
-		if ( !cc.IsOnGround )
-		{
-			cc.Velocity -= Gravity * Time.Delta * 0.5f;
-		}
-		else
-		{
-			cc.Velocity = cc.Velocity.WithZ( 0 );
-		}
 	}
 
-	protected float GetWishSpeed()
+	public float GetWishSpeed()
 	{
 		if ( CurrentSpeedOverride is not null ) return CurrentSpeedOverride.Value;
 
 		// Default speed
-		return 110.0f;
+		return PlayerSettings.WalkSpeed;
 	}
 
 	public Vector3 WishMove;
@@ -257,15 +307,23 @@ public partial class PlayerController : Component
 		if ( Input.Down( "right", false ) ) WishMove += Vector3.Right;
 	}
 
-	public void BuildWishVelocity()
+	public Vector3 BuildWishVelocity( bool zeroPitch = true )
 	{
 		WishVelocity = 0;
-		
-		var rot = EyeAngles.WithPitch( 0f ).ToRotation();
+		Angles angles = EyeAngles;
+
+		if ( zeroPitch )
+		{
+			angles = angles.WithPitch( 0f );
+		}
+
+		var rot = angles.ToRotation();
 		var wishDirection = WishMove * rot;
-		wishDirection = wishDirection.WithZ( 0 );
+		wishDirection = wishDirection.WithZ( 0 ).Normal;
 
 		WishVelocity = wishDirection * GetWishSpeed();
+
+		return WishVelocity;
 	}
 
 	public void Write( ref ByteStream stream )
@@ -276,5 +334,11 @@ public partial class PlayerController : Component
 	public void Read( ByteStream stream )
 	{
 		EyeAngles = stream.Read<Angles>();
+	}
+
+	protected override void DrawGizmos()
+	{
+		Gizmo.Draw.LineBBox( Hull );
+		Gizmo.Draw.ScreenText( HorzVelocity.Length.ToString(), new Vector2( 100, 100 ) );
 	}
 }
