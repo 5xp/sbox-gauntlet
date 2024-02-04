@@ -37,6 +37,11 @@ public partial class PlayerController
 		float? frictionOverride = null;
 		float? accelerationOverride = null;
 
+		foreach ( var mechanic in Mechanics )
+		{
+			mechanic.Simulate();
+		}
+
 		foreach ( var mechanic in sortedMechanics )
 		{
 			mechanic.IsActive = true;
@@ -88,7 +93,7 @@ public partial class PlayerController
 		return null;
 	}
 
-	public bool IsMechanicActive<T>() where T: BasePlayerControllerMechanic
+	public bool IsMechanicActive<T>() where T : BasePlayerControllerMechanic
 	{
 		return GetMechanic<T>()?.IsActive ?? false;
 	}

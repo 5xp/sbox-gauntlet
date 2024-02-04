@@ -22,6 +22,11 @@ public partial class PlayerController : Component
 	/// </summary>
 	public GameObject CameraGameObject => CameraController.Camera.GameObject;
 
+	/// <summary>
+	/// Mechanics can add to this camera offset. Resets to zero after every frame.
+	/// </summary>
+	public Vector3 CurrentCameraOffset { get; set; }
+
 	public GameObject LastGroundObject { get; set; }
 	public GameObject GroundObject { get; set; }
 	[Property, ReadOnly] public bool IsGrounded => GroundObject is not null;
@@ -52,7 +57,7 @@ public partial class PlayerController : Component
 	public Vector3 Velocity { get; set; }
 	public Vector3 HorzVelocity => Velocity.WithZ( 0f );
 
-	public PlayerSettings PlayerSettings { get; set; } = PlayerSettings.Faster;
+	public PlayerSettings PlayerSettings { get; set; } = PlayerSettings.Regular;
 
 	/// <summary>
 	/// The current holdtype for the player.
@@ -96,23 +101,36 @@ public partial class PlayerController : Component
 		return PlayerSettings.HullHeightStanding;
 	}
 
+	protected override void OnFixedUpdate()
+	{
+		if ( IsProxy )
+			return;
+
+		BuildWishInput();
+		// Wish direction could change here
+		OnUpdateMechanics();
+		BuildWishVelocity();
+	}
+
 	protected override void OnUpdate()
 	{
-
 		// Eye input
 		if ( !IsProxy )
 		{
 			SimulateEyes();
+			CurrentCameraOffset = Vector3.Zero;
 
 			EyeAngles.pitch += Input.MouseDelta.y * 0.1f;
 			EyeAngles.yaw -= Input.MouseDelta.x * 0.1f;
-			EyeAngles.roll = 0;
 
 			// we're a shooter game!
-			EyeAngles.pitch = EyeAngles.pitch.Clamp( -90, 90 );
+			EyeAngles.pitch = EyeAngles.pitch.Clamp( -PlayerSettings.PitchMaxUp, PlayerSettings.PitchMaxDown );
 
 			var cam = CameraController.Camera;
 			var lookDir = EyeAngles.ToRotation();
+
+			EyeAngles.roll = 0;
+
 
 			cam.Transform.Rotation = lookDir;
 		}
@@ -143,6 +161,11 @@ public partial class PlayerController : Component
 			AnimationHelper.DuckLevel = HasTag( "crouch" ) ? 100 : 0;
 			AnimationHelper.HoldType = CurrentHoldType;
 			AnimationHelper.SkidAmount = HasTag( "slide" ) ? 1 : 0;
+		}
+
+		foreach ( var mechanic in Mechanics )
+		{
+			mechanic.FrameSimulate();
 		}
 	}
 
@@ -184,7 +207,7 @@ public partial class PlayerController : Component
 		// Smooth step
 		float duckTime = DuckFraction * DuckFraction * (3f - 2f * DuckFraction);
 		CurrentEyeHeight = PlayerSettings.ViewHeightStanding.LerpTo( PlayerSettings.ViewHeightCrouching, duckTime );
-		CameraGameObject.Transform.LocalPosition = Vector3.Up * CurrentEyeHeight;
+		CameraGameObject.Transform.LocalPosition = Vector3.Up * CurrentEyeHeight + CurrentCameraOffset;
 	}
 
 	public void StepMove( float groundAngle = 46f, float stepSize = 18f )
@@ -274,17 +297,6 @@ public partial class PlayerController : Component
 		float accelSpeed = MathF.Min( acceleration * Time.Delta, addSpeed );
 
 		Velocity += wishDir * accelSpeed;
-	}
-
-	protected override void OnFixedUpdate()
-	{
-		if ( IsProxy )
-			return;
-
-		BuildWishInput();
-		// Wish direction could change here
-		OnUpdateMechanics();
-		BuildWishVelocity();
 	}
 
 	public float GetWishSpeed()

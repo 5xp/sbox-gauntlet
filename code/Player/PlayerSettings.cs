@@ -56,4 +56,14 @@ public sealed class PlayerSettings
 	public float PitchMaxDown { get; set; } = 89f;
 	public float DuckSpeed { get; set; } = 2f;
 	public float UnduckSpeed { get; set; } = 5f;
+	public float SprintMaxAngleDot { get; set; } = 0.6f;
+	public float SprintTiltAccel { get; set; } = 35f;
+	public float SprintTiltMaxVel { get; set; } = 2f;
+	public float SprintTiltTurnRange { get; set; } = 120f;
+	public float SprintTiltMaxRoll { get; set; } = 2f;
+	public float SprintOffsetStartDelay { get; set; } = 0.2f;
+	public float SprintOffsetStartDuration { get; set; } = 0.8f;
+	public float SprintOffsetStartFastDuration { get; set; } = 0.2f;
+	public float SprintOffsetEndDuration { get; set; } = 0.15f;
+	public float SprintViewOffset { get; set; } = -6f;
 }

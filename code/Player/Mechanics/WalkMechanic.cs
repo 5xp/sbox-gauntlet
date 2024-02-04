@@ -29,8 +29,8 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 		Velocity = HorzVelocity;
 
 		float accel = Controller.CurrentAccelerationOverride ?? PlayerSettings.Acceleration;
-		Controller.Accelerate( wishDir, wishSpeed, accel );
 		Decelerate( wishDir, wishSpeed, accel * 0.6f );
+		Accelerate( wishDir, wishSpeed, accel );
 
 		if ( Velocity.LengthSquared < 1f )
 		{
@@ -70,9 +70,22 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 		Position = tr.EndPosition;
 	}
 
+	private void Accelerate( Vector3 wishDir, float wishSpeed, float acceleration )
+	{
+		float currentSpeed = Velocity.Dot( wishDir );
+		float addSpeed = MathF.Max( 0f, wishSpeed - currentSpeed );
+		float accelSpeed = MathF.Min( acceleration * Time.Delta, addSpeed );
+
+		float magnitudeSquared = MathF.Max( wishSpeed * wishSpeed, Velocity.LengthSquared );
+
+		Velocity += wishDir * accelSpeed;
+
+		Velocity = Velocity.ClampLength( MathF.Sqrt( magnitudeSquared ) );
+	}
+
 	private void Decelerate( Vector3 wishDir, float wishSpeed, float deceleration )
 	{
-		float projSpeed = MathF.Min(wishSpeed, Velocity.Dot( wishDir ));
+		float projSpeed = MathF.Min( wishSpeed, Velocity.Dot( wishDir ) );
 		Vector3 proj = wishDir * projSpeed;
 		Vector3 decel = proj - Velocity;
 

@@ -17,7 +17,23 @@ public abstract partial class BasePlayerControllerMechanic : Component
 	/// <summary>
 	/// How long since <see cref="IsActive"/> changed.
 	/// </summary>
-	[Property, Category( "Base" ), ReadOnly] protected TimeSince TimeSinceActiveChanged { get; set; }
+	[Property, Category( "Base" ), ReadOnly] public TimeSince TimeSinceActiveChanged { get; protected set; }
+
+	/// <summary>
+	/// How long since <see cref="IsActive"/> was set to true
+	/// </summary>
+	public TimeSince TimeSinceStart { get; protected set; }
+
+	/// <summary>
+	/// How long since <see cref="IsActive"/> was last set to true
+	/// </summary>
+	public TimeSince TimeSinceLastStart { get; protected set; }
+
+	/// <summary>
+	/// How long since <see cref="IsActive"/> was set to false
+	/// </summary>
+	public TimeSince TimeSinceStop { get; protected set; }
+
 
 	public Vector3 Position
 	{
@@ -58,7 +74,10 @@ public abstract partial class BasePlayerControllerMechanic : Component
 			if ( isActive != before )
 			{
 				TimeSinceActiveChanged = 0;
+				if ( isActive ) TimeSinceStart = 0;
+				if ( !isActive ) TimeSinceStop = 0;
 				OnActiveChanged( before, isActive );
+				if ( isActive ) TimeSinceLastStart = 0;
 			}
 		}
 	}
@@ -116,6 +135,22 @@ public abstract partial class BasePlayerControllerMechanic : Component
 	/// Called by <see cref="Controller"/>, treat this like a Tick/Update while the mechanic is active.
 	/// </summary>
 	public virtual void OnActiveUpdate()
+	{
+		//
+	}
+
+	/// <summary>
+	/// Mechanics can simulate even if not active. Called before active update.
+	/// </summary>
+	public virtual void Simulate()
+	{
+		//
+	}
+
+	/// <summary>
+	/// Mechanics can simulate every frame even if not active.
+	/// </summary>
+	public virtual void FrameSimulate()
 	{
 		//
 	}
