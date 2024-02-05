@@ -20,11 +20,32 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 
 	protected override void OnActiveChanged( bool before, bool after )
 	{
+		if ( !after ) return;
+
 		Controller.ClearGroundObject();
 
 		float startZ = Velocity.z;
 
-		float upSpeed = MathF.Sqrt( 2f * PlayerSettings.JumpHeight * PlayerSettings.Gravity );
+		float jumpHeight = HasTag( "slide" ) ? PlayerSettings.SlideJumpHeight : PlayerSettings.JumpHeight;
+
+		bool isFullyDucked = Controller.DuckFraction.AlmostEqual( 1f );
+
+		if ( !isFullyDucked && HasTag( "crouch" ) )
+		{
+			Controller.DuckFraction = 0f;
+
+			// If we try jumping before we're fully crouching, refund our speed boost
+			SlideMechanic slide = Controller.GetMechanic<SlideMechanic>();
+
+			if ( slide.IsActive && slide.UsedBoost )
+			{
+				Velocity = Velocity.Normal * slide.StartSpeed;
+
+				Controller.DuckFraction = 1f;
+			}
+		}
+
+		float upSpeed = MathF.Sqrt( 2f * jumpHeight * PlayerSettings.Gravity );
 		Velocity = Velocity.WithZ( startZ + upSpeed );
 
 		Controller.BroadcastPlayerJumped();

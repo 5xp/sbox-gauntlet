@@ -33,6 +33,7 @@ public partial class PlayerController : Component
 	public TimeSince TimeSinceLastOnGround { get; set; }
 	public TimeSince TimeSinceLastLanding { get; set; }
 
+	public Vector3 GroundNormal { get; set; }
 	public float CurrentEyeHeight { get; set; }
 	public float CurrentHullHeight { get; set; }
 	public float DuckFraction { get; set; }
@@ -158,7 +159,7 @@ public partial class PlayerController : Component
 			AnimationHelper.FootShuffle = rotateDifference;
 			AnimationHelper.WithLook( EyeAngles.Forward, 1, 1, 1.0f );
 			AnimationHelper.MoveStyle = HasTag( "sprint" ) ? AnimationHelper.MoveStyles.Run : AnimationHelper.MoveStyles.Walk;
-			AnimationHelper.DuckLevel = HasTag( "crouch" ) ? 100 : 0;
+			AnimationHelper.DuckLevel = HasTag( "slide" ) ? 0 : DuckFraction * 100f;
 			AnimationHelper.HoldType = CurrentHoldType;
 			AnimationHelper.SkidAmount = HasTag( "slide" ) ? 1 : 0;
 		}
@@ -202,10 +203,14 @@ public partial class PlayerController : Component
 			CurrentHullHeight = targetHullHeight;
 		}
 
+		if ( HasTag( "slide" ) )
+		{
+			CurrentHullHeight = targetHullHeight;
+		}
+
 		GetMechanic<CrouchMechanic>().ForceDuck = forceDuck;
 
-		// Smooth step
-		float duckTime = DuckFraction * DuckFraction * (3f - 2f * DuckFraction);
+		float duckTime = MathUtils.SmoothStep( DuckFraction );
 		CurrentEyeHeight = PlayerSettings.ViewHeightStanding.LerpTo( PlayerSettings.ViewHeightCrouching, duckTime );
 		CameraGameObject.Transform.LocalPosition = Vector3.Up * CurrentEyeHeight + CurrentCameraOffset;
 	}

@@ -66,4 +66,24 @@ public sealed class PlayerSettings
 	public float SprintOffsetStartFastDuration { get; set; } = 0.2f;
 	public float SprintOffsetEndDuration { get; set; } = 0.15f;
 	public float SprintViewOffset { get; set; } = -6f;
+	public float SlideBoostCooldown { get; set; } = 2f;
+	public float SlideMaxAngleDot { get; set; } = 0.6f;
+	public float SlideStepVelocityReduction { get; set; } = 10f;
+	public float SlideDecel { get; set; } = 50f;
+	public float SlideVelocityDecay { get; set; } = 0.7f;
+	public float SlideSpeedBoost { get; set; } = 150f;
+	public float SlideSpeedBoostCap { get; set; } = 400f;
+	public float SlideRequiredStartSpeed { get; set; } = 200f;
+	public float SlideJumpHeight { get; set; } = 50f;
+	public float SlideForceSlideSpeed { get; set; } = 350f;
+	public float SlideForceSlideUnduckDecel { get; set; } = 350f;
+	public float SlideEndSpeed { get; set; } = 125f;
+	public float SlideFOVLerpInTime { get; set; } = 0.25f;
+	public float SlideFOVLerpOutTime { get; set; } = 0.25f;
+	public float SlideFOVScale { get; set; } = 1.1f;
+	public float SlideTiltPlayerSpeed { get; set; } = 400f;
+	public float SlideTiltIncreaseSpeed { get; set; } = 5f;
+	public float SlideTiltDecreaseSpeed { get; set; } = 2.5f;
+	public float SlideTiltMaxRoll { get; set; } = 15f;
+	public float SkipTime { get; set; } = 0.1f;
 }

@@ -19,7 +19,11 @@ public partial class CrouchMechanic : BasePlayerControllerMechanic
 	{
 		if ( !HasTag( "slide" ) ) return false;
 
-		if ( Controller.IsGrounded ) return false;
+		if ( !Controller.IsGrounded ) return false;
+
+		float forceSpeed = PlayerSettings.SlideForceSlideSpeed;
+
+		if ( HorzVelocity.LengthSquared <= forceSpeed * forceSpeed ) return false;
 
 		return true;
 	}

@@ -14,6 +14,8 @@ public sealed class CameraController : Component
 
 	[Property] public PlayerController PlayerController { get; set; }
 
+	[Property, Range( 1f, 179f, 0.01f, true, true )] public float BaseFieldOfView { get; set; } = 90f;
+
 	/// <summary>
 	/// Constructs a ray using the camera's GameObject
 	/// </summary>

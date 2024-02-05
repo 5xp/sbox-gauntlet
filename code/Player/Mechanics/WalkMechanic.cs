@@ -26,6 +26,8 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 		Vector3 wishDir = wishVel.Normal;
 		float wishSpeed = wishVel.Length;
 
+		float startZ = Position.z;
+
 		Velocity = HorzVelocity;
 
 		float accel = Controller.CurrentAccelerationOverride ?? PlayerSettings.Acceleration;
@@ -50,6 +52,7 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 
 		Controller.StepMove( PlayerSettings.GroundAngle, PlayerSettings.StepHeightMax );
 		StayOnGround();
+		ApplySlideStepVelocityReduction( Position.z - startZ );
 	}
 
 	private void StayOnGround()
@@ -68,6 +71,14 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 		if ( Vector3.GetAngle( Vector3.Up, tr.Normal ) > PlayerSettings.GroundAngle ) return;
 
 		Position = tr.EndPosition;
+	}
+
+	private void ApplySlideStepVelocityReduction( float stepAmount )
+	{
+		if ( !HasTag( "slide" ) || stepAmount < PlayerSettings.StepHeightMin )
+			return;
+
+		Velocity = Velocity.Approach( 0f, stepAmount * PlayerSettings.SlideStepVelocityReduction );
 	}
 
 	private void Accelerate( Vector3 wishDir, float wishSpeed, float acceleration )
@@ -157,8 +168,7 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 
 	private void UpdateGroundObject( SceneTraceResult tr )
 	{
+		Controller.GroundNormal = tr.Normal;
 		SetGroundObject( tr.GameObject );
 	}
-
-
 }

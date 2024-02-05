@@ -23,6 +23,8 @@ public partial class SprintMechanic : BasePlayerControllerMechanic
 
 	public override bool ShouldBecomeActive()
 	{
+		if ( HasTag( "crouch" ) ) return false;
+
 		if ( !Input.Down( "Run" ) && !SprintToggled ) return false;
 
 		if ( !Controller.IsGrounded ) return false;
@@ -74,6 +76,9 @@ public partial class SprintMechanic : BasePlayerControllerMechanic
 		Controller.CurrentCameraOffset += Vector3.Up * offsetAmount;
 	}
 
+	/// <summary>
+	/// Apply camera tilt when looking to the side
+	/// </summary>
 	private void ApplySprintTilt()
 	{
 		float angleDelta = 0f;
@@ -93,22 +98,24 @@ public partial class SprintMechanic : BasePlayerControllerMechanic
 		SprintTiltVelocity += Math.Sign( deltaFrac ) * PlayerSettings.SprintTiltAccel * Time.Delta;
 		SprintTiltVelocity = SprintTiltVelocity.Clamp( -PlayerSettings.SprintTiltMaxVel, PlayerSettings.SprintTiltMaxVel );
 
-		Controller.EyeAngles += Rotation.FromRoll( SprintTiltFraction * PlayerSettings.SprintTiltMaxRoll ).Angles();
+		Controller.EyeAngles += new Angles( 0f, 0f, SprintTiltFraction * PlayerSettings.SprintTiltMaxRoll );
 	}
 
+	/// <summary>
+	/// If we press sprint, keep sprint on until we try moving backwards or crouch
+	/// </summary>
 	private void CheckSprintToggled()
 	{
-		bool movingForward = Vector3.Dot( Controller.WishMove, Vector3.Forward ) > 0f;
+		bool movingForward = Vector3.Dot( Controller.WishMove, Vector3.Forward ) >= 0f && !Controller.WishMove.AlmostEqual( 0f );
 
 		if ( SprintToggled && movingForward )
 		{
 			SprintCanToggleOff = true;
 		}
 
-		if ( SprintCanToggleOff && !movingForward )
+		if ( Input.Pressed( "Duck" ) || SprintCanToggleOff && !movingForward )
 		{
 			SprintToggled = false;
-
 		}
 
 		if ( Input.Pressed( "Run" ) )

@@ -23,7 +23,7 @@ public partial class PlayerController
 	protected void OnUpdateMechanics()
 	{
 		var lastUpdate = ActiveMechanics;
-		var sortedMechanics = Mechanics.Where( x => x.ShouldBecomeActive() || !x.ShouldBecomeInactive() );
+		var sortedMechanics = Mechanics.Where( x => x.ShouldBecomeActive() ).ToArray();
 
 		// Copy the previous update's tags so we can compare / send tag changed events later.
 		var previousUpdateTags = tags;
@@ -63,7 +63,7 @@ public partial class PlayerController
 			if ( acceleration is not null ) accelerationOverride = acceleration;
 		}
 
-		ActiveMechanics = sortedMechanics.ToArray();
+		ActiveMechanics = sortedMechanics;
 
 		if ( lastUpdate is not null )
 		{
