@@ -8,7 +8,10 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 	public override bool ShouldBecomeActive()
 	{
 		if ( !Input.Pressed( "Jump" ) ) return false;
+
 		bool shouldJump = Controller.IsGrounded;
+
+		shouldJump |= RecentlyLeftGround();
 
 		if ( !shouldJump ) return false;
 		return true;
@@ -22,6 +25,24 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 	{
 		if ( !after ) return;
 
+		if ( Controller.IsGrounded || RecentlyLeftGround() )
+		{
+			DoGroundJump();
+		}
+	}
+
+	/// <summary>
+	/// Returns true if we recently walked off a ledge within the allowed coyote time.
+	/// Will not return true if we just jumped.
+	/// </summary>
+	/// <returns></returns>
+	private bool RecentlyLeftGround()
+	{
+		return Controller.TimeSinceLastOnGround <= PlayerSettings.JumpGracePeriod && TimeSinceStart > Controller.TimeSinceLastOnGround;
+	}
+
+	private void DoGroundJump()
+	{
 		Controller.ClearGroundObject();
 
 		float startZ = Velocity.z;

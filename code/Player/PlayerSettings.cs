@@ -42,7 +42,6 @@ public sealed class PlayerSettings
 	public float GravityScale { get; set; } = 0.75f;
 	public float StepHeightMax { get; set; } = 18f;
 	public float StepHeightMin { get; set; } = 2f;
-	public float JumpHeight { get; set; } = 60f;
 	public float GroundAngle { get; set; } = 46f;
 	public float MaxNonJumpVelocity { get; set; } = 140f;
 	public float Acceleration { get; set; } = 2500f;
@@ -58,6 +57,8 @@ public sealed class PlayerSettings
 	public float UnduckSpeed { get; set; } = 5f;
 	public float SprintMaxAngleDot { get; set; } = 0.6f;
 	public float SprintTiltAccel { get; set; } = 35f;
+	public float JumpHeight { get; set; } = 60f;
+	public float JumpGracePeriod { get; set; } = 0.2f;
 	public float SprintTiltMaxVel { get; set; } = 2f;
 	public float SprintTiltTurnRange { get; set; } = 120f;
 	public float SprintTiltMaxRoll { get; set; } = 2f;
