@@ -33,11 +33,6 @@ public partial class CrouchMechanic : BasePlayerControllerMechanic
 		yield return "crouch";
 	}
 
-	public override float? GetEyeHeight()
-	{
-		return PlayerSettings.ViewHeightCrouching;
-	}
-
 	public override float? GetSpeed()
 	{
 		return PlayerSettings.CrouchSpeed;

@@ -10,7 +10,6 @@ public partial class PlayerController
 	public IEnumerable<BasePlayerControllerMechanic> Mechanics => Components.GetAll<BasePlayerControllerMechanic>( FindMode.EnabledInSelfAndDescendants ).OrderBy( x => x.Priority );
 
 	public float? CurrentSpeedOverride;
-	public float? CurrentEyeHeightOverride;
 	public float? CurrentHullHeightOverride;
 	public float? CurrentFrictionOverride;
 	public float? CurrentAccelerationOverride;
@@ -75,7 +74,6 @@ public partial class PlayerController
 		}
 
 		CurrentSpeedOverride = speedOverride;
-		CurrentEyeHeightOverride = eyeHeightOverride;
 		CurrentHullHeightOverride = hullHeightOverride;
 		CurrentFrictionOverride = frictionOverride;
 		CurrentAccelerationOverride = accelerationOverride;
@@ -85,16 +83,6 @@ public partial class PlayerController
 
 	public T GetMechanic<T>() where T : BasePlayerControllerMechanic
 	{
-		foreach ( var mechanic in Mechanics )
-		{
-			if ( mechanic is T val ) return val;
-		}
-
-		return null;
-	}
-
-	public bool IsMechanicActive<T>() where T : BasePlayerControllerMechanic
-	{
-		return GetMechanic<T>()?.IsActive ?? false;
+		return Components.Get<T>( FindMode.EnabledInSelfAndChildren );
 	}
 }

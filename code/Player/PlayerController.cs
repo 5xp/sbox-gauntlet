@@ -84,17 +84,9 @@ public partial class PlayerController : Component
 		}
 	}
 
-
 	// Properties used only in this component.
 	Vector3 WishVelocity;
 	public Angles EyeAngles;
-
-
-	protected float GetTargetEyeHeight()
-	{
-		if ( CurrentEyeHeightOverride is not null ) return CurrentEyeHeightOverride.Value;
-		return PlayerSettings.ViewHeightStanding;
-	}
 
 	protected float GetTargetHullHeight()
 	{
@@ -173,13 +165,13 @@ public partial class PlayerController : Component
 	public void SimulateEyes()
 	{
 		float targetHullHeight = GetTargetHullHeight();
-		float targetEyeHeight = GetTargetEyeHeight();
+		float targetDuckFraction = Input.Down( "Duck" ) ? 1f : 0f;
 		bool forceDuck = false;
-
+		
 		// Unducking
-		if ( CurrentEyeHeight < targetEyeHeight )
+		if ( DuckFraction > targetDuckFraction )
 		{
-			float liftHead = targetHullHeight - CurrentHullHeight;
+			float liftHead = PlayerSettings.HullHeightStanding - CurrentHullHeight;
 			SceneTraceResult tr = TraceBBox( Position, Position, 0, liftHead );
 			if ( tr.Hit )
 			{
@@ -192,7 +184,7 @@ public partial class PlayerController : Component
 			}
 		}
 		// Ducking
-		else if ( CurrentEyeHeight > targetEyeHeight )
+		else if ( DuckFraction < targetDuckFraction )
 		{
 			float duckSpeed = HasTag( "slide" ) ? PlayerSettings.UnduckSpeed : PlayerSettings.DuckSpeed;
 			DuckFraction = DuckFraction.Approach( 1f, duckSpeed * Time.Delta );
