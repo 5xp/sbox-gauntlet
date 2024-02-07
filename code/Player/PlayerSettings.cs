@@ -59,6 +59,14 @@ public sealed class PlayerSettings
 	public float SprintTiltAccel { get; set; } = 35f;
 	public float JumpHeight { get; set; } = 60f;
 	public float JumpGracePeriod { get; set; } = 0.2f;
+	public float JumpKeyboardGracePeriodMin { get; set; } = 0.2f;
+	public float JumpKeyboardGracePeriodMax { get; set; } = 0.5f;
+	public float JumpKeyboardGraceMax { get; set; } = 0.7f;
+	public float JumpKeyboardGraceStrength { get; set; } = 0.7f;
+	public float AirJumpHeight { get; set; } = 60f;
+	public float AirJumpHorizontalSpeed { get; set; } = 180f;
+	public float AirJumpMinHeightFraction { get; set; } = 0.25f;
+	public int AirJumpMaxJumps { get; set; } = 1;
 	public float SprintTiltMaxVel { get; set; } = 2f;
 	public float SprintTiltTurnRange { get; set; } = 120f;
 	public float SprintTiltMaxRoll { get; set; } = 2f;
