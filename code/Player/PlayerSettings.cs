@@ -95,4 +95,7 @@ public sealed class PlayerSettings
 	public float SlideTiltDecreaseSpeed { get; set; } = 2.5f;
 	public float SlideTiltMaxRoll { get; set; } = 15f;
 	public float SkipTime { get; set; } = 0.1f;
+	public float SkipSpeedRetain { get; set; } = 450f;
+	public float SkipSpeedReduce { get; set; } = 12f;
+	public float SkipJumpHeightFraction { get; set; } = 0.75f;
 }

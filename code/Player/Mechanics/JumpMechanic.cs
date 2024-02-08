@@ -69,6 +69,8 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 
 		bool isFullyDucked = Controller.DuckFraction.AlmostEqual( 1f );
 
+		Vector3 horzVelocity = HorzVelocity;
+
 		if ( !isFullyDucked && HasTag( "crouch" ) )
 		{
 			Controller.DuckFraction = 0f;
@@ -84,8 +86,19 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 			}
 		}
 
+		if ( IsSkipping() )
+		{
+			jumpHeight *= PlayerSettings.SkipJumpHeightFraction;
+
+			if ( horzVelocity.LengthSquared > PlayerSettings.SkipSpeedRetain * PlayerSettings.SkipSpeedRetain )
+			{
+				float newSpeed = MathF.Max( horzVelocity.Length - PlayerSettings.SkipSpeedReduce, PlayerSettings.SkipSpeedRetain );
+				horzVelocity = horzVelocity.Normal * newSpeed;
+			}
+		}
+
 		float upSpeed = MathF.Sqrt( 2f * jumpHeight * PlayerSettings.Gravity );
-		Velocity = Velocity.WithZ( startZ + upSpeed );
+		Velocity = horzVelocity.WithZ( startZ + upSpeed );
 
 		Controller.BroadcastPlayerJumped();
 		RefreshAirJumps();
@@ -157,6 +170,15 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 		float range = PlayerSettings.JumpKeyboardGracePeriodMax - PlayerSettings.JumpKeyboardGracePeriodMin;
 		float keyboardGraceFrac = (timeSinceJump - PlayerSettings.JumpKeyboardGracePeriodMin) / range;
 		return 1f - keyboardGraceFrac.Clamp( 0f, 1f );
+	}
+
+	/// <summary>
+	/// We are considered skipping after a short duration after landing. This will reduce our speed and reduce our jump height
+	/// </summary>
+	/// <returns></returns>
+	private bool IsSkipping()
+	{
+		return Controller.TimeSinceLastLanding <= PlayerSettings.SkipTime;
 	}
 
 	private static bool DidPressMovementKey()
