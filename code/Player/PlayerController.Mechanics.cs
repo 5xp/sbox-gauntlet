@@ -41,6 +41,8 @@ public partial class PlayerController
 			mechanic.Simulate();
 		}
 
+		float previousZVel = Velocity.z;
+
 		foreach ( var mechanic in sortedMechanics )
 		{
 			mechanic.IsActive = true;
@@ -61,6 +63,8 @@ public partial class PlayerController
 			if ( hullHeight is not null ) hullHeightOverride = hullHeight;
 			if ( acceleration is not null ) accelerationOverride = acceleration;
 		}
+
+		CheckReachedApex( previousZVel, Velocity.z );
 
 		ActiveMechanics = sortedMechanics;
 

@@ -98,4 +98,27 @@ public sealed class PlayerSettings
 	public float SkipSpeedRetain { get; set; } = 450f;
 	public float SkipSpeedReduce { get; set; } = 12f;
 	public float SkipJumpHeightFraction { get; set; } = 0.75f;
+	public float ViewPunchSpringConstant { get; set; } = 65f;
+	public float ViewPunchSpringDamping { get; set; } = 9f;
+	public float ViewPunchJumpPitchMin { get; set; } = 33;
+	public float ViewPunchJumpPitchMax { get; set; } = 51f;
+	public float ViewPunchJumpYawMin { get; set; } = -10.5f;
+	public float ViewPunchJumpYawMax { get; set; } = 10.5f;
+	public float ViewPunchJumpRollMin { get; set; } = 12.75f;
+	public float ViewPunchJumpRollMax { get; set; } = 22.5f;
+	public float ViewPunchAirJumpPitchMin { get; set; } = 83.7f;
+	public float ViewPunchAirJumpPitchMax { get; set; } = 103.2f;
+	public float ViewPunchAirJumpYawMin { get; set; } = -10.5f;
+	public float ViewPunchAirJumpYawMax { get; set; } = 10.5f;
+	public float ViewPunchAirJumpRollMin { get; set; } = -18f;
+	public float ViewPunchAirJumpRollMax { get; set; } = 13.5f;
+	public float ViewPunchFallPitchMin { get; set; } = 33f;
+	public float ViewPunchFallPitchMax { get; set; } = 51f;
+	public float ViewPunchFallYawMin { get; set; } = 0f;
+	public float ViewPunchFallYawMax { get; set; } = 0f;
+	public float ViewPunchFallRollMin { get; set; } = -9.3f;
+	public float ViewPunchFallRollMax { get; set; } = 9.3f;
+	public float ViewPunchFallDistMin { get; set; } = 160f;
+	public float ViewPunchFallDistMax { get; set; } = 1160;
+	public float ViewPunchFallDistMaxScale { get; set; } = 12f;
 }

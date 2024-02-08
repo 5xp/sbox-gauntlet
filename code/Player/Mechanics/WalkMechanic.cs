@@ -12,7 +12,7 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 		yield return "walk";
 	}
 
-	protected override void OnFixedUpdate()
+	public override void OnActiveUpdate()
 	{
 		if ( Controller.IsGrounded )
 			WalkMove();

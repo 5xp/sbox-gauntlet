@@ -22,6 +22,9 @@ public partial class PlayerController : Component
 	/// </summary>
 	public GameObject CameraGameObject => CameraController.Camera.GameObject;
 
+	[ConVar( "debug_viewPunch" )]
+	public static bool DebugViewPunch { get; set; } = false;
+
 	/// <summary>
 	/// Mechanics can add to this camera offset. Resets to zero after every frame.
 	/// </summary>
@@ -37,6 +40,7 @@ public partial class PlayerController : Component
 	public float CurrentEyeHeight { get; set; }
 	public float CurrentHullHeight { get; set; }
 	public float DuckFraction { get; set; }
+	public float ApexHeight { get; set; }
 
 
 	/// <summary>
@@ -115,17 +119,16 @@ public partial class PlayerController : Component
 
 			EyeAngles.pitch += Input.MouseDelta.y * 0.1f;
 			EyeAngles.yaw -= Input.MouseDelta.x * 0.1f;
-
-			// we're a shooter game!
 			EyeAngles.pitch = EyeAngles.pitch.Clamp( -PlayerSettings.PitchMaxUp, PlayerSettings.PitchMaxDown );
 
 			var cam = CameraController.Camera;
-			var lookDir = EyeAngles.ToRotation();
 
-			EyeAngles.roll = 0;
+			ViewPunchMechanic viewPunch = GetMechanic<ViewPunchMechanic>();
 
+			var lookDir = EyeAngles.ToRotation() * viewPunch.Spring.ToRotation();
 
 			cam.Transform.Rotation = lookDir;
+			EyeAngles.roll = 0;
 		}
 
 		float rotateDifference = 0;
@@ -167,7 +170,7 @@ public partial class PlayerController : Component
 		float targetHullHeight = GetTargetHullHeight();
 		float targetDuckFraction = Input.Down( "Duck" ) ? 1f : 0f;
 		bool forceDuck = false;
-		
+
 		// Unducking
 		if ( DuckFraction > targetDuckFraction )
 		{
@@ -314,6 +317,14 @@ public partial class PlayerController : Component
 		if ( Input.Down( "backward", false ) ) WishMove += Vector3.Backward;
 		if ( Input.Down( "left", false ) ) WishMove += Vector3.Left;
 		if ( Input.Down( "right", false ) ) WishMove += Vector3.Right;
+	}
+
+	private void CheckReachedApex( float previousVelocity, float currentVelocity )
+	{
+		if ( currentVelocity.AlmostEqual( 0f ) || (currentVelocity < 0f && previousVelocity > 0f) )
+		{
+			ApexHeight = Position.z;
+		}
 	}
 
 	public Vector3 BuildWishVelocity( bool zeroPitch = true )

@@ -7,6 +7,9 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 {
 	public int AirJumpsRemaining { get; set; }
 
+	private TimeSince TimeSinceGroundJump { get; set; }
+	private TimeSince TimeSinceAirJump { get; set; }
+
 	public override bool ShouldBecomeActive()
 	{
 		if ( !Input.Pressed( "Jump" ) ) return false;
@@ -21,7 +24,11 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 
 	public override IEnumerable<string> GetTags()
 	{
-		yield return "jump";
+		if ( TimeSinceGroundJump == 0 )
+			yield return "jump";
+
+		if ( TimeSinceAirJump == 0 )
+			yield return "airjump";
 	}
 
 	protected override void OnActiveChanged( bool before, bool after )
@@ -36,6 +43,8 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 		{
 			DoAirJump();
 		}
+
+		Controller.ApexHeight = Position.z;
 	}
 
 	public override void Simulate()
@@ -57,6 +66,7 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 		Velocity += Vector3.Up * speedDiff;
 		AirJumpsRemaining--;
 		RedirectVelocity();
+		TimeSinceAirJump = 0;
 	}
 
 	private void DoGroundJump()
@@ -102,6 +112,7 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 
 		Controller.BroadcastPlayerJumped();
 		RefreshAirJumps();
+		TimeSinceGroundJump = 0;
 	}
 
 	/// <summary>

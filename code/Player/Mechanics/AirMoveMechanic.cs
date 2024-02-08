@@ -5,7 +5,7 @@ public partial class AirMoveMechanic : BasePlayerControllerMechanic
 	public override bool ShouldBecomeActive() => !Controller.IsGrounded;
 	public override float? GetSpeed() => PlayerSettings.AirSpeed;
 
-	protected override void OnFixedUpdate()
+	public override void OnActiveUpdate()
 	{
 		bool groundedAtStart = Controller.IsGrounded;
 
