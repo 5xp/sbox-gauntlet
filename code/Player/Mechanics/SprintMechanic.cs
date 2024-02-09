@@ -85,7 +85,7 @@ public partial class SprintMechanic : BasePlayerControllerMechanic
 
 		if ( IsActive )
 		{
-			angleDelta = Input.MouseDelta.x * 0.1f;
+			angleDelta = PlayerController.GetInputDelta().x;
 		}
 
 		float turnRate = angleDelta / Time.Delta;

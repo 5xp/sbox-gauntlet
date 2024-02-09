@@ -117,8 +117,8 @@ public partial class PlayerController : Component
 			SimulateEyes();
 			CurrentCameraOffset = Vector3.Zero;
 
-			EyeAngles.pitch += Input.MouseDelta.y * 0.1f;
-			EyeAngles.yaw -= Input.MouseDelta.x * 0.1f;
+			EyeAngles.pitch += GetInputDelta().y;
+			EyeAngles.yaw -= GetInputDelta().x;
 			EyeAngles.pitch = EyeAngles.pitch.Clamp( -PlayerSettings.PitchMaxUp, PlayerSettings.PitchMaxDown );
 
 			var cam = CameraController.Camera;
@@ -282,6 +282,11 @@ public partial class PlayerController : Component
 			.Run();
 
 		return tr;
+	}
+
+	public static Vector2 GetInputDelta()
+	{
+		return Input.MouseDelta * 0.066f;
 	}
 
 	public SceneTraceResult TraceBBox( Vector3 start, Vector3 end, float liftFeet = 0.0f, float liftHead = 0.0f )
