@@ -47,12 +47,13 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 		{
 			Position = tr.EndPosition;
 			StayOnGround();
+			OnStep( Position.z - startZ );
 			return;
 		}
 
 		Controller.StepMove( PlayerSettings.GroundAngle, PlayerSettings.StepHeightMax );
 		StayOnGround();
-		ApplySlideStepVelocityReduction( Position.z - startZ );
+		OnStep( Position.z - startZ );
 	}
 
 	private void StayOnGround()
@@ -71,6 +72,16 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 		if ( Vector3.GetAngle( Vector3.Up, tr.Normal ) > PlayerSettings.GroundAngle ) return;
 
 		Position = tr.EndPosition;
+	}
+
+	private void OnStep( float stepAmount )
+	{
+		ApplySlideStepVelocityReduction( stepAmount );
+
+		if ( MathF.Abs( stepAmount ) > PlayerSettings.StepHeightMin )
+		{
+			Controller.AddStepOffset( Vector3.Down * stepAmount );
+		}
 	}
 
 	private void ApplySlideStepVelocityReduction( float stepAmount )

@@ -41,7 +41,7 @@ public sealed class PlayerSettings
 	public float Gravity { get; set; } = 750f;
 	public float GravityScale { get; set; } = 0.75f;
 	public float StepHeightMax { get; set; } = 18f;
-	public float StepHeightMin { get; set; } = 2f;
+	public float StepHeightMin { get; set; } = 4f;
 	public float GroundAngle { get; set; } = 46f;
 	public float MaxNonJumpVelocity { get; set; } = 140f;
 	public float Acceleration { get; set; } = 2500f;
@@ -121,4 +121,5 @@ public sealed class PlayerSettings
 	public float ViewPunchFallDistMin { get; set; } = 160f;
 	public float ViewPunchFallDistMax { get; set; } = 1160;
 	public float ViewPunchFallDistMaxScale { get; set; } = 12f;
+	public float StepSmoothingOffsetCorrectSpeed { get; set; } = 80f;
 }

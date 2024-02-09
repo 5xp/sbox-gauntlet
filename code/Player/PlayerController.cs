@@ -30,6 +30,13 @@ public partial class PlayerController : Component
 	/// </summary>
 	public Vector3 CurrentCameraOffset { get; set; }
 
+	/// <summary>
+	/// When we step, we add to this offset
+	/// This offset gets added to the eye position
+	/// This slowly goes back to 0
+	/// </summary>
+	public Vector3 StepSmoothingOffset { get; set; }
+
 	public GameObject LastGroundObject { get; set; }
 	public GameObject GroundObject { get; set; }
 	[Property, ReadOnly] public bool IsGrounded => GroundObject is not null;
@@ -205,9 +212,10 @@ public partial class PlayerController : Component
 
 		GetMechanic<CrouchMechanic>().ForceDuck = forceDuck;
 
+		StepSmoothingOffset = StepSmoothingOffset.Approach( 0f, PlayerSettings.StepSmoothingOffsetCorrectSpeed * Time.Delta );
 		float duckTime = MathUtils.SmoothStep( DuckFraction );
 		CurrentEyeHeight = PlayerSettings.ViewHeightStanding.LerpTo( PlayerSettings.ViewHeightCrouching, duckTime );
-		CameraGameObject.Transform.LocalPosition = Vector3.Up * CurrentEyeHeight + CurrentCameraOffset;
+		CameraGameObject.Transform.LocalPosition = Vector3.Up * CurrentEyeHeight + CurrentCameraOffset + StepSmoothingOffset;
 	}
 
 	public void StepMove( float groundAngle = 46f, float stepSize = 18f )
@@ -242,6 +250,14 @@ public partial class PlayerController : Component
 
 		Position = mover.Position;
 		Velocity = mover.Velocity;
+	}
+
+	public void AddStepOffset( Vector3 stepAmount )
+	{
+		StepSmoothingOffset += stepAmount;
+
+		// Clear transform lerping, otherwise it looks bad on high framerate
+		GameObject.Transform.ClearLerp();
 	}
 
 	public void ClearGroundObject()
