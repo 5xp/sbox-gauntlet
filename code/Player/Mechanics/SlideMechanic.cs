@@ -28,7 +28,7 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 	public override bool ShouldBecomeActive()
 	{
 		if ( !HasTag( "crouch" ) ) return false;
-		if ( HasAnyTag( "wallrun", "jump" ) ) return false;
+		if ( HasAnyTag( "wallrun", "jump", "airjump" ) ) return false;
 
 		// Can't initiate a slide in the air.
 		if ( !IsActive && !Controller.IsGrounded ) return false;
@@ -101,8 +101,7 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 
 		if ( TimeSinceLastStart >= PlayerSettings.SlideBoostCooldown )
 		{
-			float speedDifference = PlayerSettings.SlideSpeedBoostCap - HorzVelocity.Length;
-			float speedBoost = speedDifference.Clamp( 0f, PlayerSettings.SlideSpeedBoost );
+			float speedBoost = GetSpeedBoost();
 
 			Vector3 dir = HorzVelocity.Normal;
 			Velocity += dir * speedBoost;
@@ -132,6 +131,14 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 		FOVScaleTargetFraction = 0f;
 		SlideTiltLowerSpeedBound = PlayerSettings.SlideRequiredStartSpeed;
 	}
+
+	public float GetSpeedBoost()
+	{
+		float speedDifference = PlayerSettings.SlideSpeedBoostCap - StartSpeed;
+		float speedBoost = speedDifference.Clamp( 0f, PlayerSettings.SlideSpeedBoost );
+		return speedBoost;
+	}
+
 
 	/// <summary>
 	/// We don't want the player to be able to steer much, but they should be able to brake if they want
