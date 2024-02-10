@@ -5,7 +5,12 @@
 /// </summary>
 public partial class WalkMechanic : BasePlayerControllerMechanic
 {
-	public override bool ShouldBecomeActive() => true;
+	public override bool ShouldBecomeActive()
+	{
+		JumpMechanic jump = Controller.GetMechanic<JumpMechanic>();
+
+		return !jump.ShouldBecomeActive();
+	}
 
 	public override IEnumerable<string> GetTags()
 	{
@@ -131,7 +136,6 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 		if ( Controller.LastGroundObject is null && groundObject is not null )
 		{
 			Controller.TimeSinceLastLanding = 0;
-			// TODO: Try start jump?
 		}
 	}
 
