@@ -9,16 +9,16 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 
 	private TimeSince TimeSinceGroundJump { get; set; }
 	private TimeSince TimeSinceAirJump { get; set; }
+	private TimeSince TimeSinceWallJump { get; set; }
 
 	public override bool ShouldBecomeActive()
 	{
 		if ( !Input.Pressed( "Jump" ) ) return false;
 
-		bool shouldJump = Controller.IsGrounded || AirJumpsRemaining > 0;
+		bool canJump = ShouldGroundJump() || ShouldAirJump() || ShouldWallJump();
 
-		shouldJump |= RecentlyLeftGround();
+		if ( !canJump ) return false;
 
-		if ( !shouldJump ) return false;
 		return true;
 	}
 
@@ -29,17 +29,24 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 
 		if ( TimeSinceAirJump == 0 )
 			yield return "airjump";
+
+		if ( TimeSinceWallJump == 0 )
+			yield return "walljump";
 	}
 
 	protected override void OnActiveChanged( bool before, bool after )
 	{
 		if ( !after ) return;
 
-		if ( Controller.IsGrounded || RecentlyLeftGround() )
+		if ( ShouldGroundJump() )
 		{
 			DoGroundJump();
 		}
-		else if ( AirJumpsRemaining > 0 )
+		else if ( ShouldWallJump() )
+		{
+			DoWallJump();
+		}
+		else if ( ShouldAirJump() )
 		{
 			DoAirJump();
 		}
@@ -52,6 +59,11 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 		if ( Controller.IsGrounded ) return;
 		if ( !DidPressMovementKey() ) return;
 		RedirectVelocity( TimeSinceStart );
+	}
+
+	private bool ShouldAirJump()
+	{
+		return AirJumpsRemaining > 0;
 	}
 
 	private void DoAirJump()
@@ -67,6 +79,56 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 		AirJumpsRemaining--;
 		RedirectVelocity();
 		TimeSinceAirJump = 0;
+	}
+
+	private bool ShouldWallJump()
+	{
+		return Controller.GetMechanic<WallrunMechanic>().IsActive || RecentlyFellAwayFromWall();
+	}
+
+	/// <summary>
+	/// Called when walljumping. Adds upward velocity, outward velocity, and input direction velocity
+	/// </summary>
+	private void DoWallJump()
+	{
+		float upSpeed = PlayerSettings.WallrunJumpUpSpeed;
+		float outSpeed = PlayerSettings.WallrunJumpOutwardSpeed;
+		float inputDirSpeed = PlayerSettings.WallrunJumpInputDirSpeed;
+
+		Vector3 wallNormal = Controller.GetMechanic<WallrunMechanic>().LastWallNormal;
+		Vector3 wishDir = Controller.BuildWishVelocity().Normal;
+
+		float lookingNormalAmount = Controller.EyeAngles.WithPitch( 0f ).Forward.Dot( wallNormal );
+		bool tryingToClimbInwards = lookingNormalAmount < -0.71f && Controller.WishMove.x > 0f;
+
+		if ( wishDir.Dot( wallNormal ) < 0f )
+		{
+			wishDir = Vector3.VectorPlaneProject( wishDir, wallNormal );
+		}
+
+		if ( tryingToClimbInwards )
+		{
+			outSpeed *= 0.2f;
+		}
+
+		float startZ = Velocity.z;
+
+		// Don't add any speed if we are already moving up fast enough
+		// Or give extra speed if we're falling
+		upSpeed = (upSpeed - startZ).Clamp( 0f, upSpeed * 1.47f );
+
+		float maxOutSpeed = MathF.Max( outSpeed, inputDirSpeed );
+
+		Vector3 addVelocity = Vector3.Up * upSpeed + wallNormal * outSpeed + wishDir * inputDirSpeed;
+		addVelocity = addVelocity.ClampLengthOnAxis( wallNormal, maxOutSpeed );
+
+		Velocity += addVelocity;
+		TimeSinceWallJump = 0;
+	}
+
+	private bool ShouldGroundJump()
+	{
+		return Controller.IsGrounded || RecentlyLeftGround();
 	}
 
 	private void DoGroundJump()
@@ -218,6 +280,18 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 	private bool RecentlyLeftGround()
 	{
 		return Controller.TimeSinceLastOnGround <= PlayerSettings.JumpGracePeriod && TimeSinceLastStart > Controller.TimeSinceLastOnGround;
+	}
+
+	/// <summary>
+	/// Returns true if we recently fell away from a wall within the allowed grace period.
+	/// Will not return true if we just walljumped or didn't fall away.
+	/// </summary>
+	/// <returns></returns>
+	private bool RecentlyFellAwayFromWall()
+	{
+		WallrunMechanic wallrun = Controller.GetMechanic<WallrunMechanic>();
+
+		return wallrun.TimeSinceFellAwayFromWall <= PlayerSettings.JumpGracePeriod && TimeSinceLastStart > wallrun.TimeSinceFellAwayFromWall;
 	}
 
 	public void RefreshAirJumps()

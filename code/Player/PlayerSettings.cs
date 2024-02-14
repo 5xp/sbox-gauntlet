@@ -10,7 +10,27 @@ public sealed class PlayerSettings
 
 	public PlayerSettings() { }
 
-	public static PlayerSettings Regular { get { return new PlayerSettings(); } }
+	public static PlayerSettings Regular
+	{
+		get
+		{
+			if ( WallrunMechanic.DebugWallrunSettings )
+			{
+				return new PlayerSettings
+				{
+					WallrunTimeLimit = 9999f,
+					WallrunGravityRampUpTime = 9999f,
+					WallrunSlipStartTime = 9999f,
+					WallrunPushAwayFallOffTime = 9999f,
+					WallrunUpwardAutoPush = 0f,
+					WallrunNoInputSlipFrac = 0f,
+					WallrunTiltMaxRoll = 0f,
+				};
+			}
+
+			return new PlayerSettings();
+		}
+	}
 	public static PlayerSettings Faster
 	{
 		get
@@ -20,6 +40,9 @@ public sealed class PlayerSettings
 				GravityScale = 0.8f,
 				WalkSpeed = 173.5f,
 				SprintSpeed = 260f,
+				WallrunJumpInputDirSpeed = 80f,
+				WallrunMaxSpeedHorizontal = 420f,
+				WallrunAccelerationHorizontal = 1500f,
 			};
 		}
 	}
@@ -121,5 +144,44 @@ public sealed class PlayerSettings
 	public float ViewPunchFallDistMin { get; set; } = 160f;
 	public float ViewPunchFallDistMax { get; set; } = 1160;
 	public float ViewPunchFallDistMaxScale { get; set; } = 12f;
+	public float ViewPunchWallrunStartPitchMin { get; set; } = -29f;
+	public float ViewPunchWallrunStartPitchMax { get; set; } = -36.3f;
+	public float ViewPunchWallrunStartYawMin { get; set; } = -5f;
+	public float ViewPunchWallrunStartYawMax { get; set; } = 5f;
+	public float ViewPunchWallrunStartRollMin { get; set; } = 93f;
+	public float ViewPunchWallrunStartRollMax { get; set; } = 100f;
 	public float StepSmoothingOffsetCorrectSpeed { get; set; } = 80f;
+	public bool WallrunEnable { get; set; } = true;
+	public float WallrunTimeLimit { get; set; } = 1.75f;
+	public float WallrunGravityRampUpTime { get; set; } = 1f;
+	public float WallrunUpWallBoost { get; set; } = 250f;
+	public float WallrunJumpOutwardSpeed { get; set; } = 205f;
+	public float WallrunJumpUpSpeed { get; set; } = 230f;
+	public float WallrunJumpInputDirSpeed { get; set; } = 75f;
+	public float WallrunFallAwaySpeed { get; set; } = 70f;
+	public float WallrunMaxSpeedHorizontal { get; set; } = 340f;
+	public float WallrunMaxSpeedBackwards { get; set; } = 50f;
+	public float WallrunMaxSpeedVertical { get; set; } = 225f;
+	public float WallrunAccelerationHorizontal { get; set; } = 1400f;
+	public float WallrunAccelerationVertical { get; set; } = 360f;
+	public float WallrunAvoidTopWallDecel { get; set; } = 3000f;
+	public float WallrunFriction { get; set; } = 4f;
+	public float WallrunSlipStartTime { get; set; } = 2f;
+	public float WallrunSlipDuration { get; set; } = 1f;
+	public float WallrunNoInputSlipFrac { get; set; } = 0.7f;
+	public float WallrunPushAwayFallOffTime { get; set; } = 0.05f;
+	public float WallrunUpwardAutoPush { get; set; } = 0.65f;
+	public float WallrunSameWallDot { get; set; } = 0.9f;
+	public float WallrunSameWallHeight { get; set; } = 0f;
+	public float WallrunAllowedWallDist { get; set; } = 13f;
+	public float WallrunAngleChangeMinCos { get; set; } = 0.8f;
+	public float WallrunRotateMaxRate { get; set; } = 3f;
+	public float WallrunTiltSpeed { get; set; } = 4f;
+	public float WallrunTiltEndSpeed { get; set; } = 1.33f;
+	public float WallrunTiltPredictTime { get; set; } = 0.25f;
+	public float WallrunTiltMaxRoll { get; set; } = 15f;
+	public float WallrunViewYawOffset { get; set; } = 80f;
+	public float WallrunViewPitchOffsetMin { get; set; } = 30f;
+	public float WallrunViewPitchOffsetMax { get; set; } = 50f;
+	public float WallrunViewPitchOffsetCorrectSpeed { get; set; } = 35f;
 }

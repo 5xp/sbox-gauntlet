@@ -9,7 +9,11 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 	{
 		JumpMechanic jump = Controller.GetMechanic<JumpMechanic>();
 
-		return !jump.ShouldBecomeActive();
+		if ( !jump.IsActive && jump.ShouldBecomeActive() )
+			return false;
+
+		return true;
+
 	}
 
 	public override IEnumerable<string> GetTags()
@@ -82,11 +86,7 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 	private void OnStep( float stepAmount )
 	{
 		ApplySlideStepVelocityReduction( stepAmount );
-
-		if ( MathF.Abs( stepAmount ) > PlayerSettings.StepHeightMin )
-		{
-			Controller.AddStepOffset( Vector3.Down * stepAmount );
-		}
+		Controller.AddStepOffset( Vector3.Down * stepAmount );
 	}
 
 	private void ApplySlideStepVelocityReduction( float stepAmount )

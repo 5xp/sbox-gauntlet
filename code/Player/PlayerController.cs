@@ -22,6 +22,9 @@ public partial class PlayerController : Component
 	/// </summary>
 	public GameObject CameraGameObject => CameraController.Camera.GameObject;
 
+	[ConVar( "debug_controller" )]
+	public static bool DebugController { get; set; } = true;
+
 	[ConVar( "debug_viewPunch" )]
 	public static bool DebugViewPunch { get; set; } = false;
 
@@ -218,7 +221,7 @@ public partial class PlayerController : Component
 		CameraGameObject.Transform.LocalPosition = Vector3.Up * CurrentEyeHeight + CurrentCameraOffset + StepSmoothingOffset;
 	}
 
-	public void StepMove( float groundAngle = 46f, float stepSize = 18f )
+	public float StepMove( float groundAngle, float stepSize, Vector3 up )
 	{
 		MoveHelper mover = new( Position, Velocity )
 		{
@@ -227,9 +230,16 @@ public partial class PlayerController : Component
 			MaxStandableAngle = groundAngle
 		};
 
-		mover.TryMoveWithStep( Time.Delta, stepSize, Vector3.Up, out float _ );
+		mover.TryMoveWithStep( Time.Delta, stepSize, up, out float stepAmount );
 		Position = mover.Position;
 		Velocity = mover.Velocity;
+
+		return stepAmount;
+	}
+
+	public void StepMove( float groundAngle = 46f, float stepSize = 18f )
+	{
+		StepMove( groundAngle, stepSize, Vector3.Up );
 	}
 
 	public void Move( float groundAngle = 46f )
@@ -243,18 +253,21 @@ public partial class PlayerController : Component
 
 		mover.TryMove( Time.Delta, Vector3.Up );
 
-		if ( mover.HitWall )
+		if ( mover.HitWall && mover.HitNormal.HasValue )
 		{
-			// We hit the wall!
+			GetMechanic<WallrunMechanic>().OnWallTouch( mover.HitNormal.Value );
 		}
 
 		Position = mover.Position;
 		Velocity = mover.Velocity;
 	}
 
-	public void AddStepOffset( Vector3 stepAmount )
+	public void AddStepOffset( Vector3 stepOffset )
 	{
-		StepSmoothingOffset += stepAmount;
+		if ( stepOffset.LengthSquared < PlayerSettings.StepHeightMin * PlayerSettings.StepHeightMin )
+			return;
+
+		StepSmoothingOffset += stepOffset;
 
 		// Clear transform lerping, otherwise it looks bad on high framerate
 		GameObject.Transform.ClearLerp();
@@ -310,14 +323,19 @@ public partial class PlayerController : Component
 		return TraceBBox( start, end, Hull.Mins, Hull.Maxs, liftFeet, liftHead );
 	}
 
-	public void Accelerate( Vector3 wishDir, float wishSpeed, float acceleration, float extraAcceleration = 0f )
+	public static bool IsFloor( Vector3 up, Vector3 normal, float maxAngle )
 	{
-		float currentSpeed = Velocity.Dot( wishDir );
-		float addSpeed = MathF.Max( extraAcceleration * Time.Delta, wishSpeed - currentSpeed );
+		return Vector3.GetAngle( up, normal ) <= maxAngle;
+	}
 
-		float accelSpeed = MathF.Min( acceleration * Time.Delta, addSpeed );
+	public bool IsFloor( Vector3 normal )
+	{
+		return IsFloor( Vector3.Up, normal, PlayerSettings.GroundAngle );
+	}
 
-		Velocity += wishDir * accelSpeed;
+	public Vector3 GetPlayerGravity()
+	{
+		return Vector3.Down * PlayerSettings.Gravity * PlayerSettings.GravityScale;
 	}
 
 	public float GetWishSpeed()
@@ -342,7 +360,7 @@ public partial class PlayerController : Component
 
 	private void CheckReachedApex( float previousVelocity, float currentVelocity )
 	{
-		if ( currentVelocity.AlmostEqual( 0f ) || (currentVelocity < 0f && previousVelocity > 0f) )
+		if ( HasTag( "wallrun" ) || currentVelocity.AlmostEqual( 0f ) || (currentVelocity < 0f && previousVelocity > 0f) )
 		{
 			ApexHeight = Position.z;
 		}
@@ -351,7 +369,7 @@ public partial class PlayerController : Component
 	public Vector3 BuildWishVelocity( bool zeroPitch = true )
 	{
 		WishVelocity = 0;
-		Angles angles = EyeAngles;
+		Angles angles = EyeAngles.WithRoll( 0f );
 
 		if ( zeroPitch )
 		{
@@ -360,7 +378,7 @@ public partial class PlayerController : Component
 
 		var rot = angles.ToRotation();
 		var wishDirection = WishMove * rot;
-		wishDirection = wishDirection.WithZ( 0 ).Normal;
+		wishDirection = wishDirection.Normal;
 
 		WishVelocity = wishDirection * GetWishSpeed();
 
@@ -379,7 +397,32 @@ public partial class PlayerController : Component
 
 	protected override void DrawGizmos()
 	{
+		if ( !DebugController ) return;
+
 		Gizmo.Draw.LineBBox( Hull );
-		Gizmo.Draw.ScreenText( HorzVelocity.Length.ToString(), new Vector2( 100, 100 ) );
+
+		Vector2 basePos = new( 25, 25 );
+		Vector2 offset = new( 0, 20 );
+		int offsetIndex = 0;
+
+		CameraComponent cam = CameraController.Camera;
+		Angles camAngles = cam.Transform.Rotation.Angles();
+
+		float fontSize = 16;
+
+		Gizmo.Draw.ScreenText( $"Velocity: {Velocity.Length:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
+		Gizmo.Draw.ScreenText( $"Horz vel: {HorzVelocity.Length:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
+		Gizmo.Draw.ScreenText( $"Vert vel: {Velocity.z:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
+		Gizmo.Draw.ScreenText( $"Apex: {ApexHeight:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
+		Gizmo.Draw.ScreenText( $"CamAngle: {camAngles.pitch:F2}, {camAngles.yaw:F2}, {camAngles.roll:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
+		Gizmo.Draw.ScreenText( $"CamPos: {cam.Transform.Position.x:F2}, {cam.Transform.Position.y:F2}, {cam.Transform.Position.z:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
+
+		offsetIndex++;
+
+		var sortedMechanics = Mechanics;
+		foreach ( var mechanic in sortedMechanics )
+		{
+			Gizmo.Draw.ScreenText( $"{mechanic.GetType().Name} {(mechanic.IsActive ? "Active" : "Inactive")}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
+		}
 	}
 }

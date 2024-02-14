@@ -2,8 +2,13 @@
 
 public partial class AirMoveMechanic : BasePlayerControllerMechanic
 {
-	public override bool ShouldBecomeActive() => !Controller.IsGrounded;
+	public override bool ShouldBecomeActive() => !Controller.IsGrounded && !Controller.HasTag( "wallrun" );
 	public override float? GetSpeed() => PlayerSettings.AirSpeed;
+
+	public override IEnumerable<string> GetTags()
+	{
+		yield return "airmove";
+	}
 
 	public override void OnActiveUpdate()
 	{
@@ -23,15 +28,14 @@ public partial class AirMoveMechanic : BasePlayerControllerMechanic
 		Vector3 wishDir = wishVel.Normal;
 		float wishSpeed = wishVel.Length;
 
-		Controller.Accelerate( wishDir, wishSpeed, PlayerSettings.AirAcceleration, 2.0f );
+		Accelerate( wishDir, wishSpeed, PlayerSettings.AirAcceleration, PlayerSettings.ExtraAirAcceleration );
 		ctrl.Move();
 		Velocity += halfGravity;
-
 	}
 
-	private void AirAccelerate( Vector3 wishDir, float wishSpeed, float acceleration, float extraAcceleration = 0f )
+	public void Accelerate( Vector3 wishDir, float wishSpeed, float acceleration, float extraAcceleration = 0f )
 	{
-		float currentSpeed = Velocity.Dot( wishDir );
+		float currentSpeed = HorzVelocity.Dot( wishDir );
 		float addSpeed = MathF.Max( extraAcceleration * Time.Delta, wishSpeed - currentSpeed );
 
 		float accelSpeed = MathF.Min( acceleration * Time.Delta, addSpeed );

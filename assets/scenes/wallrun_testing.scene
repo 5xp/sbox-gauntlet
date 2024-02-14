@@ -1,0 +1,187 @@
+{
+  "Id": "9d1463ac-a949-437a-9b83-e8507a1180a2",
+  "GameObjects": [
+    {
+      "Id": "d9d3c335-f1c9-4c4a-9fd5-0d42c35785df",
+      "Name": "Map",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "MapInstance",
+          "MapName": "maps/test_walls1.vmap",
+          "OnMapLoaded": null,
+          "OnMapUnloaded": null,
+          "UseMapFromLaunch": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Id": "0f04ee6a-6956-44a5-851e-aa6b5151fa34",
+      "Name": "GameManager",
+      "Position": "0,0,30",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "GameNetworkManager",
+          "IsMultiplayer": false,
+          "PlayerPrefab": {
+            "_type": "gameobject",
+            "prefab": "assets/prefabs/player/player.prefab"
+          },
+          "SpawnPoint": {
+            "_type": "gameobject",
+            "go": "0f04ee6a-6956-44a5-851e-aa6b5151fa34"
+          }
+        }
+      ]
+    },
+    {
+      "Id": "bfc59c12-1ed2-4f91-8956-a95a315eac3c",
+      "Name": "Sun",
+      "Position": "718.0756,968.9534,1033.044",
+      "Rotation": "-0.4335515,0.07918021,0.8830376,0.1612706",
+      "Tags": "light,light_directional",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "DirectionalLight",
+          "FogMode": "Enabled",
+          "FogStrength": 1,
+          "LightColor": "1.36634,0.9402,1.10213,1",
+          "Shadows": true,
+          "SkyColor": "0.18317,0.18317,0.18317,1"
+        }
+      ]
+    },
+    {
+      "Id": "00344a8c-fa5e-45ae-b12a-10bb781a1dc3",
+      "Name": "2D Skybox",
+      "Tags": "skybox",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "SkyBox2D",
+          "SkyMaterial": "materials/skybox/light_test_sky_sunset.vmat",
+          "Tint": "1,1,1,1"
+        }
+      ]
+    },
+    {
+      "Id": "652d4e8d-a737-4d00-8e9b-78aa2cbec2ee",
+      "Name": "Probe",
+      "Position": "0,0,100",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "EnvmapProbe",
+          "Bounds": {
+            "Mins": "-1024,-1024,-512",
+            "Maxs": "1024,1024,512"
+          },
+          "Feathering": 0.02,
+          "Projection": "Box",
+          "Texture": "textures/cubemaps/default2.vtex",
+          "TintColor": "1,0.66584,0.33168,1"
+        }
+      ]
+    },
+    {
+      "Id": "b3bb2e4d-b5a9-4730-bc4d-38df6c74ac9d",
+      "Name": "Point Light",
+      "Position": "466.6181,-121.6974,322.0147",
+      "Tags": "light_point,light",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "PointLight",
+          "Attenuation": 1,
+          "FogMode": "Enabled",
+          "FogStrength": 1,
+          "LightColor": "0.91373,0.98039,1,1",
+          "Radius": 611.9999,
+          "Shadows": true
+        }
+      ]
+    },
+    {
+      "Id": "91623799-49c6-47bf-8d2a-c3248e160841",
+      "Name": "Point Light (2)",
+      "Position": "176.8037,-432.2915,322.0149",
+      "Tags": "light_point,light",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "PointLight",
+          "Attenuation": 1,
+          "FogMode": "Enabled",
+          "FogStrength": 1,
+          "LightColor": "0.91373,0.98039,1,1",
+          "Radius": 611.9999,
+          "Shadows": true
+        }
+      ]
+    },
+    {
+      "Id": "d0cde360-34a9-496d-8adc-9e5f4401d57c",
+      "Name": "Point Light (1)",
+      "Position": "-247.997,511.4682,322.0148",
+      "Tags": "light_point,light",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "PointLight",
+          "Attenuation": 1,
+          "FogMode": "Enabled",
+          "FogStrength": 1,
+          "LightColor": "0.91373,0.98039,1,1",
+          "Radius": 611.9999,
+          "Shadows": true
+        }
+      ]
+    },
+    {
+      "Id": "0e3368eb-f4d2-4272-8242-67d143abf76e",
+      "Name": "Point Light (3)",
+      "Position": "505.2809,155.2335,322.0149",
+      "Tags": "light_point,light",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "PointLight",
+          "Attenuation": 1,
+          "FogMode": "Enabled",
+          "FogStrength": 1,
+          "LightColor": "0.91373,0.98039,1,1",
+          "Radius": 611.9999,
+          "Shadows": true
+        }
+      ]
+    }
+  ],
+  "SceneProperties": {
+    "FixedUpdateFrequency": 128,
+    "Lerping": true,
+    "MaxFixedUpdates": 5,
+    "NetworkFrequency": 60,
+    "ThreadedAnimation": true,
+    "TimeScale": 1,
+    "UseFixedUpdate": true,
+    "NavMesh": {
+      "Enabled": false,
+      "IncludeStaticBodies": true,
+      "IncludeKeyframedBodies": true,
+      "EditorAutoUpdate": true,
+      "AgentHeight": 64,
+      "AgentRadius": 16,
+      "AgentStepSize": 18,
+      "AgentMaxSlope": 40,
+      "ExcludedBodies": "",
+      "IncludedBodies": ""
+    }
+  },
+  "Title": "minimal",
+  "Description": "",
+  "LastSaved": "2024-02-16T21:33:12.7602941-06:00",
+  "__references": []
+}
