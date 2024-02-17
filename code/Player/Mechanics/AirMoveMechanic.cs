@@ -24,9 +24,8 @@ public partial class AirMoveMechanic : BasePlayerControllerMechanic
 		Vector3 halfGravity = Vector3.Down * 0.5f * PlayerSettings.Gravity * PlayerSettings.GravityScale * Time.Delta;
 		Velocity += halfGravity;
 
-		Vector3 wishVel = Controller.BuildWishVelocity();
-		Vector3 wishDir = wishVel.Normal;
-		float wishSpeed = wishVel.Length;
+		Vector3 wishDir = Controller.BuildWishDir();
+		float wishSpeed = GetSpeed().Value;
 
 		Accelerate( wishDir, wishSpeed, PlayerSettings.AirAcceleration, PlayerSettings.ExtraAirAcceleration );
 		ctrl.Move();

@@ -31,9 +31,8 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 
 	private void WalkMove()
 	{
-		Vector3 wishVel = Controller.BuildWishVelocity();
-		Vector3 wishDir = wishVel.Normal;
-		float wishSpeed = wishVel.Length;
+		Vector3 wishDir = Controller.BuildWishDir();
+		float wishSpeed = Controller.GetWishSpeed();
 
 		float startZ = Position.z;
 

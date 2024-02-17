@@ -96,7 +96,7 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 		float inputDirSpeed = PlayerSettings.WallrunJumpInputDirSpeed;
 
 		Vector3 wallNormal = Controller.GetMechanic<WallrunMechanic>().LastWallNormal;
-		Vector3 wishDir = Controller.BuildWishVelocity().Normal;
+		Vector3 wishDir = Controller.BuildWishDir();
 
 		float lookingNormalAmount = Controller.EyeAngles.WithPitch( 0f ).Forward.Dot( wallNormal );
 		bool tryingToClimbInwards = lookingNormalAmount < -0.71f && Controller.WishMove.x > 0f;
@@ -213,12 +213,11 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 	/// </summary>
 	private void RedirectVelocity()
 	{
-		Vector3 wishVel = Controller.BuildWishVelocity();
+		Vector3 wishDir = Controller.BuildWishDir();
 
-		if ( wishVel.AlmostEqual( 0f ) )
+		if ( wishDir.AlmostEqual( 0f ) )
 			return;
 
-		Vector3 wishDir = wishVel.Normal;
 		Vector3 horzVelocity = HorzVelocity;
 		float airJumpHorzSpeed = PlayerSettings.AirJumpHorizontalSpeed;
 
@@ -234,12 +233,10 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 	/// <param name="timeSinceJump"></param>
 	private void RedirectVelocity( float timeSinceJump )
 	{
-		Vector3 wishVel = Controller.BuildWishVelocity();
+		Vector3 wishDir = Controller.BuildWishDir();
 
-		if ( wishVel.AlmostEqual( 0f ) )
+		if ( wishDir.AlmostEqual( 0f ) )
 			return;
-
-		Vector3 wishDir = wishVel.Normal;
 
 		float max = PlayerSettings.JumpKeyboardGraceMax * PlayerSettings.SprintSpeed;
 		float strength = PlayerSettings.JumpKeyboardGraceStrength * GetKeyboardGraceFraction( timeSinceJump );

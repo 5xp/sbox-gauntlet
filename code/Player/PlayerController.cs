@@ -98,8 +98,6 @@ public partial class PlayerController : Component
 		}
 	}
 
-	// Properties used only in this component.
-	Vector3 WishVelocity;
 	public Angles EyeAngles;
 
 	protected float GetTargetHullHeight()
@@ -114,9 +112,7 @@ public partial class PlayerController : Component
 			return;
 
 		BuildWishInput();
-		// Wish direction could change here
 		OnUpdateMechanics();
-		BuildWishVelocity();
 	}
 
 	protected override void OnUpdate()
@@ -159,7 +155,7 @@ public partial class PlayerController : Component
 		if ( AnimationHelper is not null )
 		{
 			AnimationHelper.WithVelocity( Velocity );
-			AnimationHelper.WithWishVelocity( WishVelocity );
+			AnimationHelper.WithWishVelocity( BuildWishDir() * GetWishSpeed() );
 			AnimationHelper.IsGrounded = IsGrounded;
 			AnimationHelper.FootShuffle = rotateDifference;
 			AnimationHelper.WithLook( EyeAngles.Forward, 1, 1, 1.0f );
@@ -342,7 +338,6 @@ public partial class PlayerController : Component
 	{
 		if ( CurrentSpeedOverride is not null ) return CurrentSpeedOverride.Value;
 
-		// Default speed
 		return PlayerSettings.WalkSpeed;
 	}
 
@@ -366,9 +361,8 @@ public partial class PlayerController : Component
 		}
 	}
 
-	public Vector3 BuildWishVelocity( bool zeroPitch = true )
+	public Vector3 BuildWishDir( bool zeroPitch = true )
 	{
-		WishVelocity = 0;
 		Angles angles = EyeAngles.WithRoll( 0f );
 
 		if ( zeroPitch )
@@ -380,9 +374,7 @@ public partial class PlayerController : Component
 		var wishDirection = WishMove * rot;
 		wishDirection = wishDirection.Normal;
 
-		WishVelocity = wishDirection * GetWishSpeed();
-
-		return WishVelocity;
+		return wishDirection;
 	}
 
 	public void Write( ref ByteStream stream )

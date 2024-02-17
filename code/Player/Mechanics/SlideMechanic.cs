@@ -43,7 +43,7 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 
 		bool startedFromAir = Controller.TimeSinceLastLanding <= Time.Delta;
 
-		if ( !IsActive && !startedFromAir && Controller.BuildWishVelocity().Normal.Dot( Velocity.Normal ) < PlayerSettings.SlideMaxAngleDot ) return false;
+		if ( !IsActive && !startedFromAir && Controller.BuildWishDir().Dot( Velocity.Normal ) < PlayerSettings.SlideMaxAngleDot ) return false;
 
 		return true;
 	}
@@ -68,9 +68,8 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 		Velocity = Velocity.Approach( 0f, decelAmount * Time.Delta );
 
 		// Let the player apply a braking effect if they want
-		Vector3 wishVel = Controller.BuildWishVelocity();
-		Vector3 wishDir = wishVel.Normal;
-		float wishSpeed = wishVel.Length;
+		Vector3 wishDir = Controller.BuildWishDir();
+		float wishSpeed = Controller.GetWishSpeed();
 
 		Decelerate( wishDir, wishSpeed, PlayerSettings.Acceleration * 0.2f );
 		ApplyGravity();

@@ -290,7 +290,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 			UpdateWallNormal( tr.Normal );
 		}
 
-		Vector3 wishDir = Controller.BuildWishVelocity().Normal;
+		Vector3 wishDir = Controller.BuildWishDir();
 		if ( wishDir.Dot( WallNormal.Value ) < 0.71f )
 		{
 			TimeSincePushingAway = 0;
