@@ -15,6 +15,12 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 	{
 		if ( !Input.Pressed( "Jump" ) ) return false;
 
+		if ( !PlayerSettings.CanJumpWhileUnducking )
+		{
+			if ( Controller.DuckFraction > 0f && !HasTag( "crouch" ) )
+				return false;
+		}
+
 		bool canJump = ShouldGroundJump() || ShouldAirJump() || ShouldWallJump();
 
 		if ( !canJump ) return false;

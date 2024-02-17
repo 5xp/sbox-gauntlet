@@ -78,6 +78,7 @@ public sealed class PlayerSettings
 	public float PitchMaxDown { get; set; } = 89f;
 	public float DuckSpeed { get; set; } = 2f;
 	public float UnduckSpeed { get; set; } = 5f;
+	public bool CanJumpWhileUnducking { get; set; } = true;
 	public float SprintMaxAngleDot { get; set; } = 0.6f;
 	public float SprintTiltAccel { get; set; } = 35f;
 	public float JumpHeight { get; set; } = 60f;
