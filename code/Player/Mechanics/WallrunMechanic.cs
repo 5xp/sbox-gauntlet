@@ -415,7 +415,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 		Vector3 forwardBackMove = Controller.WishMove.WithY( 0f );
 
-		float upwardAutoPushAmount = MathF.Max( 0f, PlayerSettings.WallrunUpwardAutoPush - angles.Forward.Dot( Vector3.Up ) );
+		float upwardAutoPushAmount = MathF.Max( 0f, PlayerSettings.WallrunUpwardAutoPush - angles.Forward.Dot( Vector3.Up ).Clamp( 0f, 1f ) );
 		Vector3 upwardAutoPush = Vector3.Zero;
 
 		if ( forwardBackMove.x > 0f )
@@ -427,7 +427,8 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		forwardBackMove *= angles.ToRotation();
 		forwardBackMove = Vector3.VectorPlaneProject( forwardBackMove, wallNormal ).Normal;
 
-		wishDir = leftRightMove + forwardBackMove + upwardAutoPush;
+		wishDir = leftRightMove + forwardBackMove;
+		wishDir += upwardAutoPush * wishDir.WithZ( 0f ).Length;
 
 		return wishDir;
 	}
