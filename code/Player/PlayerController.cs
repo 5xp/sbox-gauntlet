@@ -82,7 +82,12 @@ public partial class PlayerController : Component
 	/// <summary>
 	/// Called when the player jumps.
 	/// </summary>
-	[Property] public Action OnJump { get; set; }
+	public Action<JumpMechanic.JumpType> OnJump;
+
+	/// <summary>
+	/// Called when the player lands.
+	/// </summary>
+	public Action OnLanded;
 
 	public BBox Hull
 	{
@@ -282,10 +287,10 @@ public partial class PlayerController : Component
 	/// A network message that lets other users that we've triggered a jump.
 	/// </summary>
 	[Broadcast]
-	public void BroadcastPlayerJumped()
+	public void BroadcastPlayerJumped( JumpMechanic.JumpType jumpType )
 	{
 		AnimationHelper?.TriggerJump();
-		OnJump?.Invoke();
+		OnJump?.Invoke( jumpType );
 	}
 
 	public SceneTraceResult TraceBBox( Vector3 start, Vector3 end, Vector3 mins, Vector3 maxs, float liftFeet = 0.0f, float liftHead = 0.0f )

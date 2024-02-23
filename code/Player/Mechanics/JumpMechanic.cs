@@ -11,6 +11,11 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 	private TimeSince TimeSinceAirJump { get; set; }
 	private TimeSince TimeSinceWallJump { get; set; }
 
+	protected override void OnStart()
+	{
+		Controller.OnLanded += OnLanded;
+	}
+
 	public override bool ShouldBecomeActive()
 	{
 		if ( !Input.Pressed( "Jump" ) ) return false;
@@ -44,19 +49,25 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 	{
 		if ( !after ) return;
 
+		JumpType jumpType = JumpType.Ground;
+
 		if ( ShouldGroundJump() )
 		{
 			DoGroundJump();
+			jumpType = JumpType.Ground;
 		}
 		else if ( ShouldWallJump() )
 		{
 			DoWallJump();
+			jumpType = JumpType.Wall;
 		}
 		else if ( ShouldAirJump() )
 		{
 			DoAirJump();
+			jumpType = JumpType.Air;
 		}
 
+		Controller.BroadcastPlayerJumped( jumpType );
 		Controller.ApexHeight = Position.z;
 	}
 
@@ -130,6 +141,7 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 
 		Velocity += addVelocity;
 		TimeSinceWallJump = 0;
+		// Controller.GetMechanic<WallrunMechanic>().ClearWallNormal();
 	}
 
 	private bool ShouldGroundJump()
@@ -191,7 +203,6 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 		float upSpeed = MathF.Sqrt( 2f * jumpHeight * PlayerSettings.Gravity );
 		Velocity = horzVelocity.WithZ( startZ + upSpeed );
 
-		Controller.BroadcastPlayerJumped();
 		RefreshAirJumps();
 		TimeSinceGroundJump = 0;
 	}
@@ -297,8 +308,20 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 		return wallrun.TimeSinceFellAwayFromWall <= PlayerSettings.JumpGracePeriod && TimeSinceLastStart > wallrun.TimeSinceFellAwayFromWall;
 	}
 
+	private void OnLanded()
+	{
+		RefreshAirJumps();
+	}
+
 	public void RefreshAirJumps()
 	{
 		AirJumpsRemaining = PlayerSettings.AirJumpMaxJumps;
+	}
+
+	public enum JumpType
+	{
+		Ground,
+		Air,
+		Wall
 	}
 }

@@ -18,27 +18,17 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 		Spring = new( PlayerSettings.ViewPunchSpringConstant, PlayerSettings.ViewPunchSpringDamping );
 	}
 
+	protected override void OnStart()
+	{
+		Controller.OnJump += DoJumpPunch;
+		Controller.OnLanded += DoFallPunch;
+	}
+
 	public override void OnActiveUpdate()
 	{
 		float beforeVel = Spring.Velocity.x;
 
-
 		DebugViewPunch( beforeVel, Spring.Velocity.x );
-
-		if ( HasAnyTag( "jump", "walljump" ) )
-		{
-			DoJumpPunch();
-		}
-
-		if ( HasTag( "airjump" ) )
-		{
-			DoAirJumpPunch();
-		}
-
-		if ( Controller.TimeSinceLastLanding == 0f )
-		{
-			DoFallPunch();
-		}
 
 		if ( Controller.GetMechanic<WallrunMechanic>().TimeSinceStart == 0f )
 		{
@@ -53,9 +43,21 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 			Spring.Update( Time.Delta );
 	}
 
-	private void DoJumpPunch()
+	private void DoJumpPunch( JumpMechanic.JumpType jumpType )
 	{
-		var (min, max) = GetViewPunchJumpVectors();
+		if ( jumpType == JumpMechanic.JumpType.Air )
+		{
+			DoAirJumpPunch();
+		}
+		else
+		{
+			DoGroundJumpPunch();
+		}
+	}
+
+	private void DoGroundJumpPunch()
+	{
+		var (min, max) = GetViewPunchGroundJumpVectors();
 		Spring.AddRandomVelocity( min, max );
 	}
 
@@ -105,7 +107,7 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 		}
 	}
 
-	private (Vector3 min, Vector3 max) GetViewPunchJumpVectors()
+	private (Vector3 min, Vector3 max) GetViewPunchGroundJumpVectors()
 	{
 		float pitchMin = PlayerSettings.ViewPunchJumpPitchMin;
 		float pitchMax = PlayerSettings.ViewPunchJumpPitchMax;

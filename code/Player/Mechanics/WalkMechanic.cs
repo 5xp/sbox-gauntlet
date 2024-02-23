@@ -129,7 +129,7 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 		{
 			Velocity = HorzVelocity;
 			Controller.TimeSinceLastOnGround = 0;
-			Controller.GetMechanic<JumpMechanic>().RefreshAirJumps();
+			Controller.OnLanded?.Invoke();
 		}
 
 		if ( Controller.LastGroundObject is null && groundObject is not null )

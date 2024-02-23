@@ -82,6 +82,11 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	[ConVar( "debug_wallrun_settings", Help = "Changes various wallrun settings to aid in testing wall movement" )]
 	public static bool DebugWallrunSettings { get; set; } = false;
 
+	protected override void OnStart()
+	{
+		Controller.OnJump += OnJump;
+	}
+
 	public override IEnumerable<string> GetTags()
 	{
 		yield return "wallrun";
@@ -100,12 +105,10 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 	public override void OnActiveUpdate()
 	{
-		if ( Controller.GetMechanic<JumpMechanic>().TimeSinceActiveChanged == 0 )
+		if ( !WallNormal.HasValue )
 		{
-			ClearWallNormal();
 			return;
 		}
-
 
 		WallrunMove();
 
@@ -118,7 +121,6 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 			Angles angleDiff = WallNormal.Value.EulerAngles - originalWallNormal.EulerAngles;
 			RelativeAnglesOffset += angleDiff;
 		}
-
 	}
 
 	public override void Simulate()
@@ -128,11 +130,6 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		{
 			HasBoost = false;
 			LastWallrunStartPos = null;
-		}
-
-		if ( HasAnyTag( "jump", "airjump", "walljump" ) )
-		{
-			HasBoost = true;
 		}
 
 		if ( !IsActive && !Controller.IsGrounded )
@@ -517,6 +514,16 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 		vertEyeAngles.pitch = vertEyeAngles.pitch.Approach( closerAngle.pitch, speedFraction * correctSpeed * Time.Delta );
 		Controller.EyeAngles = Controller.EyeAngles.WithPitch( vertEyeAngles.pitch );
+	}
+
+	private void OnJump( JumpMechanic.JumpType _ )
+	{
+		HasBoost = true;
+
+		if ( IsActive )
+		{
+			ClearWallNormal();
+		}
 	}
 
 	private void ApplyWallrunTilt()
