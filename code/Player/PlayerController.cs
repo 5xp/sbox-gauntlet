@@ -316,7 +316,7 @@ public partial class PlayerController : Component
 
 	public static Vector2 GetInputDelta()
 	{
-		return Input.MouseDelta * 0.066f;
+		return Input.MouseDelta * 0.022f * Preferences.Sensitivity;
 	}
 
 	public SceneTraceResult TraceBBox( Vector3 start, Vector3 end, float liftFeet = 0.0f, float liftHead = 0.0f )
