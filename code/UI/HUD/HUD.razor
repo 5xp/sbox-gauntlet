@@ -1,0 +1,135 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using Tf;
+@inherits PanelComponent
+
+<root class="pk"
+	style="transform: translateX(@(Position.x / 16)%) translateY(@(Position.y / 9)%) rotate(@(Position.z)deg) scale(@(GetScale()));">
+	<div class="keys-container">
+		<div class="key-row">
+			<div class="key backdrop @GetKeyHighlighted("Forward")">
+				<p>@GetKeyCode("Forward")</p>
+			</div>
+		</div>
+		<div class="key-row">
+			<div class="key backdrop @GetKeyHighlighted("Left")">
+				<p>@GetKeyCode("Left")</p>
+			</div>
+			<div class="key backdrop @GetKeyHighlighted("Backward")">
+				<p>@GetKeyCode("Backward")</p>
+			</div>
+			<div class="key backdrop @GetKeyHighlighted("Right")">
+				<p>@GetKeyCode("Right")</p>
+			</div>
+		</div>
+	</div>
+	<div class="speedometer-container backdrop">
+		<p>@HUPSToKPH(Controller.HorzVelocity.Length).ToString("F1") kph</p>
+	</div>
+</root>
+
+@code
+{
+	[Property] private PlayerController Controller { get; set; }
+
+	/// <summary>
+	/// The z component is rotation.
+	/// The w component is depth (negative is closer to the camera, positive is further away).
+	/// </summary>
+	private Vector4 Position { get; set; } = Vector4.Zero;
+	private Vector4 WishSwayContribution { get; set; }
+	private Vector4 SwayContribution { get; set; }
+	private DampedSpring ViewPunchSpring { get; set; }
+
+	protected override int BuildHash()
+	{
+		HashCode hash = new();
+		hash.Add(HUPSToKPH(Controller.HorzVelocity.Length).ToString("F1"));
+		hash.Add(Input.Down("Forward"));
+		hash.Add(Input.Down("Backward"));
+		hash.Add(Input.Down("Left"));
+		hash.Add(Input.Down("Right"));
+		hash.Add(Position);
+		return hash.ToHashCode();
+	}
+
+	protected override void OnStart()
+	{
+		ViewPunchSpring = Controller.GetMechanic<ViewPunchMechanic>().Spring;
+	}
+
+	protected override void OnUpdate()
+	{
+		Vector4 viewPunchContribution = GetViewPunchContribution();
+		Vector4 swayTurnContribution = GetSwayTurnContribution();
+		Vector4 swayMoveContribution = GetSwayMoveContribution();
+
+		WishSwayContribution = swayTurnContribution + swayMoveContribution;
+		SwayContribution = SwayContribution.LerpTo(WishSwayContribution, Time.Delta);
+
+		Position = viewPunchContribution + SwayContribution;
+	}
+
+	private Vector4 GetViewPunchContribution()
+	{
+		Vector4 viewPunchPos = new(ViewPunchSpring.Position.y, ViewPunchSpring.Position.x, ViewPunchSpring.Position.z, 0f);
+		viewPunchPos.x *= 3f;
+		viewPunchPos.y *= 3f;
+		viewPunchPos.z *= 0.15f;
+
+		return viewPunchPos;
+	}
+
+	private Vector4 GetSwayTurnContribution()
+	{
+		Vector2 inputDelta = PlayerController.GetInputDelta();
+		Vector4 swayContribution = new(inputDelta.x, inputDelta.y, inputDelta.x, 0f);
+		swayContribution.x *= -23f;
+		swayContribution.y *= -23f;
+		swayContribution.z *= 0.2f;
+
+		swayContribution.x = swayContribution.x.Clamp(-20f, 20f);
+		swayContribution.y = swayContribution.y.Clamp(-20f, 20f);
+		swayContribution.z = swayContribution.z.Clamp(-20f, 20f);
+
+		return swayContribution;
+	}
+
+	private Vector4 GetSwayMoveContribution()
+	{
+		Vector3 velocity = Controller.Velocity;
+		Vector3 projVel = Vector3.VectorPlaneProject(velocity, Controller.EyeAngles.Forward);
+		Vector3 rightEye = Controller.EyeAngles.Forward.Cross(Vector3.Up).Normal;
+		Vector3 upEye = rightEye.Cross(Controller.EyeAngles.Forward).Normal;
+
+		float relativeHorzVelocity = projVel.Dot(rightEye);
+		float relativeVertVelocity = projVel.Dot(upEye);
+		float relativeForwardVelocity = velocity.Dot(Controller.EyeAngles.Forward);
+
+		float relativeHorzVelocityFrac = MathF.Abs(relativeHorzVelocity).LerpInverse(0f, Controller.PlayerSettings.SprintSpeed
+		) * MathF.Sign(relativeHorzVelocity);
+		float relativeVertVelocityFrac = MathF.Abs(relativeVertVelocity).LerpInverse(0f, Controller.PlayerSettings.SprintSpeed
+		) * MathF.Sign(relativeVertVelocity);
+		float relativeForwardVelocityFrac = MathF.Abs(relativeForwardVelocity).LerpInverse(0f,
+		Controller.PlayerSettings.SprintSpeed
+		) * MathF.Sign(relativeForwardVelocity);
+
+		Vector4 swayContribution = new(relativeHorzVelocityFrac, relativeVertVelocityFrac, relativeHorzVelocityFrac,
+		relativeForwardVelocityFrac);
+
+		swayContribution.x *= -16f;
+		swayContribution.y *= 16f;
+		swayContribution.z *= -0.6f;
+		swayContribution.w *= -0.02f;
+
+		return swayContribution;
+	}
+
+	private string GetKeyCode(string key) => Input.GetButtonOrigin(key, true);
+
+	private float GetScale() => 1f / (1f + Position.w);
+
+	private float HUPSToKPH(float hups) => hups * 0.091392f;
+
+	private string GetKeyHighlighted(string key) => Input.Down(key) ? "highlighted" : "";
+}

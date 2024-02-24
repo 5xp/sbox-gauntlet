@@ -6,7 +6,7 @@
       "Name": "Sun",
       "Position": "445.0681,1144.973,1044.812",
       "Rotation": "0.3464704,0.2151882,-0.7756222,0.4817287",
-      "Tags": "light",
+      "Tags": "light,light_directional",
       "Enabled": true,
       "Components": [
         {
@@ -22,11 +22,12 @@
     {
       "Id": "00344a8c-fa5e-45ae-b12a-10bb781a1dc3",
       "Name": "2D Skybox",
+      "Tags": "skybox",
       "Enabled": true,
       "Components": [
         {
           "__type": "SkyBox2D",
-          "SkyMaterial": "materials/skybox/light_test_sky_sunset.vmat",
+          "SkyMaterial": "materials/skybox/light_test_sky_overcast.vmat",
           "Tint": "1,1,1,1"
         }
       ]
@@ -35,7 +36,7 @@
       "Id": "adb42f1f-2599-449a-a6fa-407e0c9029bd",
       "Name": "Camera",
       "Position": "-952.3967,-928.0466,1561.85",
-      "Rotation": "0,-0.3826836,0,0.9238794",
+      "Rotation": "0,-0.5299191,0,0.8480482",
       "Enabled": true,
       "Components": [
         {
@@ -71,7 +72,7 @@
         },
         {
           "__type": "MainMenuPanel",
-          "PlayScene": "assets/scenes/gunfight_fps_testing.scene"
+          "PlayScene": "assets/scenes/wallrun_testing.scene"
         }
       ]
     }
@@ -99,6 +100,6 @@
   },
   "Title": "minimal",
   "Description": "",
-  "LastSaved": "2024-02-09T19:11:25.0315089-06:00",
+  "LastSaved": "2024-02-23T23:01:04.4755425-06:00",
   "__references": []
 }
