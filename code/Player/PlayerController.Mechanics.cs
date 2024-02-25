@@ -22,7 +22,8 @@ public partial class PlayerController
 	protected void OnUpdateMechanics()
 	{
 		var lastUpdate = ActiveMechanics;
-		var sortedMechanics = Mechanics.Where( x => x.ShouldBecomeActive() ).ToArray();
+		var sortedMechanics = Mechanics.Where( x => x.ShouldBecomeActive() );
+		var activeMechanics = new List<BasePlayerControllerMechanic>();
 
 		// Copy the previous update's tags so we can compare / send tag changed events later.
 		var previousUpdateTags = tags;
@@ -50,6 +51,7 @@ public partial class PlayerController
 
 			// Add tags where we can
 			currentTags.AddRange( mechanic.GetTags() );
+			activeMechanics.Add( mechanic );
 
 			var eyeHeight = mechanic.GetEyeHeight();
 			var hullHeight = mechanic.GetHullHeight();
@@ -66,11 +68,11 @@ public partial class PlayerController
 
 		CheckReachedApex( previousZVel, Velocity.z );
 
-		ActiveMechanics = sortedMechanics;
+		ActiveMechanics = activeMechanics.ToArray();
 
 		if ( lastUpdate is not null )
 		{
-			foreach ( var mechanic in lastUpdate?.Except( sortedMechanics ) )
+			foreach ( var mechanic in lastUpdate?.Except( ActiveMechanics ) )
 			{
 				// This mechanic shouldn't be active anymore
 				mechanic.IsActive = false;
@@ -87,6 +89,7 @@ public partial class PlayerController
 		// We didn't move this tick for some reason
 		if ( !HasAnyTag( "walk", "airmove", "wallrun" ) )
 		{
+			Log.Warning( "Skipped moving this tick" );
 			if ( IsGrounded )
 				GetMechanic<WalkMechanic>().OnActiveUpdate();
 			else
