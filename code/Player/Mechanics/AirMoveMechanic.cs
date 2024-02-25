@@ -4,6 +4,7 @@ public partial class AirMoveMechanic : BasePlayerControllerMechanic
 {
 	public override bool ShouldBecomeActive() => !Controller.IsGrounded && !Controller.HasTag( "wallrun" );
 	public override float? GetSpeed() => PlayerSettings.AirSpeed;
+	public override int Priority => 7;
 
 	public override IEnumerable<string> GetTags()
 	{

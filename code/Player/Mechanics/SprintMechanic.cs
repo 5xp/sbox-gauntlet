@@ -11,6 +11,8 @@ public partial class SprintMechanic : BasePlayerControllerMechanic
 	public float SprintTiltVelocity { get; set; }
 	public float SprintViewOffsetFraction { get; set; }
 
+	public override int Priority => 70;
+
 	public override IEnumerable<string> GetTags()
 	{
 		yield return "sprint";

@@ -4,6 +4,8 @@ public partial class CrouchMechanic : BasePlayerControllerMechanic
 {
 	public bool ForceDuck { get; set; } = false;
 
+	public override int Priority => 10;
+
 	public override bool ShouldBecomeActive()
 	{
 		if ( ForceDuck ) return true;

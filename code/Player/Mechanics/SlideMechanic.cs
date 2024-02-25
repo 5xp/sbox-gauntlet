@@ -15,6 +15,8 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 	private float FOVScaleFraction { get; set; }
 	public float StartSpeed { get; set; }
 
+	public override int Priority => 15;
+
 	public override IEnumerable<string> GetTags()
 	{
 		yield return "slide";

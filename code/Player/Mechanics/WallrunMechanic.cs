@@ -82,6 +82,8 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	[ConVar( "debug_wallrun_settings", Help = "Changes various wallrun settings to aid in testing wall movement" )]
 	public static bool DebugWallrunSettings { get; set; } = false;
 
+	public override int Priority => 28;
+
 	protected override void OnStart()
 	{
 		Controller.OnJump += OnJump;

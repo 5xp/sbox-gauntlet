@@ -5,6 +5,8 @@
 /// </summary>
 public partial class WalkMechanic : BasePlayerControllerMechanic
 {
+	public override int Priority => 5;
+
 	public override bool ShouldBecomeActive()
 	{
 		JumpMechanic jump = Controller.GetMechanic<JumpMechanic>();

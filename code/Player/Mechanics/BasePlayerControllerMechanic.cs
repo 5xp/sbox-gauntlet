@@ -1,5 +1,3 @@
-using Sandbox.VR;
-
 namespace Tf;
 
 /// <summary>

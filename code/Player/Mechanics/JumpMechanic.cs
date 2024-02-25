@@ -11,6 +11,8 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 	private TimeSince TimeSinceAirJump { get; set; }
 	private TimeSince TimeSinceWallJump { get; set; }
 
+	public override int Priority => 30;
+
 	protected override void OnStart()
 	{
 		Controller.OnLanded += OnLanded;
@@ -141,7 +143,6 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 
 		Velocity += addVelocity;
 		TimeSinceWallJump = 0;
-		// Controller.GetMechanic<WallrunMechanic>().ClearWallNormal();
 	}
 
 	private bool ShouldGroundJump()
