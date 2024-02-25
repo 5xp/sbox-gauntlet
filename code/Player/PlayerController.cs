@@ -105,12 +105,6 @@ public partial class PlayerController : Component
 
 	public Angles EyeAngles;
 
-	protected float GetTargetHullHeight()
-	{
-		if ( CurrentHullHeightOverride is not null ) return CurrentHullHeightOverride.Value;
-		return PlayerSettings.HullHeightStanding;
-	}
-
 	protected override void OnFixedUpdate()
 	{
 		if ( IsProxy )
@@ -178,8 +172,8 @@ public partial class PlayerController : Component
 
 	public void SimulateEyes()
 	{
-		float targetHullHeight = GetTargetHullHeight();
 		float targetDuckFraction = Input.Down( "Duck" ) ? 1f : 0f;
+		float targetHullHeight = PlayerSettings.HullHeightStanding.LerpTo( PlayerSettings.HullHeightCrouching, targetDuckFraction );
 		bool forceDuck = false;
 
 		// Unducking
@@ -204,7 +198,8 @@ public partial class PlayerController : Component
 			DuckFraction = DuckFraction.Approach( 1f, duckSpeed * Time.Delta );
 		}
 		// Finished unducking or ducking
-		else
+
+		if ( DuckFraction.AlmostEqual( targetDuckFraction ) )
 		{
 			CurrentHullHeight = targetHullHeight;
 		}
