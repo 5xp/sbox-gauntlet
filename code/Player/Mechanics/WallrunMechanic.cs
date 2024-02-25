@@ -7,14 +7,27 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 {
 	public bool ShouldWallrun { get; set; } = false;
 
-	private Vector3? wallNormal;
+	private Vector3? _wallNormal;
 
 	/// <summary>
 	/// Our current wall normal. Will be null when not on the wall.
 	/// </summary>
-	private Vector3? WallNormal
+	public Vector3? WallNormal
 	{
-		get => wallNormal;
+		get
+		{
+			if ( Controller.IsGrounded )
+			{
+				return null;
+			}
+
+			if ( !PlayerSettings.WallrunEnable )
+			{
+				return null;
+			}
+
+			return _wallNormal;
+		}
 		set
 		{
 			if ( value.HasValue )
@@ -22,9 +35,34 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 				LastWallNormal = value.Value;
 			}
 
-			wallNormal = value;
+			_wallNormal = value;
 		}
 	}
+
+	private Vector3? _targetWallNormal;
+
+	/// <summary>
+	/// Our target wall normal. Mostly only relevant when the wall is rotating. Set to null when not on the wall.
+	/// </summary>
+	private Vector3? TargetWallNormal
+	{
+		get
+		{
+			if ( !PlayerSettings.WallrunEnable )
+			{
+				return null;
+			}
+
+			if ( Controller.IsGrounded )
+			{
+				return null;
+			}
+
+			return _targetWallNormal;
+		}
+		set => _targetWallNormal = value;
+	}
+
 
 	/// <summary>
 	/// Also our current wall normal, but will not be set to null when not on the wall.
@@ -36,10 +74,6 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	/// </summary>
 	private Vector3? PredictedWallNormal { get; set; } = null;
 
-	/// <summary>
-	/// Our target wall normal. Mostly only relevant when the wall is rotating. Set to null when not on the wall.
-	/// </summary>
-	private Vector3? TargetWallNormal { get; set; } = null;
 
 	/// <summary>
 	/// Gets set when we start wallrunning, then set to null when we touch the ground.
@@ -87,6 +121,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	protected override void OnStart()
 	{
 		Controller.OnJump += OnJump;
+		Controller.OnLanded += OnLanded;
 	}
 
 	public override IEnumerable<string> GetTags()
@@ -100,7 +135,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 		if ( Controller.IsGrounded ) return false;
 
-		if ( !ShouldWallrun ) return false;
+		if ( !WallNormal.HasValue ) return false;
 
 		return true;
 	}
@@ -127,13 +162,6 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 	public override void Simulate()
 	{
-		// We're eligible for the up wall boost if we have jumped after leaving the ground
-		if ( Controller.IsGrounded )
-		{
-			HasBoost = false;
-			LastWallrunStartPos = null;
-		}
-
 		if ( !IsActive && !Controller.IsGrounded )
 		{
 			PredictedWallNormal = PredictWallrun( PlayerSettings.WallrunTiltPredictTime );
@@ -162,6 +190,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 			return;
 		}
 
+		Controller.GetMechanic<JumpMechanic>().RefreshAirJumps();
 		LastWallrunStartPos = Position;
 		ApplyBoost();
 	}
@@ -181,9 +210,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		}
 
 		IsWallrunWeak = eligibility.HasFlag( WallrunEligibility.Weak );
-		ShouldWallrun = true;
 		UpdateWallNormal( wallNormal );
-		Controller.GetMechanic<JumpMechanic>().RefreshAirJumps();
 	}
 
 	private void WallrunMove()
@@ -259,7 +286,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 			ApplyTopWallDecel();
 		}
 
-		if ( HasTag( "crouch" ) )
+		if ( Input.Down( "Duck" ) )
 		{
 			FallAwayFromWall( false );
 			return;
@@ -527,6 +554,13 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		{
 			ClearWallNormal();
 		}
+	}
+
+	private void OnLanded()
+	{
+		// We're eligible for the up wall boost if we have jumped after leaving the ground
+		HasBoost = false;
+		LastWallrunStartPos = null;
 	}
 
 	private void ApplyWallrunTilt()
