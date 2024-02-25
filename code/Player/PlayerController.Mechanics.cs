@@ -85,16 +85,6 @@ public partial class PlayerController
 		CurrentAccelerationOverride = accelerationOverride;
 
 		tags = currentTags.ToImmutableArray();
-
-		// We didn't move this tick for some reason
-		if ( !HasAnyTag( "walk", "airmove", "wallrun" ) )
-		{
-			Log.Warning( "Skipped moving this tick" );
-			if ( IsGrounded )
-				GetMechanic<WalkMechanic>().OnActiveUpdate();
-			else
-				GetMechanic<AirMoveMechanic>().OnActiveUpdate();
-		}
 	}
 
 	public T GetMechanic<T>() where T : BasePlayerControllerMechanic
