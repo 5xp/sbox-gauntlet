@@ -382,6 +382,74 @@ public partial class PlayerController : Component
 		return wishDirection;
 	}
 
+	public void CategorizePosition( bool stayOnGround )
+	{
+		Vector3 point = Position + Vector3.Down * 2f;
+		Vector3 bumpOrigin = Position;
+		bool movingUpRapidly = Velocity.z > PlayerSettings.MaxNonJumpVelocity;
+		bool moveToEndPos = false;
+
+		if ( movingUpRapidly )
+		{
+			ClearGroundObject();
+			return;
+		}
+
+		if ( IsGrounded )
+		{
+			moveToEndPos = true;
+			point.z -= PlayerSettings.StepHeightMax;
+		}
+		else if ( stayOnGround )
+		{
+			moveToEndPos = true;
+			point.z -= PlayerSettings.StepHeightMax;
+		}
+
+		SceneTraceResult tr = TraceBBox( bumpOrigin, point, 4.0f );
+		float angle = Vector3.GetAngle( Vector3.Up, tr.Normal );
+
+		if ( tr.GameObject is null || angle > PlayerSettings.GroundAngle )
+		{
+			ClearGroundObject();
+			moveToEndPos = false;
+		}
+		else
+		{
+			UpdateGroundObject( tr );
+		}
+
+		// if ( moveToEndPos && !tr.StartedSolid && tr.Fraction > 0f && tr.Fraction < 1f )
+		if ( moveToEndPos && !tr.StartedSolid )
+		{
+			Position = tr.EndPosition;
+		}
+	}
+
+	public void UpdateGroundObject( SceneTraceResult tr )
+	{
+		GroundNormal = tr.Normal;
+		SetGroundObject( tr.GameObject );
+	}
+
+	public void SetGroundObject( GameObject groundObject )
+	{
+		LastGroundObject = GroundObject;
+		GroundObject = groundObject;
+
+		if ( groundObject is not null )
+		{
+			Velocity = HorzVelocity;
+			TimeSinceLastOnGround = 0;
+			OnLanded?.Invoke();
+		}
+
+		if ( LastGroundObject is null && groundObject is not null )
+		{
+			TimeSinceLastLanding = 0;
+		}
+	}
+
 	public void Write( ref ByteStream stream )
 	{
 		stream.Write( EyeAngles );

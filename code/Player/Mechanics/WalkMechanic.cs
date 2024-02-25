@@ -9,13 +9,7 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 
 	public override bool ShouldBecomeActive()
 	{
-		JumpMechanic jump = Controller.GetMechanic<JumpMechanic>();
-
-		if ( !jump.IsActive && jump.ShouldBecomeActive() )
-			return false;
-
 		return true;
-
 	}
 
 	public override IEnumerable<string> GetTags()
@@ -27,8 +21,6 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 	{
 		if ( Controller.IsGrounded )
 			WalkMove();
-
-		CategorizePosition( Controller.IsGrounded );
 	}
 
 	private void WalkMove()
@@ -120,72 +112,5 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 		decel = decel.ClampLength( deceleration * Time.Delta );
 
 		Velocity += decel;
-	}
-
-	public void SetGroundObject( GameObject groundObject )
-	{
-		Controller.LastGroundObject = Controller.GroundObject;
-		Controller.GroundObject = groundObject;
-
-		if ( groundObject is not null )
-		{
-			Velocity = HorzVelocity;
-			Controller.TimeSinceLastOnGround = 0;
-			Controller.OnLanded?.Invoke();
-		}
-
-		if ( Controller.LastGroundObject is null && groundObject is not null )
-		{
-			Controller.TimeSinceLastLanding = 0;
-		}
-	}
-
-	private void CategorizePosition( bool stayOnGround )
-	{
-		Vector3 point = Position + Vector3.Down * 2f;
-		Vector3 bumpOrigin = Position;
-		bool movingUpRapidly = Velocity.z > PlayerSettings.MaxNonJumpVelocity;
-		bool moveToEndPos = false;
-
-		if ( movingUpRapidly )
-		{
-			Controller.ClearGroundObject();
-			return;
-		}
-
-		if ( Controller.IsGrounded )
-		{
-			moveToEndPos = true;
-			point.z -= PlayerSettings.StepHeightMax;
-		}
-		else if ( stayOnGround )
-		{
-			moveToEndPos = true;
-			point.z -= PlayerSettings.StepHeightMax;
-		}
-
-		SceneTraceResult tr = Controller.TraceBBox( bumpOrigin, point, 4.0f );
-		float angle = Vector3.GetAngle( Vector3.Up, tr.Normal );
-
-		if ( tr.GameObject is null || angle > PlayerSettings.GroundAngle )
-		{
-			Controller.ClearGroundObject();
-			moveToEndPos = false;
-		}
-		else
-		{
-			UpdateGroundObject( tr );
-		}
-
-		if ( moveToEndPos && !tr.StartedSolid && tr.Fraction > 0f && tr.Fraction < 1f )
-		{
-			Position = tr.EndPosition;
-		}
-	}
-
-	private void UpdateGroundObject( SceneTraceResult tr )
-	{
-		Controller.GroundNormal = tr.Normal;
-		SetGroundObject( tr.GameObject );
 	}
 }

@@ -11,15 +11,18 @@ public partial class AirMoveMechanic : BasePlayerControllerMechanic
 		yield return "airmove";
 	}
 
-	public override void OnActiveUpdate()
+	public override void Simulate()
 	{
-		bool groundedAtStart = Controller.IsGrounded;
-
-		if ( groundedAtStart )
+		if ( ShouldBecomeActive() )
 		{
-			return;
+			AirMove();
 		}
 
+		Controller.CategorizePosition( Controller.IsGrounded );
+	}
+
+	private void AirMove()
+	{
 		PlayerController ctrl = Controller;
 
 		Vector3 halfGravity = Vector3.Down * 0.5f * PlayerSettings.Gravity * PlayerSettings.GravityScale * Time.Delta;
