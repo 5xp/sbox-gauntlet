@@ -1,31 +1,10 @@
-@using Sandbox;
-@using Sandbox.UI;
-@using Tf;
+@namespace Tf.UI
 @inherits PanelComponent
 
 <root class="pk"
 	style="transform: translateX(@(Position.x / 16)%) translateY(@(Position.y / 9)%) rotate(@(Position.z)deg) scale(@(GetScale()));">
-	<div class="keys-container">
-		<div class="key-row">
-			<div class="key backdrop @GetKeyHighlighted("Forward")">
-				<p>@GetKeyCode("Forward")</p>
-			</div>
-		</div>
-		<div class="key-row">
-			<div class="key backdrop @GetKeyHighlighted("Left")">
-				<p>@GetKeyCode("Left")</p>
-			</div>
-			<div class="key backdrop @GetKeyHighlighted("Backward")">
-				<p>@GetKeyCode("Backward")</p>
-			</div>
-			<div class="key backdrop @GetKeyHighlighted("Right")">
-				<p>@GetKeyCode("Right")</p>
-			</div>
-		</div>
-	</div>
-	<div class="speedometer-container backdrop">
-		<p>@HUPSToKPH(Controller.HorzVelocity.Length).ToString("F1") kph</p>
-	</div>
+	<KeyPressPanel />
+	<SpeedometerPanel HorzVelocity=@Controller.HorzVelocity />
 </root>
 
 @code
@@ -44,11 +23,6 @@
 	protected override int BuildHash()
 	{
 		HashCode hash = new();
-		hash.Add(HUPSToKPH(Controller.HorzVelocity.Length).ToString("F1"));
-		hash.Add(Input.Down("Forward"));
-		hash.Add(Input.Down("Backward"));
-		hash.Add(Input.Down("Left"));
-		hash.Add(Input.Down("Right"));
 		hash.Add(Position);
 		return hash.ToHashCode();
 	}
@@ -125,11 +99,5 @@
 		return swayContribution;
 	}
 
-	private string GetKeyCode(string key) => Input.GetButtonOrigin(key, true);
-
 	private float GetScale() => 1f / (1f + Position.w);
-
-	private float HUPSToKPH(float hups) => hups * 0.091392f;
-
-	private string GetKeyHighlighted(string key) => Input.Down(key) ? "highlighted" : "";
 }
