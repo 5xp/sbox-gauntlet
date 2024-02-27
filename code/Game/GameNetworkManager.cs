@@ -45,7 +45,26 @@ public sealed class GameNetworkManager : Component, Component.INetworkListener
 
 	private GameObject SpawnPlayer()
 	{
-		var player = PlayerPrefab.Clone(SpawnPoint.Transform.World);
+		Transform spawnTransform;
+
+		if ( SpawnPoint is null )
+		{
+			var spawnPoints = Scene.GetAllComponents<SpawnPoint>().ToArray();
+
+			if ( spawnPoints.Length == 0 )
+			{
+				Log.Error( "No spawn points found" );
+				return null;
+			}
+
+			spawnTransform = Game.Random.FromArray( spawnPoints ).GameObject.Transform.World;
+		}
+		else
+		{
+			spawnTransform = SpawnPoint.Transform.World;
+		}
+
+		var player = PlayerPrefab.Clone( spawnTransform );
 		player.BreakFromPrefab();
 		return player;
 	}
