@@ -37,12 +37,12 @@ public partial class PlayerController
 		float? frictionOverride = null;
 		float? accelerationOverride = null;
 
+		float previousZVel = Velocity.z;
+
 		foreach ( var mechanic in Mechanics )
 		{
 			mechanic.Simulate();
 		}
-
-		float previousZVel = Velocity.z;
 
 		foreach ( var mechanic in sortedMechanics )
 		{

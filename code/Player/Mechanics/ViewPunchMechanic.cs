@@ -8,6 +8,8 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 {
 	public DampedSpring Spring { get; set; }
 
+	private float VelocityPerDegree => 17f;
+
 	public override int Priority => 500;
 
 	public override bool ShouldBecomeActive() => true;
@@ -26,21 +28,29 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 
 	public override void OnActiveUpdate()
 	{
-		float beforeVel = Spring.Velocity.x;
+		WallrunMechanic wallrun = Controller.GetMechanic<WallrunMechanic>();
 
-		DebugViewPunch( beforeVel, Spring.Velocity.x );
-
-		if ( Controller.GetMechanic<WallrunMechanic>().TimeSinceStart == 0f )
+		if ( wallrun.TimeSinceStart == 0f )
 		{
 			DoFallPunch();
 			DoWallrunStartPunch();
+		}
+
+		// TimeSinceStop will never be equal to 0 because IsActive gets set to false after all mechanics have updated
+		if ( wallrun.TimeSinceStop == Time.Delta && wallrun.TimeSinceLastStart > PlayerSettings.WallrunTimeLimit )
+		{
+			DoWallrunTimeOutPunch();
 		}
 	}
 
 	public override void FrameSimulate()
 	{
+		float beforeVel = Spring.Velocity.x;
+
 		if ( IsActive )
 			Spring.Update( Time.Delta );
+
+		DebugViewPunch( beforeVel, Spring.Velocity.x );
 	}
 
 	private void DoJumpPunch( JumpMechanic.JumpType jumpType )
@@ -94,6 +104,14 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 		Spring.AddRandomVelocity( min, max );
 	}
 
+	private void DoWallrunTimeOutPunch()
+	{
+		var (min, max) = GetViewPunchGroundJumpVectors();
+		min *= -1f;
+		max *= -1f;
+		Spring.AddRandomVelocity( min, max );
+	}
+
 	private float GetFallFraction( float fallDist )
 	{
 		if ( fallDist <= PlayerSettings.ViewPunchFallDistMin )
@@ -119,6 +137,9 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 		Vector3 minPunch = new( pitchMin, yawMin, rollMin );
 		Vector3 maxPunch = new( pitchMax, yawMax, rollMax );
 
+		minPunch *= VelocityPerDegree;
+		maxPunch *= VelocityPerDegree;
+
 		return (minPunch, maxPunch);
 	}
 
@@ -133,6 +154,9 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 
 		Vector3 minPunch = new( pitchMin, yawMin, rollMin );
 		Vector3 maxPunch = new( pitchMax, yawMax, rollMax );
+
+		minPunch *= VelocityPerDegree;
+		maxPunch *= VelocityPerDegree;
 
 		return (minPunch, maxPunch);
 	}
@@ -149,6 +173,9 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 		Vector3 minPunch = new( pitchMin, yawMin, rollMin );
 		Vector3 maxPunch = new( pitchMax, yawMax, rollMax );
 
+		minPunch *= VelocityPerDegree;
+		maxPunch *= VelocityPerDegree;
+
 		return (minPunch, maxPunch);
 	}
 
@@ -163,6 +190,9 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 
 		Vector3 minPunch = new( pitchMin, yawMin, rollMin );
 		Vector3 maxPunch = new( pitchMax, yawMax, rollMax );
+
+		minPunch *= VelocityPerDegree;
+		maxPunch *= VelocityPerDegree;
 
 		return (minPunch, maxPunch);
 	}
