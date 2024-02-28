@@ -64,8 +64,11 @@ public sealed class GameNetworkManager : Component, Component.INetworkListener
 			spawnTransform = SpawnPoint.Transform.World;
 		}
 
-		var player = PlayerPrefab.Clone( spawnTransform );
+		Angles angles = spawnTransform.Rotation.Angles();
+		spawnTransform = spawnTransform.WithRotation( Rotation.Identity );
+		var player = PlayerPrefab.Clone( spawnTransform, name: Connection.Local.DisplayName );
 		player.BreakFromPrefab();
+		player.Components.GetInChildrenOrSelf<PlayerController>().EyeAngles = angles;
 		return player;
 	}
 }
