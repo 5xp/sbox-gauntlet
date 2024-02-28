@@ -8,7 +8,7 @@
   "HasAssets": true,
   "AssetsPath": "",
   "Resources": null,
-  "MenuResources": "assets/fonts/*\nassets/UI/*\nassets/GameMenu/*\nassets/sounds/*\nassets/models/*\nassets/particles/*\nassets/materials/*\nassets/scenes/*",
+  "MenuResources": "assets/fonts/*\nassets/UI/*\nassets/sounds/*\nassets/models/*\nassets/particles/*\nassets/materials/*\nassets/scenes/*",
   "HasCode": true,
   "CodePath": "/code/",
   "PackageReferences": [],
@@ -176,22 +176,6 @@
           "GroupName": "Actions"
         },
         {
-          "Name": "View",
-          "KeyboardCode": "z",
-          "GroupName": "Other"
-        },
-        {
-          "Name": "Voice",
-          "KeyboardCode": "v",
-          "GamepadCode": "RightJoystickButton",
-          "GroupName": "Other"
-        },
-        {
-          "Name": "Drop",
-          "KeyboardCode": "g",
-          "GroupName": "Other"
-        },
-        {
           "Name": "Score",
           "KeyboardCode": "tab",
           "GamepadCode": "SwitchLeftMenu",
@@ -201,24 +185,6 @@
           "Name": "Chat",
           "KeyboardCode": "enter",
           "GroupName": "Other"
-        },
-        {
-          "Name": "Mount",
-          "KeyboardCode": "T",
-          "GamepadCode": "RightJoystickButton",
-          "GroupName": "Weapon Handling"
-        },
-        {
-          "Name": "SwitchWeapon",
-          "KeyboardCode": "2",
-          "GamepadCode": "DpadSouth",
-          "GroupName": "Weapon Handling"
-        },
-        {
-          "Name": "FireMode",
-          "KeyboardCode": "B",
-          "GamepadCode": "DpadNorth",
-          "GroupName": "Weapon Handling"
         },
         {
           "Name": "Noclip",
@@ -240,7 +206,7 @@
       ]
     },
     "StartupScene": "assets/scenes/main_menu.scene",
-    "MapStartupScene": null,
+    "MapStartupScene": "assets/scenes/map_only.scene",
     "LaunchMode": "Normal"
   }
 }

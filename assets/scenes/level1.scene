@@ -1,0 +1,408 @@
+{
+  "Id": "9d1463ac-a949-437a-9b83-e8507a1180a2",
+  "GameObjects": [
+    {
+      "Id": "9b51056a-386c-4595-b738-89c9c66ae830",
+      "Name": "Lights",
+      "Position": "-2042.181,-2461.837,263.3",
+      "Enabled": true,
+      "Children": [
+        {
+          "Id": "7a35fdcb-f666-405b-a022-41eeea390fee",
+          "Name": "Point Light",
+          "Position": "13.28577,-100.6089,86.53143",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0.36,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "1,0.87783,0.08372,1",
+              "Radius": 584.39984,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "440d65b8-1674-4052-85ee-7449f6c2f69a",
+          "Name": "Point Light",
+          "Position": "147.7488,-266.4883,97.41776",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0.36,
+              "FogMode": "Disabled",
+              "FogStrength": 1,
+              "LightColor": "1,0.87783,0.08372,1",
+              "Radius": 584.39984,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "4804559c-135d-4f27-9e05-706945ccc592",
+          "Name": "Point Light",
+          "Position": "-401.1215,1643.27,275.8206",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0.04,
+              "FogMode": "Disabled",
+              "FogStrength": 0.99900025,
+              "LightColor": "0.06512,0.48581,1,1",
+              "Radius": 606.29944,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "145f5e8a-b203-40ab-b8c9-049115532198",
+          "Name": "Point Light",
+          "Position": "109.9517,342.5249,91.57025",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0.36,
+              "FogMode": "Disabled",
+              "FogStrength": 0.99900025,
+              "LightColor": "0.06512,0.48581,1,1",
+              "Radius": 610.4997,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "461a2e01-1393-4242-be1c-e5f70d7b15c7",
+          "Name": "Point Light",
+          "Position": "-343.8636,4649.846,164.9444",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "0.72093,0.057,0.057,1",
+              "Radius": 584.39984,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "4d08bc95-d94d-42e1-b49d-4a5825bb1108",
+          "Name": "Point Light",
+          "Position": "4136.123,7670.176,-11.51785",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "0.72093,0.057,0.057,1",
+              "Radius": 858.60114,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "66cf532b-20bf-477e-a9a6-287151528f06",
+          "Name": "Point Light",
+          "Position": "-336.9257,3114.932,329.7316",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0.2,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "0.90233,0.79069,0.58336,1",
+              "Radius": 584.39984,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "11d70cb7-5c61-4cfd-b815-f7fa9ea3c343",
+          "Name": "Point Light",
+          "Position": "-250.5201,5349.088,329.7316",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0.2,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "0.90233,0.79069,0.58336,1",
+              "Radius": 584.39984,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "8bcc0544-8030-45d6-b002-f9035600e358",
+          "Name": "Point Light",
+          "Position": "-323.674,4021.721,329.7319",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0.2,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "0.90233,0.79069,0.58336,1",
+              "Radius": 584.39984,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "38073ba0-dc8f-4352-9441-b7961dd91c82",
+          "Name": "Point Light",
+          "Position": "333.6581,6139.46,436.3849",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0.2,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "0.90233,0.79069,0.58336,1",
+              "Radius": 584.39984,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "e0e35d0d-b600-4e76-855e-52e3d0eec434",
+          "Name": "Point Light",
+          "Position": "1284.626,6626.84,436.3851",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0.2,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "0.90233,0.79069,0.58336,1",
+              "Radius": 584.39984,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "7c402ef2-2350-405f-bb23-fe4e6720945e",
+          "Name": "Point Light",
+          "Position": "2662.724,6581.263,436.3856",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0.2,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "0.90233,0.79069,0.58336,1",
+              "Radius": 584.39984,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "add131b7-516b-4f8d-b39d-3ee8128dd10f",
+          "Name": "Point Light",
+          "Position": "3087.922,6724.264,436.3858",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0.2,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "0.90233,0.79069,0.58336,1",
+              "Radius": 584.39984,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "79cc5d77-ed86-4225-8d42-bffd217d6139",
+          "Name": "Point Light",
+          "Position": "4045.841,7354.56,436.3859",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0.2,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "0.90233,0.79069,0.58336,1",
+              "Radius": 1430.7003,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "ca0f5401-5ece-4e49-aa48-5c1f7575d46e",
+          "Name": "Point Light",
+          "Position": "4664.777,8103.167,585.066",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0.2,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "0.90233,0.79069,0.58336,1",
+              "Radius": 1430.7003,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "c4e13323-e246-4b63-bba7-e3b1b98d863c",
+          "Name": "Point Light",
+          "Position": "5570.812,8976.857,633.3328",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0.75,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "0.90233,0.79069,0.58336,1",
+              "Radius": 1173.3988,
+              "Shadows": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Id": "d9d3c335-f1c9-4c4a-9fd5-0d42c35785df",
+      "Name": "Map",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "MapInstance",
+          "MapName": "maps/level1.vmap",
+          "OnMapLoaded": null,
+          "OnMapUnloaded": null,
+          "UseMapFromLaunch": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Id": "0f04ee6a-6956-44a5-851e-aa6b5151fa34",
+      "Name": "GameManager",
+      "Position": "0.0003538796,-611.6824,64.27141",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "GameNetworkManager",
+          "IsMultiplayer": false,
+          "PlayerPrefab": {
+            "_type": "gameobject",
+            "prefab": "assets/prefabs/player/player.prefab"
+          },
+          "SpawnPoint": null
+        }
+      ]
+    },
+    {
+      "Id": "bfc59c12-1ed2-4f91-8956-a95a315eac3c",
+      "Name": "Sun",
+      "Position": "718.0756,968.9534,1033.044",
+      "Rotation": "-0.5384366,-0.03387598,0.8403233,-0.05286932",
+      "Tags": "light,light_directional",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "DirectionalLight",
+          "FogMode": "Disabled",
+          "FogStrength": 0,
+          "LightColor": "0.85581,0.80606,0.79611,1",
+          "Shadows": true,
+          "SkyColor": "0.89767,0.77701,0.4718,1"
+        }
+      ]
+    },
+    {
+      "Id": "00344a8c-fa5e-45ae-b12a-10bb781a1dc3",
+      "Name": "2D Skybox",
+      "Tags": "skybox",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "SkyBox2D",
+          "SkyMaterial": "materials/skybox/light_test_sky_sunny_basic.vmat",
+          "Tint": "1,1,1,1"
+        }
+      ]
+    },
+    {
+      "Id": "652d4e8d-a737-4d00-8e9b-78aa2cbec2ee",
+      "Name": "Probe",
+      "Position": "0,0,100",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "EnvmapProbe",
+          "Bounds": {
+            "Mins": "-1024,-1024,-512",
+            "Maxs": "1024,1024,512"
+          },
+          "Feathering": 0.02,
+          "Projection": "Box",
+          "Texture": "textures/cubemaps/default2.vtex",
+          "TintColor": "1,0.66584,0.33168,1"
+        }
+      ]
+    }
+  ],
+  "SceneProperties": {
+    "FixedUpdateFrequency": 128,
+    "Lerping": true,
+    "MaxFixedUpdates": 5,
+    "NetworkFrequency": 60,
+    "ThreadedAnimation": true,
+    "TimeScale": 1,
+    "UseFixedUpdate": true,
+    "NavMesh": {
+      "Enabled": false,
+      "IncludeStaticBodies": true,
+      "IncludeKeyframedBodies": true,
+      "EditorAutoUpdate": true,
+      "AgentHeight": 64,
+      "AgentRadius": 16,
+      "AgentStepSize": 18,
+      "AgentMaxSlope": 40,
+      "ExcludedBodies": "",
+      "IncludedBodies": ""
+    }
+  },
+  "Title": "minimal",
+  "Description": "",
+  "LastSaved": "2024-02-27T19:32:15.9439985-06:00",
+  "__references": []
+}

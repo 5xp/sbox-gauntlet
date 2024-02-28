@@ -72,7 +72,7 @@
         },
         {
           "__type": "MainMenuPanel",
-          "PlayScene": "assets/scenes/wallrun_testing.scene"
+          "PlayScene": "assets/scenes/level1.scene"
         }
       ]
     }
@@ -100,6 +100,6 @@
   },
   "Title": "minimal",
   "Description": "",
-  "LastSaved": "2024-02-23T23:01:04.4755425-06:00",
+  "LastSaved": "2024-02-27T20:24:05.4167042-06:00",
   "__references": []
 }
