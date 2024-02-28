@@ -5,8 +5,11 @@
 <root class="pk">
     <div class="layout padding-insane column">
         <div class="layout flex-grow" />
-        <label class="text header">Parkour</label>
-        <button class="button standard backdrop" onclick=@Play>Play</button>
+        <label class="text header">Gauntlet Movement Test</label>
+        <div class="layout column gap">
+            <button class="button standard backdrop" onclick=@Play onmouseover=@OnMouseOver>Play</button>
+            <button class="button standard backdrop" onclick=@Quit onmouseover=@OnMouseOver>Quit</button>
+        </div>
     </div>
 </root>
 
@@ -17,5 +20,15 @@
     void Play()
     {
         GameManager.ActiveScene.Load(PlayScene);
+    }
+
+    void Quit()
+    {
+        Game.Disconnect();
+    }
+
+    void OnMouseOver()
+    {
+        Sound.Play("sounds/kenney/ui/ui.button.over.sound");
     }
 }
