@@ -122,8 +122,8 @@ public partial class PlayerController : Component
 			SimulateEyes();
 			CurrentCameraOffset = Vector3.Zero;
 
-			EyeAngles.pitch += GetInputDelta().y;
-			EyeAngles.yaw -= GetInputDelta().x;
+			EyeAngles.pitch += GetInputDelta().pitch;
+			EyeAngles.yaw += GetInputDelta().yaw;
 			EyeAngles.pitch = EyeAngles.pitch.Clamp( -PlayerSettings.PitchMaxUp, PlayerSettings.PitchMaxDown );
 
 			var cam = CameraController.Camera;
@@ -309,9 +309,17 @@ public partial class PlayerController : Component
 		return tr;
 	}
 
-	public static Vector2 GetInputDelta()
+	public static Angles GetInputDelta()
 	{
-		return Input.MouseDelta * 0.022f * Preferences.Sensitivity;
+		if ( Input.UsingController )
+		{
+			return Input.AnalogLook;
+		}
+		else
+		{
+			float multiplier = 0.022f * Preferences.Sensitivity;
+			return new Angles( Input.MouseDelta.y * multiplier, -Input.MouseDelta.x * multiplier, 0 );
+		}
 	}
 
 	public SceneTraceResult TraceBBox( Vector3 start, Vector3 end, float liftFeet = 0.0f, float liftHead = 0.0f )
@@ -347,10 +355,17 @@ public partial class PlayerController : Component
 	{
 		WishMove = 0;
 
-		if ( Input.Down( "forward", false ) ) WishMove += Vector3.Forward;
-		if ( Input.Down( "backward", false ) ) WishMove += Vector3.Backward;
-		if ( Input.Down( "left", false ) ) WishMove += Vector3.Left;
-		if ( Input.Down( "right", false ) ) WishMove += Vector3.Right;
+		if ( Input.UsingController )
+		{
+			WishMove = Input.AnalogMove;
+		}
+		else
+		{
+			if ( Input.Down( "forward", false ) ) WishMove += Vector3.Forward;
+			if ( Input.Down( "backward", false ) ) WishMove += Vector3.Backward;
+			if ( Input.Down( "left", false ) ) WishMove += Vector3.Left;
+			if ( Input.Down( "right", false ) ) WishMove += Vector3.Right;
+		}
 	}
 
 	private void CheckReachedApex( float previousVelocity, float currentVelocity )

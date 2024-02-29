@@ -56,11 +56,11 @@
 
 	private Vector4 GetSwayTurnContribution()
 	{
-		Vector2 inputDelta = PlayerController.GetInputDelta();
-		Vector4 swayContribution = new(inputDelta.x, inputDelta.y, inputDelta.x, 0f);
-		swayContribution.x *= -23f;
+		Angles inputDelta = PlayerController.GetInputDelta();
+		Vector4 swayContribution = new(inputDelta.yaw, inputDelta.pitch, inputDelta.yaw, 0f);
+		swayContribution.x *= 23f;
 		swayContribution.y *= -23f;
-		swayContribution.z *= 0.2f;
+		swayContribution.z *= -0.2f;
 
 		swayContribution.x = swayContribution.x.Clamp(-20f, 20f);
 		swayContribution.y = swayContribution.y.Clamp(-20f, 20f);
