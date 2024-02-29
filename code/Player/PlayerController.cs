@@ -174,16 +174,11 @@ public partial class PlayerController : Component
 	{
 		float targetDuckFraction = Input.Down( "Duck" ) ? 1f : 0f;
 		float targetHullHeight = PlayerSettings.HullHeightStanding.LerpTo( PlayerSettings.HullHeightCrouching, targetDuckFraction );
-		bool forceDuck = false;
-
 		// Unducking
 		if ( DuckFraction > targetDuckFraction )
 		{
-			float liftHead = PlayerSettings.HullHeightStanding - CurrentHullHeight;
-			SceneTraceResult tr = TraceBBox( Position, Position, 0, liftHead );
-			if ( tr.Hit )
+			if ( GetMechanic<CrouchMechanic>().ForceDuck )
 			{
-				forceDuck = true;
 				DuckFraction = 1f;
 			}
 			else
@@ -197,8 +192,8 @@ public partial class PlayerController : Component
 			float duckSpeed = HasTag( "slide" ) ? PlayerSettings.UnduckSpeed : PlayerSettings.DuckSpeed;
 			DuckFraction = DuckFraction.Approach( 1f, duckSpeed * Time.Delta );
 		}
-		// Finished unducking or ducking
 
+		// Finished unducking or ducking
 		if ( DuckFraction.AlmostEqual( targetDuckFraction ) )
 		{
 			CurrentHullHeight = targetHullHeight;
@@ -206,15 +201,20 @@ public partial class PlayerController : Component
 
 		if ( HasTag( "slide" ) )
 		{
-			CurrentHullHeight = targetHullHeight;
+			CurrentHullHeight = PlayerSettings.HullHeightCrouching;
 		}
-
-		GetMechanic<CrouchMechanic>().ForceDuck = forceDuck;
 
 		StepSmoothingOffset = StepSmoothingOffset.Approach( 0f, PlayerSettings.StepSmoothingOffsetCorrectSpeed * Time.Delta );
 		float duckTime = MathUtils.SmoothStep( DuckFraction );
 		CurrentEyeHeight = PlayerSettings.ViewHeightStanding.LerpTo( PlayerSettings.ViewHeightCrouching, duckTime );
 		CameraGameObject.Transform.LocalPosition = Vector3.Up * CurrentEyeHeight + CurrentCameraOffset + StepSmoothingOffset;
+	}
+
+	public bool CanUnduck()
+	{
+		float liftHead = PlayerSettings.HullHeightStanding - CurrentHullHeight;
+		SceneTraceResult tr = TraceBBox( Position, Position, 0, liftHead );
+		return !tr.Hit;
 	}
 
 	public float StepMove( float groundAngle, float stepSize, Vector3 up )

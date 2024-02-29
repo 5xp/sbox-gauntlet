@@ -28,6 +28,11 @@ public partial class CrouchMechanic : BasePlayerControllerMechanic
 		return true;
 	}
 
+	public override void Simulate()
+	{
+		ForceDuck = !Controller.CanUnduck();
+	}
+
 	public override IEnumerable<string> GetTags()
 	{
 		yield return "crouch";
