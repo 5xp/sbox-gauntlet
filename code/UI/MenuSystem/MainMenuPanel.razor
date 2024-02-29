@@ -16,10 +16,18 @@
 @code
 {
     [Property] public SceneFile PlayScene { get; set; }
+    [Property] private GameObject Camera { get; set; }
+
+    protected override void OnFixedUpdate()
+    {
+        Rotation rot = Rotation.FromYaw(3f * Time.Delta);
+        Camera.Transform.Rotation = rot * Camera.Transform.Rotation;
+    }
 
     void Play()
     {
         GameManager.ActiveScene.Load(PlayScene);
+        Sound.Play("sounds/kenney/ui/ui.navigate.forward.sound");
     }
 
     void Quit()

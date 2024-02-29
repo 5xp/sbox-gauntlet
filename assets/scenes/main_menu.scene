@@ -72,6 +72,10 @@
         },
         {
           "__type": "MainMenuPanel",
+          "Camera": {
+            "_type": "gameobject",
+            "go": "adb42f1f-2599-449a-a6fa-407e0c9029bd"
+          },
           "PlayScene": "assets/scenes/level1.scene"
         }
       ]
@@ -100,6 +104,6 @@
   },
   "Title": "minimal",
   "Description": "",
-  "LastSaved": "2024-02-27T20:24:05.4167042-06:00",
+  "LastSaved": "2024-02-28T19:09:26.8119394-06:00",
   "__references": []
 }
