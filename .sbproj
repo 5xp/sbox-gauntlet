@@ -8,7 +8,7 @@
   "HasAssets": true,
   "AssetsPath": "",
   "Resources": null,
-  "MenuResources": "assets/fonts/*\nassets/UI/*\nassets/sounds/*\nassets/models/*\nassets/particles/*\nassets/materials/*\nassets/scenes/*\nUI/*",
+  "MenuResources": "assets/fonts/*\nassets/UI/*\nassets/sounds/*\nassets/models/*\nassets/particles/*\nassets/materials/*\nassets/scenes/*\nUI/*\nmaps/level1.vpk",
   "HasCode": true,
   "CodePath": "/code/",
   "PackageReferences": [],
