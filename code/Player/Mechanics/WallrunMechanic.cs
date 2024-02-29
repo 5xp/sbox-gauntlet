@@ -561,6 +561,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		// We're eligible for the up wall boost if we have jumped after leaving the ground
 		HasBoost = false;
 		LastWallrunStartPos = null;
+		ClearWallNormal();
 	}
 
 	private void ApplyWallrunTilt()
