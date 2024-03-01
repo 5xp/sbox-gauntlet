@@ -57,7 +57,6 @@ public partial class PlayerController : Component
 	public float DuckFraction { get; set; }
 	public float ApexHeight { get; set; }
 
-
 	/// <summary>
 	/// Finds the first <see cref="SkinnedModelRenderer"/> on <see cref="Body"/>
 	/// </summary>

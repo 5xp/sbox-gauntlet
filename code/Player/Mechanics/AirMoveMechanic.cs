@@ -11,17 +11,7 @@ public partial class AirMoveMechanic : BasePlayerControllerMechanic
 		yield return "airmove";
 	}
 
-	public override void Simulate()
-	{
-		if ( ShouldBecomeActive() )
-		{
-			AirMove();
-		}
-
-		Controller.CategorizePosition( Controller.IsGrounded );
-	}
-
-	private void AirMove()
+	public void AirMove()
 	{
 		PlayerController ctrl = Controller;
 

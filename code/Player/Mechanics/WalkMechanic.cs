@@ -17,13 +17,7 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 		yield return "walk";
 	}
 
-	public override void OnActiveUpdate()
-	{
-		if ( Controller.IsGrounded )
-			WalkMove();
-	}
-
-	private void WalkMove()
+	public void WalkMove()
 	{
 		Vector3 wishDir = Controller.BuildWishDir();
 		float wishSpeed = Controller.GetWishSpeed();

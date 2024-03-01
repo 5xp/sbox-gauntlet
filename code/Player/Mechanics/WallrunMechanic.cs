@@ -158,10 +158,6 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 			return;
 		}
 
-		WallrunMove();
-
-		CategorizePosition();
-
 		if ( WallNormal.HasValue && TargetWallNormal.HasValue )
 		{
 			Vector3 originalWallNormal = WallNormal.Value;
@@ -226,7 +222,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		TimeSinceTouchedWall = 0;
 	}
 
-	private void WallrunMove()
+	public void WallrunMove()
 	{
 		Vector3 wishDir = BuildWishDirection( WallNormal.Value );
 
@@ -276,7 +272,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		Controller.AddStepOffset( stepAmount * -WallNormal.Value );
 	}
 
-	private void CategorizePosition()
+	public void CategorizePosition()
 	{
 		if ( !WallNormal.HasValue )
 		{

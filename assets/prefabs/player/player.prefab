@@ -1,6 +1,6 @@
 {
   "RootObject": {
-    "Id": "9f6c22be-d058-45b1-84b3-2de1ed3e07b3",
+    "Id": "a6032410-9415-4641-b5c9-8bdf8b84ae0a",
     "Name": "player",
     "Tags": "player",
     "Enabled": true,
@@ -9,22 +9,22 @@
         "__type": "PlayerController",
         "AnimationHelper": {
           "_type": "component",
-          "go": "0fd8a790-13b6-4805-9a6a-1acb46fe032e",
+          "go": "caedaf52-4c84-4d72-879b-9c983638a597",
           "component_type": "AnimationHelper"
         },
         "Body": {
           "_type": "gameobject",
-          "go": "0fd8a790-13b6-4805-9a6a-1acb46fe032e"
+          "go": "caedaf52-4c84-4d72-879b-9c983638a597"
         },
         "CameraController": {
           "_type": "component",
-          "go": "9f6c22be-d058-45b1-84b3-2de1ed3e07b3",
+          "go": "a6032410-9415-4641-b5c9-8bdf8b84ae0a",
           "component_type": "CameraController"
         },
         "CurrentHoldType": "None",
         "HullCollider": {
           "_type": "component",
-          "go": "9f6c22be-d058-45b1-84b3-2de1ed3e07b3",
+          "go": "a6032410-9415-4641-b5c9-8bdf8b84ae0a",
           "component_type": "HullCollider"
         },
         "IsGrounded": false
@@ -34,13 +34,13 @@
         "BaseFieldOfView": 90,
         "Camera": {
           "_type": "component",
-          "go": "c7b88773-c994-41c3-a094-af102880d191",
+          "go": "7702fba2-f48f-417a-b938-52623301c6b6",
           "component_type": "CameraComponent"
         },
         "HideBody": true,
         "PlayerController": {
           "_type": "component",
-          "go": "9f6c22be-d058-45b1-84b3-2de1ed3e07b3",
+          "go": "a6032410-9415-4641-b5c9-8bdf8b84ae0a",
           "component_type": "PlayerController"
         }
       },
@@ -60,7 +60,7 @@
     ],
     "Children": [
       {
-        "Id": "0fd8a790-13b6-4805-9a6a-1acb46fe032e",
+        "Id": "caedaf52-4c84-4d72-879b-9c983638a597",
         "Name": "Body",
         "Enabled": true,
         "Components": [
@@ -81,19 +81,19 @@
             "__type": "ModelHitboxes",
             "Renderer": {
               "_type": "component",
-              "go": "0fd8a790-13b6-4805-9a6a-1acb46fe032e",
+              "go": "caedaf52-4c84-4d72-879b-9c983638a597",
               "component_type": "SkinnedModelRenderer"
             },
             "Target": {
               "_type": "gameobject",
-              "go": "0fd8a790-13b6-4805-9a6a-1acb46fe032e"
+              "go": "caedaf52-4c84-4d72-879b-9c983638a597"
             }
           },
           {
             "__type": "AnimationHelper",
             "EyeSource": {
               "_type": "gameobject",
-              "go": "c7b88773-c994-41c3-a094-af102880d191"
+              "go": "7702fba2-f48f-417a-b938-52623301c6b6"
             },
             "Height": 1,
             "IkLeftFoot": null,
@@ -102,18 +102,18 @@
             "IkRightHand": null,
             "LookAtObject": {
               "_type": "gameobject",
-              "go": "c7b88773-c994-41c3-a094-af102880d191"
+              "go": "7702fba2-f48f-417a-b938-52623301c6b6"
             },
             "Target": {
               "_type": "component",
-              "go": "0fd8a790-13b6-4805-9a6a-1acb46fe032e",
+              "go": "caedaf52-4c84-4d72-879b-9c983638a597",
               "component_type": "SkinnedModelRenderer"
             }
           }
         ]
       },
       {
-        "Id": "58f4247c-4d78-4c05-9d84-fc1b97e93d56",
+        "Id": "5a655dbf-c148-402a-a39a-0228953b9863",
         "Name": "Mechanics",
         "Enabled": true,
         "Components": [
@@ -121,72 +121,72 @@
             "__type": "CrouchMechanic",
             "Controller": {
               "_type": "component",
-              "go": "9f6c22be-d058-45b1-84b3-2de1ed3e07b3",
+              "go": "a6032410-9415-4641-b5c9-8bdf8b84ae0a",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 6426.4927
+              "Relative": 5861.8223
             }
           },
           {
             "__type": "SprintMechanic",
             "Controller": {
               "_type": "component",
-              "go": "9f6c22be-d058-45b1-84b3-2de1ed3e07b3",
+              "go": "a6032410-9415-4641-b5c9-8bdf8b84ae0a",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 6426.4927
+              "Relative": 5861.8223
             }
           },
           {
             "__type": "WalkMechanic",
             "Controller": {
               "_type": "component",
-              "go": "9f6c22be-d058-45b1-84b3-2de1ed3e07b3",
+              "go": "a6032410-9415-4641-b5c9-8bdf8b84ae0a",
               "component_type": "PlayerController"
             },
             "IsActive": true,
             "TimeSinceActiveChanged": {
-              "Relative": 6426.4927
+              "Relative": 5861.8223
             }
           },
           {
             "__type": "AirMoveMechanic",
             "Controller": {
               "_type": "component",
-              "go": "9f6c22be-d058-45b1-84b3-2de1ed3e07b3",
+              "go": "a6032410-9415-4641-b5c9-8bdf8b84ae0a",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 6426.4927
+              "Relative": 5861.8223
             }
           },
           {
             "__type": "JumpMechanic",
             "Controller": {
               "_type": "component",
-              "go": "9f6c22be-d058-45b1-84b3-2de1ed3e07b3",
+              "go": "a6032410-9415-4641-b5c9-8bdf8b84ae0a",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 6426.4927
+              "Relative": 5861.8223
             }
           },
           {
             "__type": "SlideMechanic",
             "Controller": {
               "_type": "component",
-              "go": "9f6c22be-d058-45b1-84b3-2de1ed3e07b3",
+              "go": "a6032410-9415-4641-b5c9-8bdf8b84ae0a",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 6426.4927
+              "Relative": 5861.8223
             }
           },
           {
@@ -194,7 +194,7 @@
             "Controller": null,
             "IsActive": true,
             "TimeSinceActiveChanged": {
-              "Relative": 6426.4927
+              "Relative": 5861.8223
             }
           },
           {
@@ -202,13 +202,21 @@
             "Controller": null,
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 6426.4927
+              "Relative": 5861.8223
+            }
+          },
+          {
+            "__type": "MoveMechanic",
+            "Controller": null,
+            "IsActive": false,
+            "TimeSinceActiveChanged": {
+              "Relative": 5861.8223
             }
           }
         ]
       },
       {
-        "Id": "c7b88773-c994-41c3-a094-af102880d191",
+        "Id": "7702fba2-f48f-417a-b938-52623301c6b6",
         "Name": "Player Camera",
         "Position": "0,0,60",
         "Enabled": true,
@@ -230,12 +238,13 @@
             "ZNear": 0.5
           },
           {
-            "__type": "AudioListener"
+            "__type": "AudioListener",
+            "UseCameraDirection": true
           }
         ]
       },
       {
-        "Id": "435068cf-9f31-4de2-9e2a-1fbdc4977c4c",
+        "Id": "0d7b0924-f4f0-46dd-bb56-a341251a9403",
         "Name": "HUD",
         "Enabled": true,
         "Components": [
@@ -250,7 +259,7 @@
             "__type": "HudPanel",
             "Controller": {
               "_type": "component",
-              "go": "9f6c22be-d058-45b1-84b3-2de1ed3e07b3",
+              "go": "a6032410-9415-4641-b5c9-8bdf8b84ae0a",
               "component_type": "PlayerController"
             }
           }
