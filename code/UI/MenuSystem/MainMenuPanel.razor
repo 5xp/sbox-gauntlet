@@ -16,6 +16,8 @@
 @code
 {
     [Property] public SceneFile PlayScene { get; set; }
+    [Property] public SoundEvent HoverSound { get; set; }
+    [Property] public SoundEvent ClickSound { get; set; }
     [Property] private GameObject Camera { get; set; }
 
     protected override void OnFixedUpdate()
@@ -26,17 +28,23 @@
 
     void Play()
     {
+        OnClick();
         GameManager.ActiveScene.Load(PlayScene);
-        Sound.Play("sounds/kenney/ui/ui.navigate.forward.sound");
     }
 
     void Quit()
     {
         Game.Disconnect();
+        OnClick();
+    }
+
+    void OnClick()
+    {
+        Sound.Play(ClickSound);
     }
 
     void OnMouseOver()
     {
-        Sound.Play("sounds/kenney/ui/ui.button.over.sound");
+        Sound.Play(HoverSound);
     }
 }

@@ -76,6 +76,8 @@
             "_type": "gameobject",
             "go": "adb42f1f-2599-449a-a6fa-407e0c9029bd"
           },
+          "ClickSound": "sounds/kenney/ui/ui.button.press.sound",
+          "HoverSound": "sounds/kenney/ui/ui.button.over.sound",
           "PlayScene": "assets/scenes/level1.scene"
         }
       ]
@@ -104,6 +106,6 @@
   },
   "Title": "minimal",
   "Description": "",
-  "LastSaved": "2024-02-28T19:09:26.8119394-06:00",
+  "LastSaved": "2024-03-01T16:09:05.8378954-06:00",
   "__references": []
 }
