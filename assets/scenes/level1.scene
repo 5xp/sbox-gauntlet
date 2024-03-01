@@ -10,7 +10,7 @@
         {
           "Id": "7a35fdcb-f666-405b-a022-41eeea390fee",
           "Name": "Point Light",
-          "Position": "13.28577,-100.6089,86.53143",
+          "Position": "64.49854,-7.060059,86.53143",
           "Tags": "light_point,light",
           "Enabled": true,
           "Components": [
@@ -28,7 +28,7 @@
         {
           "Id": "440d65b8-1674-4052-85ee-7449f6c2f69a",
           "Name": "Point Light",
-          "Position": "147.7488,-266.4883,97.41776",
+          "Position": "119.9586,-275.4648,97.41776",
           "Tags": "light_point,light",
           "Enabled": true,
           "Components": [
@@ -280,17 +280,53 @@
         {
           "Id": "c4e13323-e246-4b63-bba7-e3b1b98d863c",
           "Name": "Point Light",
-          "Position": "5570.812,8976.857,633.3328",
+          "Position": "5579.801,8967.246,602.895",
           "Tags": "light_point,light",
           "Enabled": true,
           "Components": [
             {
               "__type": "PointLight",
-              "Attenuation": 0.75,
+              "Attenuation": 0.36,
               "FogMode": "Enabled",
               "FogStrength": 1,
-              "LightColor": "0.90233,0.79069,0.58336,1",
-              "Radius": 1173.3988,
+              "LightColor": "1,0.87783,0.08372,1",
+              "Radius": 600,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "9c8fab7b-3b77-487d-ab97-8fde8e744e0b",
+          "Name": "Point Light",
+          "Position": "5541.309,9232.52,609.2189",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0.36,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "1,0.87783,0.08372,1",
+              "Radius": 600,
+              "Shadows": true
+            }
+          ]
+        },
+        {
+          "Id": "c77ef11c-8a5f-4304-91e5-ae8b846fabe1",
+          "Name": "Point Light",
+          "Position": "5562.967,9591.203,588.7192",
+          "Tags": "light_point,light",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0.36,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "0.06512,0.48582,1,1",
+              "Radius": 600,
               "Shadows": true
             }
           ]
@@ -378,6 +414,47 @@
           "TintColor": "1,0.66584,0.33168,1"
         }
       ]
+    },
+    {
+      "Id": "9689f56b-380b-4787-bbda-1bf8be4037a9",
+      "Name": "Teleport Enter",
+      "Position": "3127.49,6183.67,736",
+      "Rotation": "0,0,0.3826835,0.9238795",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "BoxCollider",
+          "Center": "0,0,0",
+          "IsTrigger": true,
+          "Scale": "128,128,512",
+          "Static": false,
+          "Surface": null
+        },
+        {
+          "__type": "TeleportTrigger",
+          "Destination": {
+            "_type": "gameobject",
+            "go": "7fd9e52d-b7f0-4305-ad22-4af914b4278e"
+          }
+        }
+      ]
+    },
+    {
+      "Id": "7fd9e52d-b7f0-4305-ad22-4af914b4278e",
+      "Name": "Teleport Dest",
+      "Position": "-2319.82,-3055.82,224",
+      "Rotation": "0,0,0.3826835,0.9238795",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "BoxCollider",
+          "Center": "0,0,0",
+          "IsTrigger": true,
+          "Scale": "128,128,0",
+          "Static": false,
+          "Surface": null
+        }
+      ]
     }
   ],
   "SceneProperties": {
@@ -403,6 +480,6 @@
   },
   "Title": "minimal",
   "Description": "",
-  "LastSaved": "2024-02-27T19:32:15.9439985-06:00",
+  "LastSaved": "2024-02-29T23:19:30.9749264-06:00",
   "__references": []
 }

@@ -18,6 +18,11 @@ public partial class PlayerController : Component
 	[Property] public CameraController CameraController { get; set; }
 
 	/// <summary>
+	/// A reference to the player's hull collider, used for colliding with triggers.
+	/// </summary>
+	[Property] public HullCollider HullCollider { get; set; }
+
+	/// <summary>
 	/// Get a quick reference to the real Camera GameObject.
 	/// </summary>
 	public GameObject CameraGameObject => CameraController.Camera.GameObject;
@@ -104,6 +109,15 @@ public partial class PlayerController : Component
 	}
 
 	public Angles EyeAngles;
+
+	protected override void OnStart()
+	{
+		if ( HullCollider is not null )
+		{
+			HullCollider.Center = Vector3.Up * PlayerSettings.HullHeightStanding * 0.5f;
+			HullCollider.BoxSize = new Vector3( PlayerSettings.HullRadius * 2, PlayerSettings.HullRadius * 2, PlayerSettings.HullHeightStanding );
+		}
+	}
 
 	protected override void OnFixedUpdate()
 	{
