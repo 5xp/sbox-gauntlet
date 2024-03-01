@@ -90,6 +90,11 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	private bool IsWallrunWeak { get; set; }
 
 	/// <summary>
+	/// Timer to keep track of how long it's been since we touched a wall
+	/// </summary>
+	public TimeSince TimeSinceTouchedWall { get; set; }
+
+	/// <summary>
 	/// Timer to keep track of how long we've been pushing away from the wall
 	/// </summary>
 	private TimeSince TimeSincePushingAway { get; set; }
@@ -116,7 +121,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	[ConVar( "debug_wallrun_settings", Help = "Changes various wallrun settings to aid in testing wall movement" )]
 	public static bool DebugWallrunSettings { get; set; } = false;
 
-	public override int Priority => 28;
+	public override int Priority => 2;
 
 	protected override void OnStart()
 	{
@@ -135,15 +140,21 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 		if ( Controller.IsGrounded ) return false;
 
-		if ( !WallNormal.HasValue ) return false;
+		if ( !ShouldWallrun ) return false;
 
 		return true;
 	}
 
 	public override void OnActiveUpdate()
 	{
+		if ( Input.Down( "Duck" ) )
+		{
+			FallAwayFromWall( false );
+		}
+
 		if ( !WallNormal.HasValue )
 		{
+			ShouldWallrun = false;
 			return;
 		}
 
@@ -197,7 +208,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 	public void OnWallTouch( Vector3 wallNormal )
 	{
-		if ( IsActive )
+		if ( IsActive || !PlayerSettings.WallrunEnable )
 		{
 			return;
 		}
@@ -211,6 +222,8 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 		IsWallrunWeak = eligibility.HasFlag( WallrunEligibility.Weak );
 		UpdateWallNormal( wallNormal );
+		ShouldWallrun = true;
+		TimeSinceTouchedWall = 0;
 	}
 
 	private void WallrunMove()
@@ -284,12 +297,6 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		if ( Velocity.z > 0f && IsNearTopWall( Position, WallNormal.Value ) )
 		{
 			ApplyTopWallDecel();
-		}
-
-		if ( Input.Down( "Duck" ) )
-		{
-			FallAwayFromWall( false );
-			return;
 		}
 
 		if ( TimeSinceStart > PlayerSettings.WallrunTimeLimit )
@@ -387,11 +394,15 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		}
 	}
 
-	private void ClearWallNormal()
+	private void ClearWallNormal( bool skipNextTick = true )
 	{
 		WallNormal = null;
 		TargetWallNormal = null;
-		ShouldWallrun = false;
+
+		if ( skipNextTick )
+		{
+			ShouldWallrun = false;
+		}
 	}
 
 	/// <summary>
@@ -399,7 +410,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	/// </summary>
 	private void FallAwayFromWall( bool setTimeSince = true )
 	{
-		Velocity += WallNormal.Value * PlayerSettings.WallrunFallAwaySpeed;
+		Velocity += LastWallNormal * PlayerSettings.WallrunFallAwaySpeed;
 		ClearWallNormal();
 
 		if ( setTimeSince )
@@ -550,9 +561,9 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	{
 		HasBoost = true;
 
-		if ( IsActive )
+		if ( WallNormal.HasValue )
 		{
-			ClearWallNormal();
+			ClearWallNormal( false );
 		}
 	}
 
