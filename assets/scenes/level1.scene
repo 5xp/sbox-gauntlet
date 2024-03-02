@@ -436,6 +436,9 @@
             "_type": "gameobject",
             "go": "7fd9e52d-b7f0-4305-ad22-4af914b4278e"
           }
+        },
+        {
+          "__type": "EndZone"
         }
       ]
     },
@@ -453,6 +456,25 @@
           "Scale": "128,128,0",
           "Static": false,
           "Surface": null
+        }
+      ]
+    },
+    {
+      "Id": "23cf7107-4526-41d2-81c7-f71e766c1fb8",
+      "Name": "Start zone",
+      "Position": "-1908.286,-2595.271,366.9794",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "BoxCollider",
+          "Center": "0,0,0",
+          "IsTrigger": true,
+          "Scale": "1275.602,1286.505,288",
+          "Static": false,
+          "Surface": null
+        },
+        {
+          "__type": "StartZone"
         }
       ]
     }
@@ -478,8 +500,8 @@
       "IncludedBodies": ""
     }
   },
-  "Title": "minimal",
+  "Title": "level1",
   "Description": "",
-  "LastSaved": "2024-02-29T23:19:30.9749264-06:00",
+  "LastSaved": "2024-03-02T20:26:56.1961098-06:00",
   "__references": []
 }

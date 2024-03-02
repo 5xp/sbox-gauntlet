@@ -10,6 +10,8 @@
 @code
 {
 	[Property] private PlayerController Controller { get; set; }
+	[Property] private Timer Timer { get; set; }
+	public TimerPanel TimerPanel { get; set; }
 
 	/// <summary>
 	/// The z component is rotation.
@@ -29,10 +31,18 @@
 
 	protected override void OnStart()
 	{
+		Timer.OnTimerStart += OnTimerStart;
+		Timer.OnTimerRestart += OnTimerRestart;
+		Timer.OnTimerEnd += OnTimerEnd;
 		ViewPunchSpring = Controller.GetMechanic<ViewPunchMechanic>().Spring;
 	}
 
 	protected override void OnUpdate()
+	{
+		UpdatePosition();
+	}
+
+	private void UpdatePosition()
 	{
 		Vector4 viewPunchContribution = GetViewPunchContribution();
 		Vector4 swayTurnContribution = GetSwayTurnContribution();
@@ -100,4 +110,37 @@
 	}
 
 	private float GetScale() => 1f / (1f + Position.w);
+
+	private void OnTimerStart()
+	{
+		if (Timer.NumCompletionsThisSession == 0)
+		{
+			TimerPanel = new();
+			TimerPanel.Timer = Timer;
+			TimerPanel.Parent = Panel;
+		}
+
+		TimerPanel.RemoveClass("complete");
+		TimerPanel.RemoveClass("pb");
+	}
+
+	private void OnTimerRestart()
+	{
+		if (Timer.NumCompletionsThisSession == 0)
+		{
+			TimerPanel.Delete();
+		}
+	}
+
+	private void OnTimerEnd(float _1, bool isBest, int _2)
+	{
+		if (isBest)
+		{
+			TimerPanel.AddClass("pb");
+		}
+		else
+		{
+			TimerPanel.AddClass("complete");
+		}
+	}
 }

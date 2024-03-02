@@ -3,14 +3,14 @@
 
 <root class="pk">
   <div class="speedometer-container backdrop">
-    <p>@HUPSToKPH(HorzVelocity.Length).ToString("F1") kph</p>
+    <p class="mono">@Common.HUPSToKPH(HorzVelocity.Length).ToString("F1")</p>
+    <div class="spacer" />
+    <p>kph</p>
   </div>
 </root>
 
 @code
 {
   public Vector3 HorzVelocity { get; set; }
-  protected override int BuildHash() => System.HashCode.Combine(HUPSToKPH(HorzVelocity.Length).ToString("F1"));
-
-  private float HUPSToKPH(float hups) => hups * 0.091392f;
+  protected override int BuildHash() => System.HashCode.Combine(Common.HUPSToKPH(HorzVelocity.Length).ToString("F1"));
 }

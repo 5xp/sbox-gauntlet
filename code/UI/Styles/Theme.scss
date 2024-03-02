@@ -1,7 +1,13 @@
 $main-font: Geist;
+$main-font-mono: "Geist Mono";
 $main-color-dark: rgba(36, 36, 36, 0.603);
+$main-color-darker: rgba(0, 0, 0, 0.722);
 $main-color-primary: rgb(79, 172, 238);
 $main-color-secondary: rgb(10, 48, 71);
+$completion-color: #00bfff98;
+$completion-color-dark: #056c8e98;
+$pb-color: #33dc007f;
+$pb-color-dark: #33dc00;
 
 @import "Text.scss";
 @import "Layout.scss";

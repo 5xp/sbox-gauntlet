@@ -1,0 +1,15 @@
+@namespace Tf.UI
+@inherits Panel
+
+<root class="pk">
+  <div class="timer-container backdrop">
+    <h4>@Timer.LastOrCurrentLoop.ToOrdinal() loop</h4>
+    <p>@Timer</p>
+  </div>
+</root>
+
+@code
+{
+  public Timer Timer { get; set; }
+  protected override int BuildHash() => Timer.ToString().GetHashCode();
+}
