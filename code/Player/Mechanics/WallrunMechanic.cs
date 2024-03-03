@@ -16,11 +16,6 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	{
 		get
 		{
-			if ( Controller.IsGrounded )
-			{
-				return null;
-			}
-
 			if ( !PlayerSettings.WallrunEnable )
 			{
 				return null;
