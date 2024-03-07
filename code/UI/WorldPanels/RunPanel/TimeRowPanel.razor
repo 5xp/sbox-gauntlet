@@ -1,0 +1,23 @@
+@namespace Tf.UI
+@inherits Panel
+
+<root class="pk">
+  <article class="data-row">
+    <div class="data-cell">
+      <div class="data-label">@(Timer.InStartZone ? "" : "Elapsed") Time</div>
+      <div class="data-value number">@Timer.ToString()</div>
+      <div class="data-label-small time">
+        <span>Best:</span>
+        <span class="number">@Timer.BestTimeString(Timer.LastOrCurrentLoop)</span>
+      </div>
+    </div>
+    <div class="vl"></div>
+    <aside class="icon time">restore</aside>
+  </article>
+</root>
+
+@code {
+  public Timer Timer { get; set; }
+  protected override int BuildHash() => System.HashCode.Combine(Timer.ToString(),
+  Timer.BestTimeString(Timer.LastOrCurrentLoop), Timer.InStartZone);
+}

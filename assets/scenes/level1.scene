@@ -349,6 +349,53 @@
       "Children": []
     },
     {
+      "Id": "579f83fd-227b-45e8-87e7-bf1f301f95de",
+      "Name": "WorldPanels",
+      "Enabled": true,
+      "Children": [
+        {
+          "Id": "824d3fe8-693b-46ec-9b4d-10ee075a78be",
+          "Name": "RunPanel",
+          "Position": "-1697.371,-2368.062,365.1968",
+          "Rotation": "0,0,0.9238796,-0.3826834",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "WorldPanel",
+              "HorizontalAlign": "Center",
+              "LookAtCamera": false,
+              "PanelSize": "8000,5000",
+              "RenderScale": 1,
+              "VerticalAlign": "Center"
+            },
+            {
+              "__type": "RunPanel"
+            }
+          ]
+        },
+        {
+          "Id": "182ab688-2b99-4896-8999-5be777f1a9d8",
+          "Name": "RunPanel",
+          "Position": "3748.22,6871.124,876.9724",
+          "Rotation": "0,0,0.9238796,-0.3826834",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "WorldPanel",
+              "HorizontalAlign": "Center",
+              "LookAtCamera": false,
+              "PanelSize": "8000,5000",
+              "RenderScale": 1,
+              "VerticalAlign": "Center"
+            },
+            {
+              "__type": "RunPanel"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Id": "0f04ee6a-6956-44a5-851e-aa6b5151fa34",
       "Name": "GameManager",
       "Position": "0.0003538796,-611.6824,64.27141",
@@ -469,7 +516,7 @@
           "__type": "BoxCollider",
           "Center": "0,0,0",
           "IsTrigger": true,
-          "Scale": "1275.602,1286.505,288",
+          "Scale": "1275.602,1285.006,288",
           "Static": false,
           "Surface": null
         },
@@ -502,6 +549,6 @@
   },
   "Title": "level1",
   "Description": "",
-  "LastSaved": "2024-03-02T20:26:56.1961098-06:00",
+  "LastSaved": "2024-03-03T20:00:49.8619498-06:00",
   "__references": []
 }
