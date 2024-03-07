@@ -471,13 +471,13 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 		float speedFraction = HorzVelocity.Length.LerpInverse( 0f, 100f );
 
-		MaintainRelativeYaw( horzEyeAngles.Normal );
+		MaintainRelativeYaw( horzEyeAngles );
 
 		// If we're wallrunning and looking and moving forward
 		if ( WallNormal.HasValue && horzEyeAngles.Forward.Dot( Velocity.Normal ) >= 0f )
 		{
 			Angles wallAngles = WallNormal.Value.EulerAngles.WithPitch( 0f ).Normal;
-			CorrectYaw( wallAngles, horzEyeAngles.Normal, speedFraction );
+			CorrectYaw( wallAngles, horzEyeAngles, speedFraction );
 			CorrectPitch( wallAngles, vertEyeAngles, speedFraction );
 		}
 	}
@@ -511,7 +511,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	/// </summary>
 	private void CorrectYaw( Angles wallAngles, Angles horzEyeAngles, float speedFraction )
 	{
-		Angles angleDiff = wallAngles - horzEyeAngles;
+		Angles angleDiff = (wallAngles - horzEyeAngles).Normal;
 		float correctedAngleOffset = PlayerSettings.WallrunViewYawOffset;
 
 		if ( MathF.Abs( angleDiff.yaw ) < correctedAngleOffset )
@@ -522,9 +522,13 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		Angles correctedAngle2 = wallAngles - Angles.Zero.WithYaw( correctedAngleOffset );
 		Angles closerAngle = horzEyeAngles.Distance( correctedAngle1 ) < horzEyeAngles.Distance( correctedAngle2 ) ? correctedAngle1 : correctedAngle2;
 
+		// This is kinda cursed, but I can't think of a better way to do it
 		float t = MathUtils.EaseOutCubic( speedFraction * Time.Delta );
-		horzEyeAngles = horzEyeAngles.LerpTo( closerAngle, t );
-		Controller.EyeAngles = Controller.EyeAngles.WithYaw( horzEyeAngles.yaw );
+		Vector3 anglesVec = horzEyeAngles.Forward;
+		Angles newAngle = horzEyeAngles.LerpTo( closerAngle, t ).Normal;
+		Vector3 newAnglesVec = newAngle.Forward;
+		anglesVec = anglesVec.RotateTowards( newAnglesVec, MathX.DegreeToRadian( 85f * Time.Delta ) );
+		Controller.EyeAngles = Controller.EyeAngles.WithYaw( anglesVec.EulerAngles.yaw );
 	}
 
 	/// <summary>

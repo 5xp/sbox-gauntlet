@@ -184,5 +184,6 @@ public sealed class PlayerSettings
 	public float WallrunViewYawOffset { get; set; } = 80f;
 	public float WallrunViewPitchOffsetMin { get; set; } = 30f;
 	public float WallrunViewPitchOffsetMax { get; set; } = 50f;
+	public float WallrunViewYawCorrectSpeed { get; set; } = 85f;
 	public float WallrunViewPitchOffsetCorrectSpeed { get; set; } = 35f;
 }
