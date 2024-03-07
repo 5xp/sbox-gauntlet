@@ -1,0 +1,55 @@
+@namespace Tf.UI
+@inherits Panel
+@using Sandbox.Services
+
+<root class="pk">
+  @{
+    string ident = Common.GetTimeStatIdent(Scene.Title, Timer.LastOrCurrentLoop);
+    List<Leaderboards.Entry> entries = AroundPlayer ?
+    LeaderboardManager.Instance.GetAroundPlayer(ident).Result
+    : LeaderboardManager.Instance.GetTopTen(ident).Result;
+
+    int lastRank = 0;
+  }
+
+  @if (entries.Count <= 0)
+  {
+    return;
+  }
+
+  @if (AroundPlayer)
+  {
+    <h1 class="leaderboard-title">Around You</h1>
+  }
+  else
+  {
+    <h1 class="leaderboard-title">Top Players</h1>
+  }
+
+  <div class="entry-container">
+    @foreach (Leaderboards.Entry entry in entries)
+    {
+      <div class="entry @(entry.Me ? "me" : "") @(entry.Rank == 1 ? "top" : "")">
+        <p class="entry-rank">@entry.Rank</p>
+        <img src="avatar:@entry.SteamId" />
+        <p class="entry-name">@entry.DisplayName</p>
+        <p class="entry-time">@(Common.TimeToString(Convert.ToInt32(entry.Value), Scene.FixedDelta, true))</p>
+      </div>
+
+      lastRank = Convert.ToInt32(entry.Rank);
+    }
+
+    @for (int i = lastRank + 1; i <= 10; i++)
+    {
+      <div class="entry">
+        <p class="entry-rank">@i</p>
+      </div>
+    }
+  </div>
+</root>
+
+@code {
+  public bool AroundPlayer { get; set; }
+  public Timer Timer { get; set; }
+  protected override int BuildHash() => System.HashCode.Combine(Timer.InStartZone);
+}

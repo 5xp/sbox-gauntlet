@@ -381,6 +381,25 @@
                   "__type": "RunPanel"
                 }
               ]
+            },
+            {
+              "Id": "50915eb3-ff3c-4924-9f99-749d547b3da5",
+              "Name": "LeaderboardPanel",
+              "Position": "-2113.92,-3992.064,368.9423",
+              "Enabled": true,
+              "Components": [
+                {
+                  "__type": "WorldPanel",
+                  "HorizontalAlign": "Center",
+                  "LookAtCamera": false,
+                  "PanelSize": "4000,4600",
+                  "RenderScale": 1,
+                  "VerticalAlign": "Center"
+                },
+                {
+                  "__type": "StandaloneLeaderboardPanel"
+                }
+              ]
             }
           ]
         },
@@ -444,6 +463,81 @@
               "Scale": "128,128,0",
               "Static": false,
               "Surface": null
+            }
+          ]
+        },
+        {
+          "Id": "c596fb58-adc5-4ad2-95a7-216d11d1442a",
+          "Name": "Player clips",
+          "Enabled": true,
+          "Children": [
+            {
+              "Id": "e9918c60-9d0f-45ea-a60e-042904e0109b",
+              "Name": "Object",
+              "Position": "3059.054,4669.152,860.5557",
+              "Rotation": "0,0,0.3826835,0.9238795",
+              "Enabled": true,
+              "Components": [
+                {
+                  "__type": "BoxCollider",
+                  "Center": "0,0,0",
+                  "IsTrigger": false,
+                  "Scale": "119.8999,5,265.2001",
+                  "Static": false,
+                  "Surface": null
+                }
+              ]
+            },
+            {
+              "Id": "ba9caf4b-fc9a-4aaa-87f6-49ef6c647986",
+              "Name": "Object",
+              "Position": "-2114.362,-3996.007,376.2405",
+              "Rotation": "0,0,0.7071068,0.7071068",
+              "Enabled": true,
+              "Components": [
+                {
+                  "__type": "BoxCollider",
+                  "Center": "0,0,0",
+                  "IsTrigger": false,
+                  "Scale": "217.8001,5,265.2001",
+                  "Static": false,
+                  "Surface": null
+                }
+              ]
+            },
+            {
+              "Id": "e76e6259-f36e-4062-bff4-cf30e9a934ce",
+              "Name": "Object",
+              "Position": "-1691.561,-3905.927,376.2405",
+              "Rotation": "0,0,0.9238795,0.3826834",
+              "Enabled": true,
+              "Components": [
+                {
+                  "__type": "BoxCollider",
+                  "Center": "0,0,0",
+                  "IsTrigger": false,
+                  "Scale": "444.7997,5,265.2001",
+                  "Static": false,
+                  "Surface": null
+                }
+              ]
+            },
+            {
+              "Id": "04b42518-295e-4546-a387-14b5c2f9c4d3",
+              "Name": "Object",
+              "Position": "3149.367,4578.839,860.5557",
+              "Rotation": "0,0,0.3826835,0.9238795",
+              "Enabled": true,
+              "Components": [
+                {
+                  "__type": "BoxCollider",
+                  "Center": "0,0,0",
+                  "IsTrigger": false,
+                  "Scale": "119.8999,5,265.2001",
+                  "Static": false,
+                  "Surface": null
+                }
+              ]
             }
           ]
         }
@@ -555,6 +649,6 @@
   },
   "Title": "level1",
   "Description": "",
-  "LastSaved": "2024-03-04T16:04:55.9769585-06:00",
+  "LastSaved": "2024-03-06T21:15:05.7581834-06:00",
   "__references": []
 }

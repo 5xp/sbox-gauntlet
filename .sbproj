@@ -1,5 +1,5 @@
 {
-  "Title": "Gauntlet Movement Test",
+  "Title": "Gauntlet",
   "Type": "game",
   "Org": "cflo",
   "Ident": "gauntlet",
@@ -90,8 +90,12 @@
       "DefineConstants": "SANDBOX;ADDON;DEBUG",
       "NoWarn": "1701;1702;1591;",
       "WarningsAsErrors": "",
+      "Whitelist": true,
       "AssemblyReferences": [],
-      "IgnoreFolders": [],
+      "IgnoreFolders": [
+        "editor",
+        "unittest"
+      ],
       "DistinctAssemblyReferences": []
     },
     "ControlModes": {

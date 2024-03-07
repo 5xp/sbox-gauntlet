@@ -14,6 +14,11 @@ public sealed class GameNetworkManager : Component, Component.INetworkListener
 
 	protected override void OnStart()
 	{
+		LeaderboardManager.Instance.StopPolling();
+		LeaderboardManager.Instance.ResetSubscriptions();
+		_ = LeaderboardManager.Instance.FetchLeaderboardEntries( Common.GetTimeStatIdent( Scene.Title, 1 ), true );
+		_ = LeaderboardManager.Instance.FetchLeaderboardEntries( Common.GetTimeStatIdent( Scene.Title, 2 ), true );
+
 		if ( !IsMultiplayer )
 		{
 			SpawnPlayer();

@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace Tf;
 
 public static class Common
@@ -27,5 +29,40 @@ public static class Common
       default:
         return num + "th";
     }
+  }
+
+  public static string TimeToString( float time, bool includeUnit = false )
+  {
+    TimeSpan timeSpan = TimeSpan.FromSeconds( time );
+
+    if ( timeSpan.Minutes >= 1 )
+    {
+      return timeSpan.ToString( @"m\:ss" ) + (includeUnit ? "m" : "");
+    }
+    else
+    {
+      return timeSpan.ToString( @"s\.ff" ) + (includeUnit ? "s" : "");
+    }
+  }
+
+  public static string TimeToString( int ticks, float timeDelta, bool includeUnit = false )
+  {
+    return TimeToString( ticks * timeDelta, includeUnit );
+  }
+
+  public static string GetTimeStatIdent( string title, int loopNum = 1 )
+  {
+    string levelNumber;
+    Match match = Regex.Match( title, @"\d+" );
+    if ( match.Success )
+    {
+      levelNumber = match.Value;
+    }
+    else
+    {
+      throw new Exception( "Could not parse level number from scene title" );
+    }
+
+    return $"{Timer.StatVersion}-{levelNumber}.{(loopNum > 1 ? 2 : 1)}.time";
   }
 }

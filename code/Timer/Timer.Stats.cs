@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Sandbox.Services;
 
@@ -12,20 +11,32 @@ public sealed partial class Timer
   public int? BestFirstLoopTime { get; private set; }
   public int? BestLoopTime { get; private set; }
 
-  public static string StatVersion => "0.1";
+  public static string StatVersion => "v0.1";
 
-  private void GetStats()
+  /// <summary>
+  /// Called when the game starts. Fetches the leaderboard entries for the current level, so our entry gets cached.
+  /// </summary>
+  private async Task GetStats()
   {
-    // var stats = Stats.GetLocalPlayerStats( "cflo.gauntlet" );
+    Task t1 = LeaderboardManager.Instance.FetchLeaderboardEntries( Common.GetTimeStatIdent( Scene.Title, 1 ) );
+    Task t2 = LeaderboardManager.Instance.FetchLeaderboardEntries( Common.GetTimeStatIdent( Scene.Title, 2 ) );
 
-    // bool success1 = stats.TryGet( GetTimeStatIdent( 1 ), out var bestFirstLoopTime );
-    // bool success2 = stats.TryGet( GetTimeStatIdent( 2 ), out var bestLoopTime );
+    await Task.WhenAll( t1, t2 );
 
-    // if ( success1 && success2 && bestFirstLoopTime.Value != 0 && bestLoopTime.Value != 0 )
-    // {
-    //   BestFirstLoopTime = Convert.ToInt32( bestFirstLoopTime.Value );
-    //   BestLoopTime = Convert.ToInt32( bestLoopTime.Value );
-    // }
+    SetStats();
+  }
+
+  private void SetStats()
+  {
+    if ( LeaderboardManager.Instance.MyEntryCache.TryGetValue( Common.GetTimeStatIdent( Scene.Title, 1 ), out var entry ) )
+    {
+      BestFirstLoopTime = Convert.ToInt32( entry.Value );
+    }
+
+    if ( LeaderboardManager.Instance.MyEntryCache.TryGetValue( Common.GetTimeStatIdent( Scene.Title, 2 ), out var entry2 ) )
+    {
+      BestLoopTime = Convert.ToInt32( entry2.Value );
+    }
   }
 
   private void UpdateStats()
@@ -43,7 +54,7 @@ public sealed partial class Timer
 
   private bool UpdateBestTime( int ticks )
   {
-    string stat = GetTimeStatIdent( CurrentLoop );
+    string stat = Common.GetTimeStatIdent( Scene.Title, CurrentLoop );
 
     if ( CurrentLoop == 1 && (!BestFirstLoopTime.HasValue || ticks < BestFirstLoopTime.Value) )
     {
@@ -60,22 +71,5 @@ public sealed partial class Timer
     }
 
     return false;
-  }
-
-  private string GetTimeStatIdent( int loopNum = 1 )
-  {
-    string title = Scene.Title;
-    string levelNumber;
-    Match match = Regex.Match( title, @"\d+" );
-    if ( match.Success )
-    {
-      levelNumber = match.Value;
-    }
-    else
-    {
-      throw new Exception( "Could not parse level number from title" );
-    }
-
-    return $"v{StatVersion}-{levelNumber}.{(loopNum > 1 ? 2 : 1)}.time";
   }
 }

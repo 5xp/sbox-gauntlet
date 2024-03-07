@@ -1,0 +1,18 @@
+@import "UI/Styles/Theme.scss";
+@import "UI/Game/LeaderboardPanel.razor.scss";
+
+StandaloneLeaderboardPanel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  .leaderboard-container {
+    padding: 7% 7%;
+
+    LeaderboardPanel {
+      justify-content: center;
+    }
+  }
+}

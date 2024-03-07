@@ -43,7 +43,7 @@ public sealed partial class Timer : Component
 
 	protected override void OnStart()
 	{
-		GetStats();
+		_ = GetStats();
 	}
 
 	protected override void OnFixedUpdate()
@@ -54,6 +54,8 @@ public sealed partial class Timer : Component
 			{
 				CurrentLoop = 1;
 			}
+
+			LeaderboardManager.Instance.StartPolling( this );
 
 			return;
 		}
@@ -105,31 +107,12 @@ public sealed partial class Timer : Component
 
 	public override string ToString()
 	{
-		return TimeToString( Time );
-	}
-
-	public string TimeToString( float time )
-	{
-		TimeSpan timeSpan = TimeSpan.FromSeconds( time );
-
-		if ( timeSpan.Minutes >= 1 )
-		{
-			return timeSpan.ToString( @"m\:ss" );
-		}
-		else
-		{
-			return timeSpan.ToString( @"s\.ff" );
-		}
-	}
-
-	public string TimeToString( int ticks )
-	{
-		return TimeToString( ticks * Scene.FixedDelta );
+		return Common.TimeToString( Time );
 	}
 
 	public string BestTimeString( int loop )
 	{
 		int time = loop > 1 ? BestLoopTime ?? 0 : BestFirstLoopTime ?? 0;
-		return time == 0 ? "N/A" : TimeToString( time * Scene.FixedDelta );
+		return time == 0 ? "N/A" : Common.TimeToString( time * Scene.FixedDelta );
 	}
 }

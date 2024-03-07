@@ -1,0 +1,83 @@
+@import "UI/Styles/Theme.scss";
+
+LeaderboardPanel {
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+
+  h1 {
+    font-size: 200px;
+    font-family: $main-font;
+    color: white;
+    font-weight: 500;
+    text-align: left;
+    width: 100%;
+    margin: 40px 0 40px 0;
+  }
+
+  p {
+    font-size: 80px;
+    font-family: $main-font;
+    color: white;
+    font-weight: normal;
+  }
+
+  img {
+    height: 100px;
+    width: 100px;
+  }
+
+  .entry-container {
+    flex-direction: column;
+    border-radius: 75px;
+    overflow: hidden;
+  }
+
+  .entry {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    height: 150px;
+  }
+
+  .entry:nth-child(even) {
+    background-color: rgba(35, 35, 35, 0.352);
+  }
+
+  .entry.me {
+    // text-shadow: 0 0 20px rgba($main-color-primary, 0.7);
+    background-color: rgba($main-color-primary, 0.05);
+
+    p {
+      color: $main-color-primary;
+    }
+  }
+
+  .entry.top {
+    // text-shadow: 0 0 20px rgba($color-top1, 1);
+    background-color: rgba($color-top1, 0.02);
+
+    p {
+      color: $color-top1;
+    }
+  }
+
+  .entry-rank {
+    padding-left: 50px;
+    font-family: $main-font-mono;
+    width: 320px;
+  }
+
+  .entry-name {
+    flex: 1;
+    padding-left: 80px;
+    text-align: left;
+    text-overflow: ellipsis;
+  }
+
+  .entry-time {
+    text-align: right;
+    padding-right: 80px;
+  }
+}
