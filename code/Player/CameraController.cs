@@ -44,6 +44,6 @@ public sealed class CameraController : Component
 
 	protected override void OnFixedUpdate()
 	{
-		BaseFieldOfView = Preferences.FieldOfView;
+		BaseFieldOfView = Screen.CreateVerticalFieldOfView( Preferences.FieldOfView );
 	}
 }
