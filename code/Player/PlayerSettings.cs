@@ -83,6 +83,7 @@ public sealed class PlayerSettings
 	public float SprintTiltAccel { get; set; } = 35f;
 	public float JumpHeight { get; set; } = 60f;
 	public float JumpGracePeriod { get; set; } = 0.2f;
+	public float JumpBufferTime { get; set; } = 1 / 128f;
 	public float JumpKeyboardGracePeriodMin { get; set; } = 0.2f;
 	public float JumpKeyboardGracePeriodMax { get; set; } = 0.5f;
 	public float JumpKeyboardGraceMax { get; set; } = 0.7f;

@@ -10,6 +10,8 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 	private TimeSince TimeSinceGroundJump { get; set; }
 	private TimeSince TimeSinceAirJump { get; set; }
 	private TimeSince TimeSinceWallJump { get; set; }
+	private TimeSince TimeSinceJumpBuffered { get; set; }
+	private bool JumpBuffered { get; set; }
 
 	public override int Priority => 1;
 
@@ -20,7 +22,7 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 
 	public override bool ShouldBecomeActive()
 	{
-		if ( !Input.Pressed( "Jump" ) ) return false;
+		if ( !JumpBuffered ) return false;
 
 		if ( !PlayerSettings.CanJumpWhileUnducking )
 		{
@@ -28,7 +30,7 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 				return false;
 		}
 
-		bool canJump = ShouldGroundJump() || ShouldAirJump() || ShouldWallJump();
+		bool canJump = ShouldGroundJump() || (ShouldAirJump() && !ShouldDiscardAirJump()) || ShouldWallJump();
 
 		if ( !canJump ) return false;
 
@@ -50,6 +52,8 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 	protected override void OnActiveChanged( bool before, bool after )
 	{
 		if ( !after ) return;
+
+		JumpBuffered = false;
 
 		JumpType jumpType = JumpType.Ground;
 
@@ -75,6 +79,17 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 
 	public override void Simulate()
 	{
+		if ( TimeSinceJumpBuffered > GetJumpBufferTime() )
+		{
+			JumpBuffered = false;
+		}
+
+		if ( Input.Pressed( "Jump" ) )
+		{
+			JumpBuffered = true;
+			TimeSinceJumpBuffered = 0;
+		}
+
 		if ( Controller.IsGrounded ) return;
 		if ( !DidPressMovementKey() ) return;
 		RedirectVelocity( TimeSinceStart );
@@ -100,9 +115,33 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 		TimeSinceAirJump = 0;
 	}
 
+	private float GetJumpBufferTime()
+	{
+		if ( PlayerController.DebugOverrideJumpBufferTicks > -1 )
+		{
+			return PlayerController.DebugOverrideJumpBufferTicks * Scene.FixedDelta;
+		}
+
+		return PlayerSettings.JumpBufferTime;
+	}
+
 	private bool ShouldWallJump()
 	{
 		return Controller.GetMechanic<WallrunMechanic>().WallNormal.HasValue || RecentlyFellAwayFromWall();
+	}
+
+	/// <summary>
+	/// Returns true if we are about to touch the ground or a walljumpable wall.
+	/// </summary>
+	private bool ShouldDiscardAirJump()
+	{
+		if ( PredictGroundTouch( GetJumpBufferTime() ) )
+			return true;
+
+		if ( Controller.GetMechanic<WallrunMechanic>().PredictWallrun( GetJumpBufferTime() ).HasValue )
+			return true;
+
+		return false;
 	}
 
 	/// <summary>
@@ -307,6 +346,18 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 		WallrunMechanic wallrun = Controller.GetMechanic<WallrunMechanic>();
 
 		return wallrun.TimeSinceFellAwayFromWall <= PlayerSettings.JumpGracePeriod && TimeSinceLastStart > wallrun.TimeSinceFellAwayFromWall;
+	}
+
+	private bool PredictGroundTouch( float timeStep )
+	{
+		SceneTraceResult tr = Controller.TraceWithVelocity( timeStep );
+
+		if ( !tr.Hit )
+		{
+			return false;
+		}
+
+		return Controller.IsFloor( tr.Normal );
 	}
 
 	private void OnLanded()

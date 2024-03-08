@@ -33,6 +33,9 @@ public partial class PlayerController : Component
 	[ConVar( "debug_viewPunch" )]
 	public static bool DebugViewPunch { get; set; } = false;
 
+	[ConVar( "debug_override_jump_buffer_ticks" )]
+	public static int DebugOverrideJumpBufferTicks { get; set; } = -1;
+
 	/// <summary>
 	/// Mechanics can add to this camera offset. Resets to zero after every frame.
 	/// </summary>
@@ -471,6 +474,17 @@ public partial class PlayerController : Component
 		{
 			TimeSinceLastLanding = 0;
 		}
+	}
+
+	/// <summary>
+	/// Uses the current velocity to trace with a given timestep. If we hit anything return the hit normal.
+	/// </summary>
+	/// <param name="timeStep"></param>
+	/// <returns></returns>
+	public SceneTraceResult TraceWithVelocity( float timeStep )
+	{
+		Vector3 nextPos = Position + Velocity * timeStep;
+		return TraceBBox( Position, nextPos );
 	}
 
 	public void Write( ref ByteStream stream )

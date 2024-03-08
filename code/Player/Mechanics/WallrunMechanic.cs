@@ -166,7 +166,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	{
 		if ( !IsActive && !Controller.IsGrounded )
 		{
-			PredictedWallNormal = PredictWallrun( PlayerSettings.WallrunTiltPredictTime );
+			PredictedWallNormal = PredictWallrun();
 		}
 		else
 		{
@@ -624,16 +624,9 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	/// <returns>
 	/// Returns the normal vector of the wall if a wallrun is possible, otherwise returns null.
 	/// </returns>
-	private Vector3? PredictWallrun( float timeStep )
+	public Vector3? PredictWallrun( float timeStep )
 	{
-		Vector3 nextPos = Position + Velocity * timeStep;
-
-		SceneTraceResult tr = Controller.TraceBBox( Position, nextPos );
-
-		if ( !tr.Hit )
-		{
-			return null;
-		}
+		SceneTraceResult tr = Controller.TraceWithVelocity( timeStep );
 
 		if ( Controller.IsFloor( tr.Normal ) )
 		{
@@ -648,6 +641,11 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		}
 
 		return tr.Normal;
+	}
+
+	public Vector3? PredictWallrun()
+	{
+		return PredictWallrun( PlayerSettings.WallrunTiltPredictTime );
 	}
 
 	/// <summary>
