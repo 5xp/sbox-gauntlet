@@ -85,6 +85,13 @@ public partial class PlayerController
 		CurrentAccelerationOverride = accelerationOverride;
 
 		tags = currentTags.ToImmutableArray();
+
+		if ( RecordWallJumpThisTick )
+		{
+			OnFastWallJump?.Invoke( AfterWallJumpSpeed - PreWallTouchSpeed, WallJumpTimeDiff );
+		}
+
+		RecordWallJumpThisTick = false;
 	}
 
 	public T GetMechanic<T>() where T : BasePlayerControllerMechanic

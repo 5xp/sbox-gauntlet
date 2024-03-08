@@ -1,0 +1,59 @@
+@namespace Tf.UI
+@inherits Panel
+
+<root class="pk">
+  <div class="text-container @GetSpeedDiffClass()">
+    @if (ShowSpeedDiff)
+    {
+      <span class="speed">@GetSpeedDiffString()</span>
+    }
+
+    @if (ShowTime)
+    {
+      <span class="time">@((Time * 1000).ToString("F0"))ms</span>
+    }
+  </div>
+</root>
+
+@code {
+  public float SpeedDiff { get; set; }
+  public bool IsPerfect { get; set; }
+  public float Time { get; set; }
+  public bool ShowSpeedDiff { get; set; } = true;
+  public bool ShowTime { get; set; } = true;
+
+  private string GetSpeedDiffClass()
+  {
+    string classString = "";
+
+    if (IsPerfect)
+    {
+      classString += "perfect ";
+    }
+
+    if (SpeedDiff > 0)
+    {
+      classString += "gain";
+    }
+    else if (SpeedDiff < 0)
+    {
+      classString += "loss";
+    }
+
+    return classString;
+  }
+
+  private string GetSpeedDiffString()
+  {
+    string speedDiffString = "";
+
+    if (SpeedDiff > 0)
+    {
+      speedDiffString += "+";
+    }
+
+    speedDiffString += Common.HUPSToKPH(SpeedDiff).ToString("F1");
+
+    return speedDiffString;
+  }
+}

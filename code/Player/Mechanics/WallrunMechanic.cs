@@ -145,6 +145,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		if ( Input.Down( "Duck" ) )
 		{
 			FallAwayFromWall( false );
+			Controller.AfterWallJumpSpeed = HorzVelocity.Length;
 		}
 
 		if ( !WallNormal.HasValue )

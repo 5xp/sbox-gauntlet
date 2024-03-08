@@ -153,7 +153,8 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 		float outSpeed = PlayerSettings.WallrunJumpOutwardSpeed;
 		float inputDirSpeed = PlayerSettings.WallrunJumpInputDirSpeed;
 
-		Vector3 wallNormal = Controller.GetMechanic<WallrunMechanic>().LastWallNormal;
+		WallrunMechanic wallrun = Controller.GetMechanic<WallrunMechanic>();
+		Vector3 wallNormal = wallrun.LastWallNormal;
 		Vector3 wishDir = Controller.BuildWishDir();
 
 		float lookingNormalAmount = Controller.EyeAngles.WithPitch( 0f ).Forward.Dot( wallNormal );
@@ -176,11 +177,19 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 		upSpeed = (upSpeed - startZ).Clamp( 0f, upSpeed * 1.47f );
 
 		float maxOutSpeed = MathF.Max( outSpeed, inputDirSpeed );
-
 		Vector3 addVelocity = Vector3.Up * upSpeed + wallNormal * outSpeed + wishDir * inputDirSpeed;
 		addVelocity = addVelocity.ClampLengthOnAxis( wallNormal, maxOutSpeed );
 
 		Velocity += addVelocity;
+
+
+		if ( wallrun.TimeSinceTouchedWall < 0.5f )
+		{
+			Controller.RecordWallJumpThisTick = true;
+			Controller.AfterWallJumpSpeed = HorzVelocity.Length;
+			Controller.WallJumpTimeDiff = wallrun.TimeSinceTouchedWall;
+		}
+
 		TimeSinceWallJump = 0;
 	}
 

@@ -3,14 +3,62 @@
 
 <root class="pk">
   <div class="speedometer-container backdrop">
-    <p class="mono">@Common.HUPSToKPH(HorzVelocity.Length).ToString("F1")</p>
+    <p class="mono">@Common.HUPSToKPH(Controller.HorzVelocity.Length).ToString("F1")</p>
     <div class="spacer" />
     <p>kph</p>
+  </div>
+  <div class="walljump-container" @ref=WallJumpContainerPanel>
   </div>
 </root>
 
 @code
 {
-  public Vector3 HorzVelocity { get; set; }
-  protected override int BuildHash() => System.HashCode.Combine(Common.HUPSToKPH(HorzVelocity.Length).ToString("F1"));
+  public PlayerController Controller { get; set; }
+  public Panel WallJumpContainerPanel { get; set; }
+  private bool IsSubscribed { get; set; }
+  protected override int BuildHash() =>
+  System.HashCode.Combine(Common.HUPSToKPH(Controller.HorzVelocity.Length).ToString("F1"));
+
+  protected override void InitializeEvents()
+  {
+    base.InitializeEvents();
+
+    SubscribeToEvent();
+  }
+
+  private async void SubscribeToEvent()
+  {
+    if (IsSubscribed)
+    {
+      return;
+    }
+
+    while (Controller is null)
+    {
+      await Task.Frame();
+    }
+
+    IsSubscribed = true;
+
+    Controller.OnFastWallJump += OnFastWallJump;
+  }
+
+  public void OnFastWallJump(float speedDiff, float time)
+  {
+    WallJumpPanel wallJumpPanel = new WallJumpPanel();
+    wallJumpPanel.SpeedDiff = speedDiff;
+
+    // There will always be at least 1 tick between touching the wall and being able to jump
+    wallJumpPanel.IsPerfect = time / Controller.Scene.FixedDelta == 1;
+
+    wallJumpPanel.Time = time - Controller.Scene.FixedDelta;
+    wallJumpPanel.Parent = WallJumpContainerPanel;
+    DeletePanelAfterTime(wallJumpPanel, 1000);
+  }
+
+  public async void DeletePanelAfterTime(WallJumpPanel panel, int time)
+  {
+    await Task.Delay(time);
+    panel.Delete();
+  }
 }

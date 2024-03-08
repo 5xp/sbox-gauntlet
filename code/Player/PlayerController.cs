@@ -265,13 +265,15 @@ public partial class PlayerController : Component
 
 		mover.TryMove( Time.Delta, Vector3.Up );
 
-		if ( mover.HitWall && mover.HitNormal.HasValue )
-		{
-			GetMechanic<WallrunMechanic>().OnWallTouch( mover.HitNormal.Value );
-		}
-
+		float beforeSpeed = HorzVelocity.Length;
 		Position = mover.Position;
 		Velocity = mover.Velocity;
+
+		if ( mover.HitWall && mover.HitNormal.HasValue )
+		{
+			PreWallTouchSpeed = beforeSpeed;
+			GetMechanic<WallrunMechanic>().OnWallTouch( mover.HitNormal.Value );
+		}
 	}
 
 	public void AddStepOffset( Vector3 stepOffset )
