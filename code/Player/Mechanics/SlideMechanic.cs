@@ -140,7 +140,6 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 		return speedBoost;
 	}
 
-
 	/// <summary>
 	/// We don't want the player to be able to steer much, but they should be able to brake if they want
 	/// </summary>

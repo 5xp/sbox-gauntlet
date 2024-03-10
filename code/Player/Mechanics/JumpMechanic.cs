@@ -215,26 +215,24 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 		if ( !isFullyDucked && HasTag( "crouch" ) )
 		{
 			Controller.DuckFraction = 0f;
+		}
 
-			// If we try jumping before we're fully crouching, refund our speed boost
-			if ( slide.IsActive && slide.UsedBoost )
+		// Round our speed if near the threshold when slideboostjumping
+		if ( slide.IsActive && slide.UsedBoost )
+		{
+			float speed = horzVelocity.Length;
+
+			if ( speed >= PlayerSettings.SlideForceSlideSpeed - 50f && speed <= PlayerSettings.SlideForceSlideSpeed )
+			{
+				horzVelocity = horzVelocity.Normal * PlayerSettings.SlideForceSlideSpeed;
+			}
+			else if ( !isFullyDucked )
 			{
 				float boostAmount = slide.GetSpeedBoost();
 
 				horzVelocity = horzVelocity.Approach( 0f, boostAmount );
 
 				Controller.DuckFraction = 1f;
-			}
-		}
-
-		// Round our speed if near the threshold when slideboostjumping
-		if ( HasTag( "slide" ) && slide.UsedBoost )
-		{
-			float speed = horzVelocity.Length;
-
-			if ( speed >= PlayerSettings.SlideForceSlideSpeed - 50f && speed <= PlayerSettings.SlideForceSlideSpeed + 5f )
-			{
-				horzVelocity = horzVelocity.Normal * PlayerSettings.SlideForceSlideSpeed;
 			}
 		}
 
