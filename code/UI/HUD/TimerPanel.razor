@@ -2,7 +2,7 @@
 @inherits Panel
 
 <root class="pk">
-  <div class="timer-container backdrop">
+  <div class="timer-container backdrop @((Timer.IsDisqualified ? "disqualified" : ""))">
     <h4>@Timer.LastOrCurrentLoop.ToOrdinal() loop</h4>
     <p>@Timer</p>
   </div>

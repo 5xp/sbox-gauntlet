@@ -10,24 +10,27 @@ public sealed class PlayerSettings
 
 	public PlayerSettings() { }
 
+	public static PlayerSettings Debug
+	{
+		get
+		{
+			return new PlayerSettings
+			{
+				WallrunTimeLimit = 9999f,
+				WallrunGravityRampUpTime = 9999f,
+				WallrunSlipStartTime = 9999f,
+				WallrunPushAwayFallOffTime = 9999f,
+				WallrunUpwardAutoPush = 0f,
+				WallrunNoInputSlipFrac = 0f,
+				WallrunTiltMaxRoll = 0f,
+			};
+		}
+	}
+
 	public static PlayerSettings Regular
 	{
 		get
 		{
-			if ( WallrunMechanic.DebugWallrunSettings )
-			{
-				return new PlayerSettings
-				{
-					WallrunTimeLimit = 9999f,
-					WallrunGravityRampUpTime = 9999f,
-					WallrunSlipStartTime = 9999f,
-					WallrunPushAwayFallOffTime = 9999f,
-					WallrunUpwardAutoPush = 0f,
-					WallrunNoInputSlipFrac = 0f,
-					WallrunTiltMaxRoll = 0f,
-				};
-			}
-
 			return new PlayerSettings();
 		}
 	}

@@ -113,12 +113,6 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	/// </summary>
 	public TimeSince TimeSinceFellAwayFromWall { get; set; }
 
-	[ConVar( "debug_wallrun", Help = "Enables wallrun normal and wishdir gizmos in the scene camera" )]
-	public static bool DebugWallrun { get; set; } = true;
-
-	[ConVar( "debug_wallrun_settings", Help = "Changes various wallrun settings to aid in testing wall movement" )]
-	public static bool DebugWallrunSettings { get; set; } = false;
-
 	public override int Priority => 2;
 
 	protected override void OnStart()
@@ -934,7 +928,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 	protected override void DrawGizmos()
 	{
-		if ( !DebugWallrun ) return;
+		if ( !DebugConVars.DebugWallrunGizmos ) return;
 
 		Gizmo.Draw.Color = Color.White;
 

@@ -121,9 +121,9 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 
 	private float GetJumpBufferTime()
 	{
-		if ( PlayerController.DebugOverrideJumpBufferTicks > -1 )
+		if ( DebugConVars.DebugOverrideJumpBufferTicks > -1 )
 		{
-			return PlayerController.DebugOverrideJumpBufferTicks * Scene.FixedDelta;
+			return DebugConVars.DebugOverrideJumpBufferTicks * Scene.FixedDelta;
 		}
 
 		return PlayerSettings.JumpBufferTime;

@@ -29,15 +29,6 @@ public partial class PlayerController : Component
 	/// </summary>
 	public GameObject CameraGameObject => CameraController.Camera.GameObject;
 
-	[ConVar( "debug_controller" )]
-	public static bool DebugController { get; set; } = true;
-
-	[ConVar( "debug_viewPunch" )]
-	public static bool DebugViewPunch { get; set; } = false;
-
-	[ConVar( "debug_override_jump_buffer_ticks" )]
-	public static int DebugOverrideJumpBufferTicks { get; set; } = -1;
-
 	/// <summary>
 	/// Mechanics can add to this camera offset. Resets to zero after every frame.
 	/// </summary>
@@ -120,6 +111,11 @@ public partial class PlayerController : Component
 		{
 			HullCollider.Center = Vector3.Up * PlayerSettings.HullHeightStanding * 0.5f;
 			HullCollider.BoxSize = new Vector3( PlayerSettings.HullRadius * 2, PlayerSettings.HullRadius * 2, PlayerSettings.HullHeightStanding );
+		}
+
+		if ( DebugConVars.DebugWallrunSettings )
+		{
+			PlayerSettings = PlayerSettings.Debug;
 		}
 	}
 
@@ -548,7 +544,7 @@ public partial class PlayerController : Component
 
 	protected override void DrawGizmos()
 	{
-		if ( !DebugController ) return;
+		if ( !DebugConVars.DebugControllerGizmos ) return;
 
 		Gizmo.Draw.LineBBox( Hull );
 

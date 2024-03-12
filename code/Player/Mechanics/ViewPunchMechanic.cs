@@ -199,7 +199,7 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 
 	private void DebugViewPunch( float beforeSpeed, float afterSpeed )
 	{
-		if ( !PlayerController.DebugViewPunch )
+		if ( !DebugConVars.DebugViewPunch )
 		{
 			return;
 		}

@@ -12,6 +12,8 @@ public sealed partial class Timer : Component
 	/// </summary>
 	private float LoopMaintainSpeedThreshold { get; set; } = 270f;
 
+	public bool IsDisqualified { get; private set; }
+
 	/// <summary>
 	/// Our current loop. Will get reset when re-entering the start zone or when the player is in the start zone and below
 	/// the loop maintain speed threshold.
@@ -48,6 +50,11 @@ public sealed partial class Timer : Component
 
 	protected override void OnFixedUpdate()
 	{
+		if ( DebugConVars.AnyCheatEnabled )
+		{
+			IsDisqualified = true;
+		}
+
 		if ( InStartZone )
 		{
 			if ( Player.HorzVelocity.LengthSquared < LoopMaintainSpeedThreshold * LoopMaintainSpeedThreshold )
@@ -68,6 +75,9 @@ public sealed partial class Timer : Component
 
 	public void ResetTimer()
 	{
+		IsDisqualified = false;
+
+
 		if ( BlockNextReset )
 		{
 			BlockNextReset = false;
@@ -98,6 +108,11 @@ public sealed partial class Timer : Component
 	{
 		InStartZone = true;
 		BlockNextReset = true;
+		if ( IsDisqualified )
+		{
+			return;
+		}
+
 		bool newBestTime = UpdateBestTime( Ticks );
 		NumCompletionsThisSession++;
 		LastOrCurrentLoop = CurrentLoop;

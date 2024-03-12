@@ -44,6 +44,10 @@ TimerPanel {
     padding: 5px 20px 5px 20px;
     transition: background-color 0.1s ease-out;
     transition: box-shadow 0.5s ease-out;
+
+    &.disqualified {
+      background-color: rgba(189, 9, 9, 0.686);
+    }
   }
 
   &.complete .timer-container {
