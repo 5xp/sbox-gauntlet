@@ -5,7 +5,7 @@
 @* 
 This component contains all of the panels that should be parented to the crosshair.
 *@
-<root class="pk">
+<root class="pk crosshair">
 	@if ( PlayerPreferences.Instance.CrosshairHudEnabled )
 	{
 		<div class="crosshair-dot"></div>
@@ -14,17 +14,38 @@ This component contains all of the panels that should be parented to the crossha
 	@if ( PlayerPreferences.Instance.KeyPressHudEnabled && PlayerPreferences.Instance.KeyPressHudCompactEnabled )
 	{
 		<KeyPressPanel Compact="@true"/>
+
+		@if ( Input.UsingController )
+		{
+			<AnalogStickPanel StickPosition:bind="@Input.AnalogMove" Compact="@true" ShowJumpAndCrouch="@false"/>
+		}
 	}
 
 	@if ( PlayerPreferences.Instance.SpeedometerHudEnabled && PlayerPreferences.Instance.SpeedometerHudCompactEnabled )
 	{
 		<SpeedometerPanel Controller="@Controller" Compact="@true"/>
 	}
+
 </root>
 
 @code
 {
 	[Property] private PlayerController Controller { get; set; }
+
+	private bool _controllerState;
+
+	private bool ControllerState
+	{
+		get => _controllerState;
+		set
+		{
+			if ( _controllerState == value )
+				return;
+
+			_controllerState = value;
+			StateHasChanged();
+		}
+	}
 
 	protected override void OnEnabled()
 	{
@@ -38,6 +59,8 @@ This component contains all of the panels that should be parented to the crossha
 
 	protected override void OnUpdate()
 	{
+		ControllerState = Input.UsingController;
+
 		var cam = Controller.CameraController.Camera;
 		Vector3 eyePos = cam.Transform.Position;
 		Vector3 forward = Controller.AimAngles.Forward;
@@ -50,7 +73,6 @@ This component contains all of the panels that should be parented to the crossha
 
 		PanelTransform panelTransform = new PanelTransform();
 		panelTransform.AddTranslate( Length.Fraction( screenPos.x / Screen.Width ), Length.Fraction( screenPos.y / Screen.Height ) );
-
 		Panel.Style.Transform = panelTransform;
 
 		// Panel.Style.Left = Length.Fraction( screenPos.x / Screen.Width );

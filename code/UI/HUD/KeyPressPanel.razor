@@ -114,7 +114,7 @@
 
 	private static string GetKeyCode( string key ) => Input.GetButtonOrigin( key, true );
 
-	private static string GetKeyHighlighted( string key ) => Input.Down( key ) ? "highlighted" : "";
+	public static string GetKeyHighlighted( string key ) => Input.Down( key ) ? "highlighted" : "";
 
 	private void OnPreferencesSavedOrLoaded()
 	{

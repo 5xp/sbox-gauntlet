@@ -11,13 +11,21 @@ This component contains all of the HUD panels that should be affected by the pla
 <root class="pk">
 	@if ( PlayerPreferences.Instance.KeyPressHudEnabled && !PlayerPreferences.Instance.KeyPressHudCompactEnabled )
 	{
-		<KeyPressPanel Compact="@false"/>
+		@if ( Input.UsingController )
+		{
+			<AnalogStickPanel StickPosition:bind="@Input.AnalogMove" ShowJumpAndCrouch="@PlayerPreferences.Instance.KeyPressShowJumpAndCrouch"/>
+		}
+		else
+		{
+			<KeyPressPanel Compact="@false"/>
+		}
 	}
 
 	@if ( PlayerPreferences.Instance.SpeedometerHudEnabled && !PlayerPreferences.Instance.SpeedometerHudCompactEnabled )
 	{
 		<SpeedometerPanel Compact="@false" Controller="@Controller"/>
 	}
+
 </root>
 
 @code
@@ -25,6 +33,21 @@ This component contains all of the HUD panels that should be affected by the pla
 	[Property] private PlayerController Controller { get; set; }
 	[Property] private Timer Timer { get; set; }
 	private TimerPanel TimerPanel { get; set; }
+
+	private bool _controllerState;
+
+	private bool ControllerState
+	{
+		get => _controllerState;
+		set
+		{
+			if ( _controllerState == value )
+				return;
+
+			_controllerState = value;
+			StateHasChanged();
+		}
+	}
 
 	/// <summary>
 	/// The z component is rotation.
@@ -57,6 +80,8 @@ This component contains all of the HUD panels that should be affected by the pla
 
 	protected override void OnUpdate()
 	{
+		ControllerState = Input.UsingController;
+
 		UpdatePosition();
 		UpdateTransform();
 	}

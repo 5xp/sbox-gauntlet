@@ -425,6 +425,8 @@ public partial class PlayerController : Component
 			if ( Input.Down( "backward", false ) ) WishMove += Vector3.Backward;
 			if ( Input.Down( "left", false ) ) WishMove += Vector3.Left;
 			if ( Input.Down( "right", false ) ) WishMove += Vector3.Right;
+
+			WishMove = WishMove.Normal;
 		}
 	}
 
@@ -439,7 +441,6 @@ public partial class PlayerController : Component
 
 		var rot = angles.ToRotation();
 		var wishDirection = WishMove * rot;
-		wishDirection = wishDirection.Normal;
 
 		return wishDirection;
 	}

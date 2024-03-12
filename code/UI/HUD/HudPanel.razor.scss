@@ -2,9 +2,11 @@
 @import "KeyPressPanel.razor.scss";
 @import "SpeedometerPanel.razor.scss";
 @import "TimerPanel.razor.scss";
+@import "/UI/HUD/AnalogStickPanel.razor.scss";
 
 HudPanel {
 	width: 100%;
 	height: 100%;
 	position: absolute;
 }
+

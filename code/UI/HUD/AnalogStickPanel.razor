@@ -1,0 +1,164 @@
+@namespace Gauntlet.UI
+@using Gauntlet.Utils
+@inherits Panel
+
+<root class="pk @( Compact ? "compact" : "regular" )">
+	@if ( ShowJumpAndCrouch )
+	{
+		<div class="keys-container">
+			<div class="key @KeyPressPanel.GetKeyHighlighted( "Duck" ) @KeyPressPanel.GetKeyHighlighted( "Duck2" )">C</div>
+			<div class="key @KeyPressPanel.GetKeyHighlighted( "Jump" )">J</div>
+		</div>
+	}
+	<div class="analog-stick-container">
+		<div class="analog-stick" @ref=" StickPanel">▲</div>
+	</div>
+</root>
+
+@code
+{
+	public bool Compact { get; set; }
+	public bool ShowJumpAndCrouch { get; set; }
+	public Vector2 StickPosition { get; set; }
+	private Panel StickPanel { get; set; }
+
+	protected override int BuildHash()
+	{
+		if ( Compact || !ShowJumpAndCrouch )
+		{
+			return 0;
+		}
+
+		HashCode hash = new();
+		hash.Add( Common.DuckDown() );
+		hash.Add( Input.Down( "Jump" ) );
+		return hash.ToHashCode();
+	}
+
+	public override void Tick()
+	{
+		if ( StickPanel is null )
+		{
+			return;
+		}
+
+		if ( Compact )
+		{
+			CompactTick();
+		}
+		else
+		{
+			RegularTick();
+		}
+	}
+
+	private void RegularTick()
+	{
+		const float offset = 50f;
+		StickPanel.Style.Left = -StickPosition.y * offset;
+		StickPanel.Style.Top = -StickPosition.x * offset;
+
+		if ( Input.Pressed( "Forward" ) )
+		{
+			Panel northLine = new Panel { Parent = StickPanel.Parent };
+			northLine.AddClass( "line north vertical" );
+			StickPanel.Parent.SetChildIndex( northLine, 0 );
+			DeleteAfter( northLine, 0.5f );
+		}
+
+		if ( Input.Pressed( "Right" ) )
+		{
+			Panel eastLine = new Panel { Parent = StickPanel.Parent };
+			eastLine.AddClass( "line east horizontal" );
+			StickPanel.Parent.SetChildIndex( eastLine, 0 );
+			DeleteAfter( eastLine, 0.5f );
+		}
+
+		if ( Input.Pressed( "Backward" ) )
+		{
+			Panel southLine = new Panel { Parent = StickPanel.Parent };
+			southLine.AddClass( "line south vertical" );
+			StickPanel.Parent.SetChildIndex( southLine, 0 );
+			DeleteAfter( southLine, 0.5f );
+		}
+
+		if ( Input.Pressed( "Left" ) )
+		{
+			Panel westLine = new Panel { Parent = StickPanel.Parent };
+			westLine.AddClass( "line west horizontal" );
+			StickPanel.Parent.SetChildIndex( westLine, 0 );
+			DeleteAfter( westLine, 0.5f );
+		}
+	}
+
+	private void CompactTick()
+	{
+		if ( !Parent.HasClass( "crosshair" ) )
+		{
+			Log.Error( "Parent panel isn't crosshair!" );
+			Log.Info( Parent.Classes );
+			return;
+		}
+
+		const float offset = 20f;
+
+		Style.Left = -StickPosition.y * offset;
+		Style.Top = -StickPosition.x * offset;
+
+		if ( Parent.Style.Transform is not { List: not null } parentTransform )
+		{
+			return;
+		}
+
+		var parentEntry = parentTransform.List.First();
+
+		if ( parentEntry.Type != PanelTransform.EntryType.Translate )
+		{
+			return;
+		}
+
+		// Get the crosshair panel translate, add our rotation, then negate the translation.
+		// If we don't translate then negate it, it will rotate around the wrong point.
+		// This is really ugly but I can't find a better way to do it.
+		var translateX = parentTransform.List[0].X;
+		var translateY = parentTransform.List[0].Y;
+		var negativeTranslateX = Length.Parse( NegateNumberString( translateX.ToString() ) );
+		var negativeTranslateY = Length.Parse( NegateNumberString( translateY.ToString() ) );
+
+		if ( !negativeTranslateX.HasValue || !negativeTranslateY.HasValue )
+		{
+			Log.Warning( "Failed to parse negative translation" );
+			return;
+		}
+
+		PanelTransform panelTransform = new PanelTransform();
+		float angle = MathF.Atan2( StickPosition.y, StickPosition.x );
+
+		panelTransform.AddTranslate( translateX, translateY );
+		panelTransform.AddRotation( 0f, 0f, -angle.RadianToDegree() );
+		panelTransform.AddTranslate( negativeTranslateX.Value, negativeTranslateY.Value );
+
+		Style.Transform = panelTransform;
+
+		Style.Display = StickPosition.LengthSquared < 0.1f ? DisplayMode.None : DisplayMode.Flex;
+	}
+
+	private static string NegateNumberString( string number )
+	{
+		if ( number.StartsWith( "-" ) )
+		{
+			return number.TrimStart( '-' );
+		}
+		else
+		{
+			return "-" + number;
+		}
+	}
+
+	private async void DeleteAfter( Panel panel, float seconds )
+	{
+		await Task.DelaySeconds( seconds );
+		panel.Delete();
+	}
+
+}

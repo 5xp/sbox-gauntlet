@@ -30,7 +30,8 @@
       "DistinctAssemblyReferences": []
     },
     "ControlModes": {
-      "Keyboard": true
+      "Keyboard": true,
+      "Gamepad": true
     },
     "ParentPackage": "",
     "DefaultLeaderboards": [],
@@ -45,26 +46,30 @@
         {
           "Name": "Forward",
           "KeyboardCode": "W",
+          "GamepadCode": "DpadNorth",
           "GroupName": "Movement"
         },
         {
           "Name": "Backward",
           "KeyboardCode": "S",
+          "GamepadCode": "None",
           "GroupName": "Movement"
         },
         {
           "Name": "Left",
           "KeyboardCode": "A",
+          "GamepadCode": "None",
           "GroupName": "Movement"
         },
         {
           "Name": "Right",
           "KeyboardCode": "D",
+          "GamepadCode": "None",
           "GroupName": "Movement"
         },
         {
           "Name": "Jump",
-          "KeyboardCode": "space",
+          "KeyboardCode": "SPACE",
           "GamepadCode": "A",
           "GroupName": "Movement"
         },
@@ -89,6 +94,7 @@
         {
           "Name": "Duck2",
           "KeyboardCode": "V",
+          "GamepadCode": "None",
           "GroupName": "Movement"
         }
       ],
