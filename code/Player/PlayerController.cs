@@ -22,6 +22,8 @@ public partial class PlayerController : Component
 	/// </summary>
 	[Property] public HullCollider HullCollider { get; set; }
 
+	private SoundHandle LandSoundHandle { get; set; }
+
 	/// <summary>
 	/// Get a quick reference to the real Camera GameObject.
 	/// </summary>
@@ -174,8 +176,8 @@ public partial class PlayerController : Component
 			AnimationHelper.IsGrounded = IsGrounded;
 			AnimationHelper.FootShuffle = rotateDifference;
 			AnimationHelper.WithLook( EyeAngles.Forward, 1, 1, 1.0f );
-			AnimationHelper.MoveStyle = HasTag( "sprint" ) ? AnimationHelper.MoveStyles.Run : AnimationHelper.MoveStyles.Walk;
-			AnimationHelper.DuckLevel = HasTag( "slide" ) ? 0 : DuckFraction * 100f;
+			AnimationHelper.MoveStyle = AnimationHelper.MoveStyles.Auto;
+			AnimationHelper.DuckLevel = HasTag( "slide" ) ? 0 : DuckFraction;
 			AnimationHelper.HoldType = CurrentHoldType;
 			AnimationHelper.SkidAmount = HasTag( "slide" ) ? 1 : 0;
 		}
@@ -469,12 +471,21 @@ public partial class PlayerController : Component
 		{
 			Velocity = HorzVelocity;
 			TimeSinceLastOnGround = 0;
-			OnLanded?.Invoke();
 		}
 
 		if ( LastGroundObject is null && groundObject is not null )
 		{
+			float fallDist = ApexHeight - Position.z;
+			if ( fallDist >= 640f )
+			{
+				LandSoundHandle = Sound.Play( HardLandSound );
+			}
+			else
+			{
+				LandSoundHandle = Sound.Play( LandSound );
+			}
 			TimeSinceLastLanding = 0;
+			OnLanded?.Invoke();
 		}
 	}
 
@@ -488,6 +499,42 @@ public partial class PlayerController : Component
 		Vector3 nextPos = Position + Velocity * timeStep;
 		return TraceBBox( Position, nextPos );
 	}
+
+	// private void OnFootStepEvent( SceneModel.FootstepEvent footstepEvent )
+	// {
+	// 	if ( HasTag( "sprint" ) && TimeSinceFootStep < 0.3f )
+	// 	{
+	// 		return;
+	// 	}
+	// 	else if ( TimeSinceFootStep < 0.4f )
+	// 	{
+	// 		return;
+	// 	}
+
+	// 	var tr = Scene.Trace
+	// 		.Ray( footstepEvent.Transform.Position + Vector3.Up * 20, footstepEvent.Transform.Position + Vector3.Up * -20 )
+	// 		.Run();
+
+	// 	if ( !tr.Hit )
+	// 		return;
+
+	// 	if ( tr.Surface is null )
+	// 		return;
+
+	// 	TimeSinceFootStep = 0;
+
+	// 	var sound = footstepEvent.FootId == 0 ? tr.Surface.Sounds.FootLeft : tr.Surface.Sounds.FootRight;
+
+	// 	if ( sound is null )
+	// 	{
+	// 		Log.Info( "Sound is null" );
+	// 		return;
+	// 	}
+
+	// 	var handle = Sound.Play( sound, tr.HitPosition + tr.Normal * 5 );
+
+	// 	handle.Volume *= footstepEvent.Volume;
+	// }
 
 	public void Write( ref ByteStream stream )
 	{

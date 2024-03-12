@@ -187,4 +187,11 @@ public sealed class PlayerSettings
 	public float WallrunViewPitchOffsetMax { get; set; } = 50f;
 	public float WallrunViewYawCorrectSpeed { get; set; } = 85f;
 	public float WallrunViewPitchOffsetCorrectSpeed { get; set; } = 35f;
+	public float FootStepWalkInterval { get; set; } = 0.4f;
+	public float FootStepSprintInterval { get; set; } = 0.3f;
+	public float FootStepDuckIntervalAdd { get; set; } = 0.1f;
+	public float FootStepDuckWalkSpeed { get; set; } = 80f;
+	public float FootStepDuckRunSpeed { get; set; } = 120f;
+	public float FootStepNormalWalkSpeed { get; set; } = 30f;
+	public float FootStepNormalRunSpeed { get; set; } = 220f;
 }

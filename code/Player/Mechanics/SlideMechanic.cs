@@ -13,6 +13,9 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 	private TimeSince TimeSinceUsedBoost { get; set; }
 	private float FOVScaleTargetFraction { get; set; }
 	private float FOVScaleFraction { get; set; }
+	private SoundHandle SlideSoundHandle { get; set; }
+	private SoundHandle SlideBoostSoundHandle { get; set; }
+	private SoundHandle SlideEndSoundHandle { get; set; }
 	public float StartSpeed { get; set; }
 
 	public override int Priority => 15;
@@ -25,6 +28,11 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 	public override float? GetAcceleration()
 	{
 		return 0f;
+	}
+
+	protected override void OnStart()
+	{
+		Controller.OnLanded += OnLanded;
 	}
 
 	public override bool ShouldBecomeActive()
@@ -53,7 +61,14 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 	public override void OnActiveUpdate()
 	{
 		if ( !Controller.IsGrounded )
+		{
+			if ( !SlideEndSoundHandle.IsValid() )
+			{
+				SlideEndSoundHandle = Sound.Play( Controller.SlideEndSound );
+			}
+
 			return;
+		}
 
 		// We are trying to unduck
 		float forceSpeed = PlayerSettings.SlideForceSlideSpeed;
@@ -81,6 +96,20 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 	{
 		ApplySlideTilt();
 		ApplyFOVScale();
+	}
+
+	public override void Simulate()
+	{
+		FadeSounds();
+	}
+
+	private void OnLanded()
+	{
+		// While already sliding, we landed on the ground again, so we want to redo slide
+		if ( IsActive )
+		{
+			OnSlideStart();
+		}
 	}
 
 	protected override void OnActiveChanged( bool before, bool after )
@@ -111,6 +140,8 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 			TimeSinceUsedBoost = 0;
 			UsedBoost = true;
 			FOVScaleTargetFraction = 1f;
+
+			SlideBoostSoundHandle = Sound.Play( Controller.SlideBoostSound );
 		}
 
 		if ( SlideTiltFrac.AlmostEqual( 0f ) )
@@ -125,12 +156,29 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 		}
 
 		SlideTiltLowerSpeedBound = PlayerSettings.SlideEndSpeed;
+
+		SlideSoundHandle = Sound.Play( Controller.SlideSound );
 	}
 
 	private void OnSlideStop()
 	{
 		FOVScaleTargetFraction = 0f;
 		SlideTiltLowerSpeedBound = PlayerSettings.SlideRequiredStartSpeed;
+
+		if ( Controller.IsGrounded )
+		{
+			SlideEndSoundHandle = Sound.Play( Controller.SlideEndSound );
+		}
+	}
+
+	private void FadeSounds()
+	{
+		if ( !Controller.IsGrounded || !IsActive )
+		{
+			SlideSoundHandle.FadeVolume( 0.5f * Time.Delta );
+		}
+
+		SlideBoostSoundHandle.FadeVolume( 0.2f * Time.Delta );
 	}
 
 	public float GetSpeedBoost()

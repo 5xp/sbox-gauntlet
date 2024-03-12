@@ -12,6 +12,7 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 	private TimeSince TimeSinceWallJump { get; set; }
 	private TimeSince TimeSinceJumpBuffered { get; set; }
 	private bool JumpBuffered { get; set; }
+	private SoundHandle JumpSoundHandle { get; set; }
 
 	public override int Priority => 1;
 
@@ -73,6 +74,7 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 			jumpType = JumpType.Air;
 		}
 
+		PlayJumpSound( jumpType );
 		Controller.BroadcastPlayerJumped( jumpType );
 		Controller.ApexHeight = Position.z;
 	}
@@ -89,6 +91,8 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 			JumpBuffered = true;
 			TimeSinceJumpBuffered = 0;
 		}
+
+		FadeSounds();
 
 		if ( Controller.IsGrounded ) return;
 		if ( !DidPressMovementKey() ) return;
@@ -370,6 +374,28 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 	private void OnLanded()
 	{
 		RefreshAirJumps();
+	}
+
+	private void FadeSounds()
+	{
+		if ( !Controller.IsGrounded )
+		{
+			return;
+		}
+
+		JumpSoundHandle.FadeVolume( Time.Delta );
+	}
+
+	private void PlayJumpSound( JumpType jumpType )
+	{
+		if ( jumpType == JumpType.Air )
+		{
+			JumpSoundHandle = Sound.Play( Controller.AirJumpSound );
+		}
+		else
+		{
+			JumpSoundHandle = Sound.Play( Controller.JumpSound );
+		}
 	}
 
 	public void RefreshAirJumps()

@@ -105,8 +105,11 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	/// </summary>
 	private float RelativeAngleCorrectSpeed { get; set; }
 
+	private SoundHandle WallrunStartSoundHandle { get; set; }
+	private SoundHandle WallrunImpactSoundHandle { get; set; }
+
 	/// <summary>
-	/// This gets set when we fall away the wall (running out of time, pushing away, ducking )
+	/// This gets set when we fall away the wall
 	/// </summary>
 	public TimeSince TimeSinceFellAwayFromWall { get; set; }
 
@@ -173,6 +176,12 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		{
 			PredictedWallNormal = null;
 		}
+
+		if ( !IsActive )
+		{
+			WallrunStartSoundHandle.FadeVolume( Time.Delta );
+			WallrunImpactSoundHandle.FadeVolume( Time.Delta );
+		}
 	}
 
 	public override void FrameSimulate()
@@ -196,6 +205,19 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		Controller.GetMechanic<JumpMechanic>().RefreshAirJumps();
 		LastWallrunStartPos = Position;
 		ApplyBoost();
+
+		// There might be instances where we restart wallrunning but we don't want to replay the impact sound
+		if ( WallrunStartSoundHandle.IsValid() )
+		{
+			WallrunStartSoundHandle.Stop();
+		}
+
+		WallrunStartSoundHandle = Sound.Play( Controller.WallrunStartSound );
+
+		if ( !WallrunImpactSoundHandle.IsValid() )
+		{
+			WallrunImpactSoundHandle = Sound.Play( Controller.WallrunImpactSound );
+		}
 	}
 
 	public void OnWallTouch( Vector3 wallNormal )

@@ -65,4 +65,20 @@ public static class Common
 
     return $"{Timer.StatVersion}-{levelNumber}.{(loopNum > 1 ? 2 : 1)}.time";
   }
+
+  /// <summary>
+  /// Fades the volume of a sound handle linearly. Stops the sound if the volume reaches 0.
+  /// </summary>
+  public static void FadeVolume( this SoundHandle sound, float amount )
+  {
+    if ( sound.IsValid() )
+    {
+      sound.Volume = sound.Volume.Approach( 0f, amount );
+
+      if ( sound.Volume.AlmostEqual( 0f ) )
+      {
+        sound.Stop();
+      }
+    }
+  }
 }

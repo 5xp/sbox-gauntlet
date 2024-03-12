@@ -1,46 +1,60 @@
 {
   "RootObject": {
-    "Id": "229e59f8-2c43-4831-a34c-d2a8a324a624",
+    "Id": "fe15f253-ad61-421a-865d-4e052b349a58",
     "Name": "player",
     "Tags": "player",
     "Enabled": true,
+    "NetworkMode": 2,
     "Components": [
       {
         "__type": "PlayerController",
+        "AirJumpSound": "assets/sounds/airjump.sound",
         "AnimationHelper": {
           "_type": "component",
-          "go": "f6ca14c2-6609-4e91-99a4-c2a3a935ac44",
+          "go": "1fc4e324-f8b4-4884-a56e-d0f7a0c74633",
           "component_type": "AnimationHelper"
         },
         "Body": {
           "_type": "gameobject",
-          "go": "f6ca14c2-6609-4e91-99a4-c2a3a935ac44"
+          "go": "1fc4e324-f8b4-4884-a56e-d0f7a0c74633"
         },
         "CameraController": {
           "_type": "component",
-          "go": "229e59f8-2c43-4831-a34c-d2a8a324a624",
+          "go": "fe15f253-ad61-421a-865d-4e052b349a58",
           "component_type": "CameraController"
         },
         "CurrentHoldType": "None",
+        "FootStepSoundRun": "assets/sounds/footstep_generic_run.sound",
+        "FootStepSoundWalk": "assets/sounds/footstep_generic.sound",
+        "FootStepSoundWallrun": "assets/sounds/footstep_generic_light.sound",
+        "HardLandSound": "assets/sounds/hardlanding.sound",
         "HullCollider": {
           "_type": "component",
-          "go": "229e59f8-2c43-4831-a34c-d2a8a324a624",
+          "go": "fe15f253-ad61-421a-865d-4e052b349a58",
           "component_type": "HullCollider"
         },
-        "IsGrounded": false
+        "IsGrounded": false,
+        "JumpSound": "assets/sounds/jump.sound",
+        "LandSound": "assets/sounds/landing.sound",
+        "SlideBoostSound": "assets/sounds/slide_boost.sound",
+        "SlideEndSound": "assets/sounds/slide_end.sound",
+        "SlideImpactSound": "assets/sounds/slide_impact.sound",
+        "SlideSound": "assets/sounds/slide_start.sound",
+        "WallrunImpactSound": "assets/sounds/wallrun_impact.sound",
+        "WallrunStartSound": "assets/sounds/wallrun_start.sound"
       },
       {
         "__type": "CameraController",
         "BaseFieldOfView": 90,
         "Camera": {
           "_type": "component",
-          "go": "92316d46-24f7-4c43-a827-fc22a1a1d804",
+          "go": "741faeea-368b-45a6-b20b-f0e538adf143",
           "component_type": "CameraComponent"
         },
         "HideBody": true,
         "PlayerController": {
           "_type": "component",
-          "go": "229e59f8-2c43-4831-a34c-d2a8a324a624",
+          "go": "fe15f253-ad61-421a-865d-4e052b349a58",
           "component_type": "PlayerController"
         }
       },
@@ -54,14 +68,13 @@
         "Radius2": 0,
         "Slices": 16,
         "Static": false,
-        "Surface": null,
         "Type": "Box"
       },
       {
         "__type": "Timer",
         "Player": {
           "_type": "component",
-          "go": "229e59f8-2c43-4831-a34c-d2a8a324a624",
+          "go": "fe15f253-ad61-421a-865d-4e052b349a58",
           "component_type": "PlayerController"
         },
         "Time": 0
@@ -69,166 +82,158 @@
     ],
     "Children": [
       {
-        "Id": "f6ca14c2-6609-4e91-99a4-c2a3a935ac44",
+        "Id": "1fc4e324-f8b4-4884-a56e-d0f7a0c74633",
         "Name": "Body",
         "Enabled": true,
+        "NetworkMode": 2,
         "Components": [
           {
             "__type": "SkinnedModelRenderer",
-            "__enabled": false,
-            "AnimationGraph": null,
-            "BodyGroups": 18446744073709551615,
-            "BoneMergeTarget": null,
+            "BodyGroups": 18446744073709551274,
             "CreateBoneObjects": false,
-            "MaterialGroup": null,
-            "MaterialOverride": null,
+            "MaterialGroup": "default",
             "Model": "models/citizen/citizen.vmdl",
-            "RenderType": "ShadowsOnly",
+            "RenderType": "Off",
             "Tint": "1,1,1,1"
           },
           {
             "__type": "ModelHitboxes",
             "Renderer": {
               "_type": "component",
-              "go": "f6ca14c2-6609-4e91-99a4-c2a3a935ac44",
+              "go": "1fc4e324-f8b4-4884-a56e-d0f7a0c74633",
               "component_type": "SkinnedModelRenderer"
             },
             "Target": {
               "_type": "gameobject",
-              "go": "f6ca14c2-6609-4e91-99a4-c2a3a935ac44"
+              "go": "1fc4e324-f8b4-4884-a56e-d0f7a0c74633"
             }
           },
           {
             "__type": "AnimationHelper",
             "EyeSource": {
               "_type": "gameobject",
-              "go": "92316d46-24f7-4c43-a827-fc22a1a1d804"
+              "go": "741faeea-368b-45a6-b20b-f0e538adf143"
             },
             "Height": 1,
-            "IkLeftFoot": null,
-            "IkLeftHand": null,
-            "IkRightFoot": null,
-            "IkRightHand": null,
             "LookAtObject": {
               "_type": "gameobject",
-              "go": "92316d46-24f7-4c43-a827-fc22a1a1d804"
+              "go": "741faeea-368b-45a6-b20b-f0e538adf143"
             },
             "Target": {
               "_type": "component",
-              "go": "f6ca14c2-6609-4e91-99a4-c2a3a935ac44",
+              "go": "1fc4e324-f8b4-4884-a56e-d0f7a0c74633",
               "component_type": "SkinnedModelRenderer"
             }
           }
         ]
       },
       {
-        "Id": "4da5e1b8-e2d5-4804-9691-db31f45e98b9",
+        "Id": "dca69694-5607-419f-834d-06544da43a2e",
         "Name": "Mechanics",
         "Enabled": true,
+        "NetworkMode": 2,
         "Components": [
           {
             "__type": "CrouchMechanic",
             "Controller": {
               "_type": "component",
-              "go": "229e59f8-2c43-4831-a34c-d2a8a324a624",
+              "go": "fe15f253-ad61-421a-865d-4e052b349a58",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 30399.633
+              "Relative": 634.6875
             }
           },
           {
             "__type": "SprintMechanic",
             "Controller": {
               "_type": "component",
-              "go": "229e59f8-2c43-4831-a34c-d2a8a324a624",
+              "go": "fe15f253-ad61-421a-865d-4e052b349a58",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 30399.633
+              "Relative": 634.6875
             }
           },
           {
             "__type": "WalkMechanic",
             "Controller": {
               "_type": "component",
-              "go": "229e59f8-2c43-4831-a34c-d2a8a324a624",
+              "go": "fe15f253-ad61-421a-865d-4e052b349a58",
               "component_type": "PlayerController"
             },
             "IsActive": true,
             "TimeSinceActiveChanged": {
-              "Relative": 30399.633
+              "Relative": 634.6875
             }
           },
           {
             "__type": "AirMoveMechanic",
             "Controller": {
               "_type": "component",
-              "go": "229e59f8-2c43-4831-a34c-d2a8a324a624",
+              "go": "fe15f253-ad61-421a-865d-4e052b349a58",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 30399.633
+              "Relative": 634.6875
             }
           },
           {
             "__type": "JumpMechanic",
             "Controller": {
               "_type": "component",
-              "go": "229e59f8-2c43-4831-a34c-d2a8a324a624",
+              "go": "fe15f253-ad61-421a-865d-4e052b349a58",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 30399.633
+              "Relative": 634.6875
             }
           },
           {
             "__type": "SlideMechanic",
             "Controller": {
               "_type": "component",
-              "go": "229e59f8-2c43-4831-a34c-d2a8a324a624",
+              "go": "fe15f253-ad61-421a-865d-4e052b349a58",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 30399.633
+              "Relative": 634.6875
             }
           },
           {
             "__type": "ViewPunchMechanic",
-            "Controller": null,
             "IsActive": true,
             "TimeSinceActiveChanged": {
-              "Relative": 30399.633
+              "Relative": 634.6875
             }
           },
           {
             "__type": "WallrunMechanic",
-            "Controller": null,
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 30399.633
+              "Relative": 634.6875
             }
           },
           {
             "__type": "MoveMechanic",
-            "Controller": null,
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 30399.633
+              "Relative": 634.6875
             }
           }
         ]
       },
       {
-        "Id": "92316d46-24f7-4c43-a827-fc22a1a1d804",
+        "Id": "741faeea-368b-45a6-b20b-f0e538adf143",
         "Name": "Player Camera",
         "Position": "0,0,60",
         "Enabled": true,
+        "NetworkMode": 2,
         "Components": [
           {
             "__type": "CameraComponent",
@@ -253,9 +258,10 @@
         ]
       },
       {
-        "Id": "34b4e75f-b53c-4c1a-b075-1cc0c9edac05",
+        "Id": "45f149d5-e466-4642-821c-982d76d21bed",
         "Name": "HUD",
         "Enabled": true,
+        "NetworkMode": 2,
         "Components": [
           {
             "__type": "ScreenPanel",
@@ -268,12 +274,12 @@
             "__type": "HudPanel",
             "Controller": {
               "_type": "component",
-              "go": "229e59f8-2c43-4831-a34c-d2a8a324a624",
+              "go": "fe15f253-ad61-421a-865d-4e052b349a58",
               "component_type": "PlayerController"
             },
             "Timer": {
               "_type": "component",
-              "go": "229e59f8-2c43-4831-a34c-d2a8a324a624",
+              "go": "fe15f253-ad61-421a-865d-4e052b349a58",
               "component_type": "Timer"
             }
           }
