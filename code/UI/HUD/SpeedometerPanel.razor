@@ -15,30 +15,15 @@
 {
   public PlayerController Controller { get; set; }
   public Panel WallJumpContainerPanel { get; set; }
-  private bool IsSubscribed { get; set; }
   protected override int BuildHash() =>
   System.HashCode.Combine(Common.HUPSToKPH(Controller.HorzVelocity.Length).ToString("F1"));
 
-  protected override void InitializeEvents()
+  protected override void OnAfterTreeRender(bool firstTime)
   {
-    base.InitializeEvents();
-
-    SubscribeToEvent();
-  }
-
-  private async void SubscribeToEvent()
-  {
-    if (IsSubscribed)
+    if (!firstTime)
     {
       return;
     }
-
-    while (Controller is null)
-    {
-      await Task.Frame();
-    }
-
-    IsSubscribed = true;
 
     Controller.OnFastWallJump += OnFastWallJump;
   }
