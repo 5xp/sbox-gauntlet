@@ -3,12 +3,14 @@
 @inherits PanelComponent
 
 <root class="pk">
-    <div class="layout padding-insane column">
-        <div class="layout flex-grow" />
-        <label class="text header">Gauntlet Movement Test</label>
-        <div class="layout column gap">
-            <button class="button standard backdrop" onclick=@Play onmouseover=@OnMouseOver>Play</button>
-            <button class="button standard backdrop" onclick=@Quit onmouseover=@OnMouseOver>Quit</button>
+    <div class="background" @ref=BackgroundPanel />
+    <div class="layout padding-insane column main-container">
+        <label class="text header">GAUNTLET</label>
+        <div class="layout row gap">
+            <button class="button standard backdrop icon" onclick=@Play>@((IsInGame() ? "replay" :
+                "play_arrow"))</button>
+            <button class="button standard backdrop icon">settings</button>
+            <button class="button standard backdrop icon" onclick=@Quit>power_settings_new</button>
         </div>
     </div>
 </root>
@@ -16,20 +18,66 @@
 @code
 {
     [Property] public SceneFile PlayScene { get; set; }
-    [Property] public SoundEvent HoverSound { get; set; }
-    [Property] public SoundEvent ClickSound { get; set; }
-    [Property] private GameObject Camera { get; set; }
-
-    protected override void OnFixedUpdate()
+    private Panel BackgroundPanel { get; set; }
+    private string[] BackgroundTextures = new string[]
     {
-        Rotation rot = Rotation.FromYaw(3f * Time.Delta);
-        Camera.Transform.Rotation = rot * Camera.Transform.Rotation;
+"assets/materials/grid_tintable.png",
+"assets/materials/checkerboard_tintable.png",
+    };
+
+    protected override void OnTreeFirstBuilt()
+    {
+        bool isInGame = Scene.Title != "mainmenu";
+
+
+
+        string backgroundTexture = Game.Random.FromArray<string>(BackgroundTextures);
+
+        BackgroundPanel.Style.Set("background-image", $"url({backgroundTexture})");
+
+
+
+        if (isInGame)
+        {
+            BackgroundPanel.Style.Opacity = 0.1f;
+            BackgroundPanel.Style.FilterBrightness = Length.Fraction(0.5f);
+            Panel.Style.BackdropFilterBrightness = Length.Fraction(0.1f);
+            Panel.Style.BackdropFilterContrast = Length.Fraction(1.5f);
+            Panel.Style.BackdropFilterBlur = Length.Pixels(10);
+        }
+        else
+        {
+            BackgroundPanel.Style.FilterSepia = Length.Fraction(1);
+            BackgroundPanel.Style.FilterSaturate = Length.Fraction(2.5f);
+        }
+    }
+    protected override void OnUpdate()
+    {
+        if (BackgroundPanel is not null)
+        {
+            if (!IsInGame())
+            {
+                BackgroundPanel.Style.FilterHueRotate = Length.Fraction(-10f * Time.Now);
+            }
+
+            float scale = IsInGame() ? 0.25f : 0.5f;
+            BackgroundPanel.Style.BackgroundPositionX = Length.Percent(Time.Now * scale);
+            BackgroundPanel.Style.BackgroundPositionY = Length.Percent(Time.Now * scale);
+        }
     }
 
     void Play()
     {
         OnClick();
-        Game.ActiveScene.Load(PlayScene);
+
+        if (IsInGame())
+        {
+            Game.ActiveScene.Load(Game.ActiveScene.Source);
+        }
+        else
+        {
+            Game.ActiveScene.Load(PlayScene);
+        }
     }
 
     void Quit()
@@ -40,11 +88,11 @@
 
     void OnClick()
     {
-        Sound.Play(ClickSound);
+        @* Sound.Play("ui.button.press"); *@
     }
 
-    void OnMouseOver()
+    private bool IsInGame()
     {
-        Sound.Play(HoverSound);
+        return Scene.Title != "mainmenu";
     }
 }

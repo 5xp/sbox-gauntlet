@@ -1,23 +1,36 @@
 $button-standard-padding: 18px 32px;
+$button-hover-sound: "ui.button.over";
+$button-click-sound: "ui.button.press";
 
-.pk .button
-{
-    font-family: $main-font;
-    font-weight: bold;
-    font-size: 30px;
-    color: white;
+.pk .button {
+  font-family: $main-font;
+  font-weight: bold;
+  font-size: 30px;
+  color: white;
+  align-items: center;
 
-    &.standard
-    {
-        padding: $button-standard-padding;
-        pointer-events: all;
-        cursor: pointer;
-        transition: all 0.1s ease;
-        text-shadow: 0px 0px 10px rgba($main-color-secondary, 0.6);
+  &.standard {
+    padding: $button-standard-padding;
+    pointer-events: all;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    text-shadow: 0px 0px 10px rgba(black, 0.6);
 
-        &:hover
-        {
-            background-color: rgba($main-color-primary, 1);
-        }
+    &:hover {
+      sound-in: $button-hover-sound;
+      background-color: rgba($main-color-primary, 1);
     }
+
+    &:active {
+      sound-out: $button-click-sound;
+    }
+  }
+  &.icon {
+    font-family: "Material Icons";
+    font-size: 50px;
+  }
+
+  label {
+    pointer-events: none;
+  }
 }

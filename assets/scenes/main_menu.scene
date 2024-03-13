@@ -7,7 +7,7 @@
       "Position": "445.0681,1144.973,1044.812",
       "Rotation": "0.3464704,0.2151882,-0.7756222,0.4817287",
       "Tags": "light,light_directional",
-      "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "DirectionalLight",
@@ -23,7 +23,7 @@
       "Id": "00344a8c-fa5e-45ae-b12a-10bb781a1dc3",
       "Name": "2D Skybox",
       "Tags": "skybox",
-      "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "SkyBox2D",
@@ -37,7 +37,7 @@
       "Name": "Camera",
       "Position": "-952.3967,-928.0466,1561.85",
       "Rotation": "0,-0.5299191,0,0.8480482",
-      "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "CameraComponent",
@@ -60,22 +60,18 @@
     {
       "Id": "ff590321-7fa0-4089-8421-33cc01854ce0",
       "Name": "Main Menu",
-      "Position": "-955.678,-1009.678,1463.084",
       "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "ScreenPanel",
           "AutoScreenScale": true,
           "Opacity": 1,
-          "Scale": 1.25,
+          "Scale": 1,
           "ZIndex": 100
         },
         {
           "__type": "MainMenuPanel",
-          "Camera": {
-            "_type": "gameobject",
-            "go": "adb42f1f-2599-449a-a6fa-407e0c9029bd"
-          },
           "ClickSound": "sounds/kenney/ui/ui.button.press.sound",
           "HoverSound": "sounds/kenney/ui/ui.button.over.sound",
           "PlayScene": "assets/scenes/level1.scene"
@@ -104,8 +100,8 @@
       "IncludedBodies": ""
     }
   },
-  "Title": "minimal",
+  "Title": "mainmenu",
   "Description": "",
-  "LastSaved": "2024-03-01T16:09:05.8378954-06:00",
+  "LastSaved": "2024-03-13T00:41:02.4731788-05:00",
   "__references": []
 }

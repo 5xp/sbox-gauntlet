@@ -1,23 +1,18 @@
+.pk .text {
+  font-family: $main-font;
+  color: white;
+  font-size: 20px;
 
-.pk .text
-{
-    font-family: $main-font;
-    color: white;
-    font-size: 20px;
+  &.header {
+    font-size: 104px;
+    font-weight: bold;
+  }
 
-    &.header
-    {
-        font-size: 96px;
-        font-weight: bold;
-    }
-
-    &.sub-header
-    {
-        font-size: 32px;
-    }
+  &.sub-header {
+    font-size: 32px;
+  }
 }
 
-.pk .icon
-{
-    font-family: "Material Icons";
+.pk .icon {
+  font-family: "Material Icons";
 }
