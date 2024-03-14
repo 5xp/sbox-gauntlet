@@ -30,6 +30,11 @@
 
   public void OnFastWallJump(float speedDiff, float time)
   {
+    if (!PlayerPreferences.Instance.WallKickHudEnabled)
+    {
+      return;
+    }
+
     WallJumpPanel wallJumpPanel = new WallJumpPanel();
     wallJumpPanel.SpeedDiff = speedDiff;
 

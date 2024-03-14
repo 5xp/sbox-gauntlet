@@ -1,11 +1,17 @@
 @namespace Tf.UI
 @inherits PanelComponent
 
-<root class="pk"
-	style="transform: translateX(@(Position.x / 16)%) translateY(@(Position.y / 9)%) rotate(@(Position.z)deg) scale(@(GetScale()));">
-	<KeyPressPanel />
-	<SpeedometerPanel Controller=@Controller />
-</root>
+@if (PlayerPreferences.Instance.HudEnabled)
+{
+	<root class="pk"
+		style="transform: translateX(@(Position.x / 16)%) translateY(@(Position.y / 9)%) rotate(@(Position.z)deg) scale(@(GetScale()));">
+		@if (PlayerPreferences.Instance.KeyPressHudEnabled)
+		{
+			<KeyPressPanel />
+		}
+		<SpeedometerPanel Controller=@Controller />
+	</root>
+}
 
 @code
 {
@@ -35,6 +41,17 @@
 		Timer.OnTimerRestart += OnTimerRestart;
 		Timer.OnTimerEnd += OnTimerEnd;
 		ViewPunchSpring = Controller.GetMechanic<ViewPunchMechanic>().Spring;
+		PlayerPreferences.OnPreferencesSavedOrLoaded += OnPreferencesSavedOrLoaded;
+		OnPreferencesSavedOrLoaded();
+	}
+
+	protected override void OnDestroy()
+	{
+		base.OnDestroy();
+		Timer.OnTimerStart -= OnTimerStart;
+		Timer.OnTimerRestart -= OnTimerRestart;
+		Timer.OnTimerEnd -= OnTimerEnd;
+		PlayerPreferences.OnPreferencesSavedOrLoaded -= OnPreferencesSavedOrLoaded;
 	}
 
 	protected override void OnUpdate()
@@ -44,6 +61,12 @@
 
 	private void UpdatePosition()
 	{
+		if (!PlayerPreferences.Instance.HudSwayEnabled)
+		{
+			Position = Vector4.Zero;
+			return;
+		}
+
 		Vector4 viewPunchContribution = GetViewPunchContribution();
 		Vector4 swayTurnContribution = GetSwayTurnContribution();
 		Vector4 swayMoveContribution = GetSwayMoveContribution();
@@ -113,22 +136,22 @@
 
 	private void OnTimerStart()
 	{
-		if (Timer.NumCompletionsThisSession == 0)
+		if (Timer.NumCompletionsThisSession == 0 && PlayerPreferences.Instance.HudEnabled)
 		{
 			TimerPanel = new();
 			TimerPanel.Timer = Timer;
 			TimerPanel.Parent = Panel;
 		}
 
-		TimerPanel.RemoveClass("complete");
-		TimerPanel.RemoveClass("pb");
+		TimerPanel?.RemoveClass("complete");
+		TimerPanel?.RemoveClass("pb");
 	}
 
 	private void OnTimerRestart()
 	{
 		if (Timer.NumCompletionsThisSession == 0)
 		{
-			TimerPanel.Delete();
+			TimerPanel?.Delete();
 		}
 	}
 
@@ -136,11 +159,18 @@
 	{
 		if (isBest)
 		{
-			TimerPanel.AddClass("pb");
+			TimerPanel?.AddClass("pb");
 		}
 		else
 		{
-			TimerPanel.AddClass("complete");
+			TimerPanel?.AddClass("complete");
 		}
+	}
+
+	private void OnPreferencesSavedOrLoaded()
+	{
+		ScreenPanel screenPanel = Components.Get<ScreenPanel>();
+		screenPanel.Scale = PlayerPreferences.Instance.HudScale;
+		StateHasChanged();
 	}
 }

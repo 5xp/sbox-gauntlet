@@ -19,6 +19,8 @@ public sealed class GameNetworkManager : Component, Component.INetworkListener
 		_ = LeaderboardManager.Instance.FetchLeaderboardEntries( Common.GetTimeStatIdent( Scene.Title, 1 ), true );
 		_ = LeaderboardManager.Instance.FetchLeaderboardEntries( Common.GetTimeStatIdent( Scene.Title, 2 ), true );
 
+		PlayerPreferences.Load();
+
 		if ( !IsMultiplayer )
 		{
 			SpawnPlayer();
