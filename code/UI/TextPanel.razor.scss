@@ -1,0 +1,14 @@
+@import "UI/Styles/Theme.scss";
+
+TextPanel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  text-stroke: 7px black;
+  text-shadow: 0 0 20px black;
+}
