@@ -46,6 +46,8 @@ public sealed class PlayerSettings
 				WallrunJumpInputDirSpeed = 80f,
 				WallrunMaxSpeedHorizontal = 420f,
 				WallrunAccelerationHorizontal = 1500f,
+				WallrunGravityRampUpTime = 0.7f,
+				WallrunSlipStartTime = 1.5f,
 			};
 		}
 	}
