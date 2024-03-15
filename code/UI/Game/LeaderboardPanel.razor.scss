@@ -11,8 +11,14 @@ LeaderboardPanel {
     color: white;
     font-weight: 500;
     text-align: left;
-    width: 100%;
-    margin: 40px 0 40px 0;
+  }
+
+  h2 {
+    font-size: 120px;
+    font-family: $main-font;
+    color: white;
+    font-weight: 500;
+    text-align: left;
   }
 
   p {
@@ -25,6 +31,21 @@ LeaderboardPanel {
   img {
     height: 100px;
     width: 100px;
+  }
+
+  .leaderboard-header {
+    margin: 40px 0 40px 0;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 100%;
+
+    > .leaderboard-title {
+      flex: 1;
+    }
+    > .loop-label {
+      text-align: right;
+    }
   }
 
   .entry-container {
