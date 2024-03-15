@@ -7,7 +7,7 @@
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
-  "Resources": "/assets/fonts/*",
+  "Resources": "/assets/fonts/*\n/assets/materials/*.png",
   "HasCode": true,
   "CodePath": "/code/",
   "PackageReferences": [],
@@ -16,74 +16,6 @@
     "MaxPlayers": 1,
     "MinPlayers": 1,
     "LeaderboardType": "None",
-    "Collision": {
-      "Defaults": {
-        "solid": "Collide",
-        "trigger": "Trigger",
-        "ladder": "Ignore",
-        "water": "Trigger",
-        "ragdoll": "Trigger",
-        "weapon": "Trigger",
-        "player": "Collide",
-        "glass": "Collide"
-      },
-      "Pairs": [
-        {
-          "a": "solid",
-          "b": "solid",
-          "r": "Collide"
-        },
-        {
-          "a": "trigger",
-          "b": "playerclip",
-          "r": "Ignore"
-        },
-        {
-          "a": "trigger",
-          "b": "solid",
-          "r": "Trigger"
-        },
-        {
-          "a": "solid",
-          "b": "trigger",
-          "r": "Collide"
-        },
-        {
-          "a": "playerclip",
-          "b": "solid",
-          "r": "Collide"
-        },
-        {
-          "a": "ladder",
-          "b": "water",
-          "r": "Ignore"
-        },
-        {
-          "a": "trigger",
-          "b": "water"
-        },
-        {
-          "a": "solid",
-          "b": "ragdoll",
-          "r": "Collide"
-        },
-        {
-          "a": "solid",
-          "b": "weapon",
-          "r": "Collide"
-        },
-        {
-          "a": "player",
-          "b": "player",
-          "r": "Ignore"
-        },
-        {
-          "a": "player",
-          "b": "glass",
-          "r": "Trigger"
-        }
-      ]
-    },
     "Compiler": {
       "RootNamespace": "Tf",
       "DefineConstants": "SANDBOX;ADDON;DEBUG",
@@ -98,8 +30,7 @@
       "DistinctAssemblyReferences": []
     },
     "ControlModes": {
-      "Keyboard": true,
-      "Gamepad": true
+      "Keyboard": true
     },
     "ParentPackage": "",
     "DefaultLeaderboards": [],
@@ -144,67 +75,10 @@
           "GroupName": "Movement"
         },
         {
-          "Name": "Walk",
-          "KeyboardCode": "alt",
-          "GroupName": "Movement"
-        },
-        {
           "Name": "Duck",
           "KeyboardCode": "Ctrl",
           "GamepadCode": "B",
           "GroupName": "Movement"
-        },
-        {
-          "Name": "attack1",
-          "KeyboardCode": "mouse1",
-          "GamepadCode": "RightTrigger",
-          "GroupName": "Weapon Handling"
-        },
-        {
-          "Name": "attack2",
-          "KeyboardCode": "mouse2",
-          "GamepadCode": "LeftTrigger",
-          "GroupName": "Weapon Handling"
-        },
-        {
-          "Name": "reload",
-          "KeyboardCode": "r",
-          "GamepadCode": "X",
-          "GroupName": "Weapon Handling"
-        },
-        {
-          "Name": "Interact",
-          "KeyboardCode": "f",
-          "GamepadCode": "Y",
-          "GroupName": "Actions"
-        },
-        {
-          "Name": "Score",
-          "KeyboardCode": "tab",
-          "GamepadCode": "SwitchLeftMenu",
-          "GroupName": "Other"
-        },
-        {
-          "Name": "Chat",
-          "KeyboardCode": "enter",
-          "GroupName": "Other"
-        },
-        {
-          "Name": "Noclip",
-          "KeyboardCode": "MOUSE4",
-          "GroupName": "Development"
-        },
-        {
-          "Name": "SpectatorNext",
-          "KeyboardCode": "E",
-          "GamepadCode": "DpadWest",
-          "GroupName": "Spectator"
-        },
-        {
-          "Name": "SpectatorPrev",
-          "KeyboardCode": "Q",
-          "GamepadCode": "DpadEast",
-          "GroupName": "Spectator"
         }
       ]
     },
