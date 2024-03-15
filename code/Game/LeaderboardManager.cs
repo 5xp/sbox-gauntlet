@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Sandbox.Services;
 namespace Tf;
@@ -30,7 +31,7 @@ public sealed class LeaderboardManager
 	/// <summary>
 	/// A dictionary of ongoing fetches, indexed by the leaderboard identifier.
 	/// </summary>
-	private readonly Dictionary<string, Task<Tuple<List<Leaderboards.Entry>, List<Leaderboards.Entry>>>> OngoingFetches = new();
+	private readonly ConcurrentDictionary<string, Task<Tuple<List<Leaderboards.Entry>, List<Leaderboards.Entry>>>> OngoingFetches = new();
 
 	/// <summary>
 	/// A dictionary of the player's leaderboard entries, indexed by the leaderboard identifier.
@@ -71,7 +72,7 @@ public sealed class LeaderboardManager
 			var result = await fetchTask;
 
 			// Once the fetch is complete, remove it from the dictionary.
-			OngoingFetches.Remove( ident );
+			OngoingFetches.TryRemove( ident, out _ );
 
 			return result;
 		}
