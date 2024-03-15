@@ -1,0 +1,138 @@
+@namespace Tf.UI
+@attribute [StyleSheet]
+@inherits PanelComponent
+
+<root class="pk">
+  <div class="background" @ref=BackgroundPanel />
+
+  @if (CurrentView == View.MainMenu)
+  {
+    <div class="layout padding-insane column main-container">
+      <label class="text title">Gauntlet</label>
+      <div class="layout row gap">
+        <button class="button standard backdrop icon forward" onclick=@Play>@((IsInGame() ? "replay" :
+        "play_arrow"))</button>
+        <button class="button standard backdrop icon forward" onclick=@(() => CurrentView =
+        View.Settings)>settings</button>
+        <button class="button standard backdrop icon backward" onclick=@Quit>power_settings_new</button>
+      </div>
+    </div>
+  }
+  else if (CurrentView == View.Settings)
+  {
+
+    <button class="button standard backdrop icon backward back-button" onclick=@Back>navigate_before</button>
+
+    <div class="layout padding-insane column settings-container">
+      <label class="text title">Settings</label>
+      <div class="layout column gap-extra controls-container">
+        <SettingsToggle Title="Enable HUD" Value:bind=@PlayerPreferences.Instance.HudEnabled />
+        <SettingsToggle Title="Enable HUD Sway" Value:bind=@PlayerPreferences.Instance.HudSwayEnabled />
+        <SettingsToggle Title="Enable Keypress HUD" Value:bind=@PlayerPreferences.Instance.KeyPressHudEnabled />
+        <SettingsToggle Title="Enable Wallkick HUD" Value:bind=@PlayerPreferences.Instance.WallKickHudEnabled />
+        <SettingsSlider Title="HUD Scale" Min=@(0.5f) Max=@(1.2f) Step=@(0.01f)
+          Value:bind=@PlayerPreferences.Instance.HudScale />
+      </div>
+    </div>
+  }
+</root>
+
+@code
+{
+  [Property] public SceneFile PlayScene { get; set; }
+  private Panel BackgroundPanel { get; set; }
+  private string[] BackgroundTextures = new string[]
+  {
+"assets/materials/grid_tintable.png",
+"assets/materials/checkerboard_tintable.png",
+  };
+
+  private View CurrentView { get; set; } = View.MainMenu;
+
+  private enum View
+  {
+    MainMenu,
+    Settings
+  };
+
+  protected override void OnTreeFirstBuilt()
+  {
+    if (BackgroundPanel is null)
+    {
+      return;
+    }
+
+    bool isInGame = IsInGame();
+
+    string backgroundTexture = Game.Random.FromArray<string>(BackgroundTextures);
+
+    BackgroundPanel.Style.Set("background-image", $"url({backgroundTexture})");
+
+    if (isInGame)
+    {
+      BackgroundPanel.Style.Opacity = 0.1f;
+      BackgroundPanel.Style.FilterBrightness = Length.Fraction(0.5f);
+      Panel.Style.BackdropFilterBrightness = Length.Fraction(0.3f);
+      Panel.Style.BackdropFilterContrast = Length.Fraction(1.5f);
+      Panel.Style.BackdropFilterBlur = Length.Pixels(10);
+    }
+    else
+    {
+      BackgroundPanel.Style.FilterSepia = Length.Fraction(1);
+      BackgroundPanel.Style.FilterSaturate = Length.Fraction(2.5f);
+    }
+  }
+
+  protected override void OnUpdate()
+  {
+    if (Input.EscapePressed)
+    {
+      Back();
+      StateHasChanged();
+    }
+
+    if (BackgroundPanel is not null)
+    {
+      if (!IsInGame())
+      {
+        BackgroundPanel.Style.FilterHueRotate = Length.Fraction(-10f * Time.Now);
+      }
+
+      float scale = IsInGame() ? 0.25f : 0.5f;
+      BackgroundPanel.Style.BackgroundPositionX = Length.Percent(Time.Now * scale);
+      BackgroundPanel.Style.BackgroundPositionY = Length.Percent(Time.Now * scale);
+    }
+  }
+
+  void Play()
+  {
+    if (IsInGame())
+    {
+      Game.ActiveScene.Load(Game.ActiveScene.Source);
+    }
+    else
+    {
+      Game.ActiveScene.Load(PlayScene);
+    }
+  }
+
+  void Quit()
+  {
+    Game.Disconnect();
+  }
+
+  private bool IsInGame()
+  {
+    return Scene.Title != "mainmenu";
+  }
+
+  private void Back()
+  {
+    if (CurrentView == View.Settings)
+    {
+      PlayerPreferences.Save();
+    }
+
+    CurrentView = View.MainMenu;
+  }
+}

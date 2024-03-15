@@ -9,3 +9,12 @@
   backdrop-filter: blur(30px);
   border-radius: 300px 0px 300px 0px;
 }
+
+.pk .settings-control {
+  width: 800px;
+  height: 90px;
+  padding: 30px;
+
+  justify-content: space-between;
+  align-items: center;
+}

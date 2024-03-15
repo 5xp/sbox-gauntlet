@@ -30,6 +30,7 @@ public sealed class PlayerPreferences
   public static void Save()
   {
     FileSystem.Data.WriteJson( FileName, Instance );
+    OnPreferencesSavedOrLoaded?.Invoke();
   }
 
   public static void Load()

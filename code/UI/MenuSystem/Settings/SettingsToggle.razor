@@ -1,0 +1,12 @@
+@namespace Tf.UI
+@inherits Panel
+
+<root class="settings-control settings-toggle backdrop">
+  <div class="settings toggle__title text">@Title</div>
+  <SwitchControl Value:bind=@Value />
+</root>
+
+@code {
+  public string Title { get; set; }
+  public bool Value { get; set; }
+}

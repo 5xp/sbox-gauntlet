@@ -1,6 +1,4 @@
 $button-standard-padding: 18px 32px;
-$button-hover-sound: "ui.button.over";
-$button-click-sound: "ui.button.press";
 
 .pk .button {
   font-family: $main-font;
@@ -22,7 +20,13 @@ $button-click-sound: "ui.button.press";
     }
 
     &:active {
-      sound-out: $button-click-sound;
+      &.forward {
+        sound-out: $button-navigate-forward-sound;
+      }
+
+      &.backward {
+        sound-out: $button-navigate-backward-sound;
+      }
     }
   }
   &.icon {

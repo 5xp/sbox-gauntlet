@@ -1,0 +1,42 @@
+@import "/UI/Styles/Theme.scss";
+$radius: 24px;
+
+SettingsSlider {
+  .slider__title {
+    flex: 0 0 30%;
+  }
+
+  .slider__value {
+    flex: 0 0 12%;
+    margin-left: 3%;
+  }
+
+  .slidercontrol {
+    flex: 0 0 35%;
+    margin-left: 20%;
+
+    .value-tooltip {
+      opacity: 0;
+    }
+
+    > .inner {
+      justify-content: center;
+
+      > .track {
+        height: $radius;
+        border-radius: $radius;
+        background-color: rgba(14, 14, 14, 0.363);
+
+        > .track-active {
+          border-radius: $radius;
+
+          transition: width 0.1s ease-out;
+        }
+
+        > .thumb {
+          opacity: 0;
+        }
+      }
+    }
+  }
+}

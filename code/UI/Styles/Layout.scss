@@ -1,47 +1,41 @@
-
 $layout-standard-padding: 8px;
 $layout-extra-padding: 16px;
 $layout-insane-padding: 64px;
 
-.pk .layout
-{
-    &.padding
-    {
-        padding: $layout-standard-padding;
-    }
+.pk .layout {
+  &.padding {
+    padding: $layout-standard-padding;
+  }
 
-    &.padding-extra
-    {
-        padding: $layout-extra-padding;
-    }
-    
-    &.padding-insane
-    {
-        padding: $layout-insane-padding;
-    }
+  &.padding-extra {
+    padding: $layout-extra-padding;
+  }
 
-    &.gap
-    {
-        gap: 8px;
-    }
+  &.padding-insane {
+    padding: $layout-insane-padding;
+  }
 
-    &.flex-grow
-    {
-        flex-grow: 1;
-    }
+  &.gap {
+    gap: 8px;
+  }
 
-    &.row
-    {
-        flex-direction: row;
-    }
+  &.gap-extra {
+    gap: 16px;
+  }
 
-    &.column
-    {
-        flex-direction: column;
-    }
+  &.flex-grow {
+    flex-grow: 1;
+  }
 
-    &.pointer-events
-    {
-        pointer-events: all;
-    }
+  &.row {
+    flex-direction: row;
+  }
+
+  &.column {
+    flex-direction: column;
+  }
+
+  &.pointer-events {
+    pointer-events: all;
+  }
 }

@@ -1,0 +1,29 @@
+@import "/UI/Styles/Theme.scss";
+$radius: 24px;
+$width: 48px;
+
+SettingsToggle {
+  .switchcontrol {
+    &.inactive .switch-frame,
+    &.active .switch-frame {
+      background-color: rgba(14, 14, 14, 0.363);
+      height: $radius;
+      width: $width;
+      > .switch-inner {
+        background-color: white;
+        transition: all 0.2s ease-out;
+        width: $radius;
+        height: $radius;
+        border-radius: $radius;
+      }
+    }
+
+    &.active > .switch-frame {
+      background-color: rgba(194, 194, 194, 0.226);
+    }
+
+    &:active {
+      sound-out: $button-click-sound;
+    }
+  }
+}

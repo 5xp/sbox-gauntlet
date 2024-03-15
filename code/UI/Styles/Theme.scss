@@ -9,6 +9,11 @@ $completion-color-dark: #056c8e98;
 $pb-color: #33dc007f;
 $pb-color-dark: #33dc00;
 $color-top1: #f0d716;
+$button-hover-sound: "ui.button.over";
+$button-click-sound: "ui.button.press";
+$button-navigate-forward-sound: "ui.navigate.forward";
+$button-navigate-backward-sound: "ui.navigate.back";
+$slider-tick-sound: "ui.drag.start";
 
 @import "Text.scss";
 @import "Layout.scss";

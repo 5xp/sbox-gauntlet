@@ -1,8 +1,8 @@
 {
-  "Id": "9d1463ac-a949-437a-9b83-e8507a1180a2",
+  "__guid": "9d1463ac-a949-437a-9b83-e8507a1180a2",
   "GameObjects": [
     {
-      "Id": "bfc59c12-1ed2-4f91-8956-a95a315eac3c",
+      "__guid": "bfc59c12-1ed2-4f91-8956-a95a315eac3c",
       "Name": "Sun",
       "Position": "445.0681,1144.973,1044.812",
       "Rotation": "0.3464704,0.2151882,-0.7756222,0.4817287",
@@ -11,6 +11,7 @@
       "Components": [
         {
           "__type": "DirectionalLight",
+          "__guid": "b77d32e8-1012-4b24-8aab-95efc72b06af",
           "FogMode": "Enabled",
           "FogStrength": 1,
           "LightColor": "1.36634,0.9402,1.10213,1",
@@ -20,20 +21,21 @@
       ]
     },
     {
-      "Id": "00344a8c-fa5e-45ae-b12a-10bb781a1dc3",
+      "__guid": "00344a8c-fa5e-45ae-b12a-10bb781a1dc3",
       "Name": "2D Skybox",
       "Tags": "skybox",
       "NetworkMode": 2,
       "Components": [
         {
           "__type": "SkyBox2D",
+          "__guid": "fc7c80e6-8faa-44d8-a21f-1daadec35f12",
           "SkyMaterial": "materials/skybox/light_test_sky_overcast.vmat",
           "Tint": "1,1,1,1"
         }
       ]
     },
     {
-      "Id": "adb42f1f-2599-449a-a6fa-407e0c9029bd",
+      "__guid": "adb42f1f-2599-449a-a6fa-407e0c9029bd",
       "Name": "Camera",
       "Position": "-952.3967,-928.0466,1561.85",
       "Rotation": "0,-0.5299191,0,0.8480482",
@@ -41,6 +43,7 @@
       "Components": [
         {
           "__type": "CameraComponent",
+          "__guid": "8080ba83-6221-4938-abd8-8fd5079730d0",
           "BackgroundColor": "0.33333,0.46275,0.52157,1",
           "ClearFlags": "All",
           "FieldOfView": 60,
@@ -58,22 +61,57 @@
       ]
     },
     {
-      "Id": "ff590321-7fa0-4089-8421-33cc01854ce0",
+      "__guid": "ff590321-7fa0-4089-8421-33cc01854ce0",
       "Name": "Main Menu",
       "Enabled": true,
       "NetworkMode": 2,
       "Components": [
         {
           "__type": "ScreenPanel",
+          "__guid": "7ccb385d-f602-47a2-b667-9f8084d2dfef",
           "AutoScreenScale": true,
+          "OnComponentStart": {
+            "Version": 5,
+            "UserData": {
+              "Title": "On Component Start",
+              "id": "7e10dbd1-4230-466a-a306-3e60991a7884",
+              "ReferencedComponentTypes": []
+            },
+            "Variables": [],
+            "Nodes": [
+              {
+                "Id": 0,
+                "Type": "input"
+              },
+              {
+                "Id": 1,
+                "Type": "call",
+                "Properties": {
+                  "_isStatic": true,
+                  "_name": "Load",
+                  "_type": "package.cflo.gauntlet/Tf.PlayerPreferences"
+                },
+                "UserData": {
+                  "Position": "240,0"
+                }
+              }
+            ],
+            "Links": [
+              {
+                "SrcId": 0,
+                "SrcName": "_signal",
+                "DstId": 1,
+                "DstName": "_signal"
+              }
+            ]
+          },
           "Opacity": 1,
           "Scale": 1,
           "ZIndex": 100
         },
         {
-          "__type": "MainMenuPanel",
-          "ClickSound": "sounds/kenney/ui/ui.button.press.sound",
-          "HoverSound": "sounds/kenney/ui/ui.button.over.sound",
+          "__type": "MenuPanel",
+          "__guid": "686582d0-5637-44a9-b5dc-ece8f253c10f",
           "PlayScene": "assets/scenes/level1.scene"
         }
       ]
@@ -102,6 +140,8 @@
   },
   "Title": "mainmenu",
   "Description": "",
-  "LastSaved": "2024-03-13T00:41:02.4731788-05:00",
+  "LastSaved": "2024-03-15T01:44:44.2289492-05:00",
+  "ResourceVersion": 1,
+  "__version": 1,
   "__references": []
 }
