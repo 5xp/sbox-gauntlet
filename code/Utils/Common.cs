@@ -37,7 +37,7 @@ public static class Common
 
     if ( timeSpan.Minutes >= 1 )
     {
-      return timeSpan.ToString( @"m\:ss" ) + (includeUnit ? "m" : "");
+      return timeSpan.ToString( @"m\:ss" );
     }
     else
     {

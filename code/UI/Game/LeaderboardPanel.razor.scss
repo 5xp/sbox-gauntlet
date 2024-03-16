@@ -60,10 +60,10 @@ LeaderboardPanel {
     width: 100%;
     justify-content: space-between;
     height: 150px;
-  }
 
-  .entry:nth-child(even) {
-    background-color: rgba(35, 35, 35, 0.352);
+    &.even {
+      background-color: rgba(35, 35, 35, 0.352);
+    }
   }
 
   .entry.me {

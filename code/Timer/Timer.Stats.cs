@@ -15,7 +15,7 @@ public sealed partial class Timer
   public bool HasSlid { get; private set; }
   public bool HasWallran { get; private set; }
 
-  public static string StatVersion => "v0.1";
+  public static string StatVersion => "v0.2";
 
   /// <summary>
   /// Called when the game starts. Fetches the leaderboard entries for the current level, so our entry gets cached.

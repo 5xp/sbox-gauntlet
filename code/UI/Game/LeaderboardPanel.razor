@@ -22,13 +22,13 @@
       <h1 class="leaderboard-title">Top Players</h1>
     }
 
-    <h2 class=loop-label>@Timer.LastOrCurrentLoop.ToOrdinal() Loop</h2>
+    <h2 class=loop-label>@GetLoopLabel()</h2>
   </div>
 
   <div class="entry-container">
     @foreach (var entry in entries)
     {
-      <div class="entry @(entry.Me ? "me" : "") @(entry.Rank == 1 ? "top" : "")">
+      <div class=@GetEntryClass(entry)>
         <p class="entry-rank">@entry.Rank</p>
         <img src="avatar:@entry.SteamId" />
         <p class="entry-name">@entry.DisplayName</p>
@@ -38,9 +38,10 @@
       lastRank = entry.Rank;
     }
 
+    @* Fill in the rest of the top 10 with empty entries *@
     @for (int i = lastRank; i < 10; i++)
     {
-      <div class="entry">
+      <div class=@GetDefaultEntryClass(i + 1)>
         <p class="entry-rank">@(i + 1)</p>
       </div>
     }
@@ -50,5 +51,19 @@
 @code {
   public bool AroundPlayer { get; set; }
   public Timer Timer { get; set; }
-  protected override int BuildHash() => System.HashCode.Combine(Timer.InStartZone);
+
+  protected override int BuildHash() => System.HashCode.Combine(Timer.LastOrCurrentLoop);
+
+  private string GetLoopLabel() => Timer.LastOrCurrentLoop == 1 ? "1st Loop" : "2+ Loops";
+
+  private string GetEntryClass(GauntletLeaderboardEntry entry)
+  {
+    string result = "entry";
+    if (entry.Me) result += " me";
+    if (entry.Rank == 1) result += " top";
+    if (entry.Rank % 2 == 0) result += " even";
+    return result;
+  }
+
+  private string GetDefaultEntryClass(int rank) => rank % 2 == 0 ? "entry even" : "entry";
 }
