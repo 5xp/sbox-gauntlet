@@ -84,8 +84,6 @@ public sealed class PlayerSettings
 	public float DuckSpeed { get; set; } = 2f;
 	public float UnduckSpeed { get; set; } = 5f;
 	public bool CanJumpWhileUnducking { get; set; } = true;
-	public float SprintMaxAngleDot { get; set; } = 0.6f;
-	public float SprintTiltAccel { get; set; } = 35f;
 	public float JumpHeight { get; set; } = 60f;
 	public float JumpGracePeriod { get; set; } = 0.2f;
 	public float JumpBufferTime { get; set; } = 1 / 128f;
@@ -97,6 +95,8 @@ public sealed class PlayerSettings
 	public float AirJumpHorizontalSpeed { get; set; } = 180f;
 	public float AirJumpMinHeightFraction { get; set; } = 0.25f;
 	public int AirJumpMaxJumps { get; set; } = 1;
+	public float SprintMaxAngleDot { get; set; } = 0.6f;
+	public float SprintTiltAccel { get; set; } = 35f;
 	public float SprintTiltMaxVel { get; set; } = 2f;
 	public float SprintTiltTurnRange { get; set; } = 120f;
 	public float SprintTiltMaxRoll { get; set; } = 2f;
@@ -105,6 +105,9 @@ public sealed class PlayerSettings
 	public float SprintOffsetStartFastDuration { get; set; } = 0.2f;
 	public float SprintOffsetEndDuration { get; set; } = 0.15f;
 	public float SprintViewOffset { get; set; } = -6f;
+	public float SprintBobSmoothingReductionFactor { get; set; } = 0.2f;
+	public float SprintBobSmoothingTime { get; set; } = 3f;
+	public float SprintBobCycleTime { get; set; } = 0.55f;
 	public float SlideBoostCooldown { get; set; } = 2f;
 	public float SlideMaxAngleDot { get; set; } = 0.6f;
 	public float SlideStepVelocityReduction { get; set; } = 10f;

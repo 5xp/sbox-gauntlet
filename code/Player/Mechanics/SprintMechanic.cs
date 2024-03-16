@@ -5,11 +5,14 @@ namespace Tf;
 /// </summary>
 public partial class SprintMechanic : BasePlayerControllerMechanic
 {
-	public bool SprintToggled { get; set; } = false;
-	public bool SprintCanToggleOff { get; set; } = false;
-	public float SprintTiltFraction { get; set; }
-	public float SprintTiltVelocity { get; set; }
-	public float SprintViewOffsetFraction { get; set; }
+	private bool SprintToggled { get; set; } = false;
+	private bool SprintCanToggleOff { get; set; } = false;
+	private float SprintTiltFraction { get; set; }
+	private float SprintTiltVelocity { get; set; }
+	private float SprintViewOffsetFraction { get; set; }
+	private float SprintBobFrequency => 2f * MathF.PI / PlayerSettings.SprintBobCycleTime;
+	private float SprintBobFraction { get; set; }
+
 
 	public override int Priority => 70;
 
@@ -46,6 +49,7 @@ public partial class SprintMechanic : BasePlayerControllerMechanic
 
 	public override void FrameSimulate()
 	{
+		ApplySprintBob();
 		ApplySprintTilt();
 		ApplyViewOffset();
 	}
@@ -101,6 +105,51 @@ public partial class SprintMechanic : BasePlayerControllerMechanic
 		SprintTiltVelocity = SprintTiltVelocity.Clamp( -PlayerSettings.SprintTiltMaxVel, PlayerSettings.SprintTiltMaxVel );
 
 		Controller.EyeAngles += new Angles( 0f, 0f, SprintTiltFraction * PlayerSettings.SprintTiltMaxRoll );
+	}
+
+	/// <summary>
+	/// Apply camera bob when sprinting
+	/// </summary>
+	private void ApplySprintBob()
+	{
+		float approachSpeed = IsActive ? 4f : 10f;
+
+		SprintBobFraction = SprintBobFraction.Approach( IsActive ? 1f : 0f, approachSpeed * Time.Delta );
+
+		float smoothingFrac = MathX.LerpInverse( TimeSinceStart, 0f, PlayerSettings.SprintBobSmoothingTime );
+		float reductionFactor = MathX.LerpTo( 1f, PlayerSettings.SprintBobSmoothingReductionFactor, smoothingFrac );
+		float sprintFrac = MathX.LerpInverse( Velocity.Length, 0f, PlayerSettings.SprintSpeed );
+
+		Vector3 bob = new Vector3( GetPitchBob(), GetYawBob(), GetRollBob() ) * reductionFactor * sprintFrac * SprintBobFraction;
+		bob *= PlayerPreferences.Instance.SprintBobScale;
+
+		Controller.CurrentCameraRotationOffset *= Rotation.From( bob.x, bob.y, bob.z );
+	}
+
+	private float GetYawBob()
+	{
+		return 0.7f * MathF.Sin( TimeSinceStart * SprintBobFrequency + 0.82f ) - 0.159f;
+	}
+
+	private float GetPitchBob()
+	{
+		float t = TimeSinceStart;
+
+		float c1 = -0.143f * MathF.Sin( t * SprintBobFrequency + 0.762f );
+		float c2 = 0.3f * MathF.Sin( t * 2f * SprintBobFrequency - 1.532f );
+		float c3 = -0.083f * MathF.Sin( t * 4f * SprintBobFrequency + 1.4f );
+
+		return c1 + c2 + c3 + 0.044f;
+	}
+
+	private float GetRollBob()
+	{
+		float t = TimeSinceStart;
+
+		float c1 = 0.55f * MathF.Sin( t * SprintBobFrequency - 1.26f );
+		float c2 = -0.05f * MathF.Sin( t * 2f * SprintBobFrequency + 1.06f );
+		float c3 = -0.08f * MathF.Sin( t * 3f * SprintBobFrequency + 4.38f );
+		return c1 + c2 + c3 + 0.49f;
 	}
 
 	/// <summary>

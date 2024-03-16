@@ -25,7 +25,7 @@ public sealed class PlayerPreferences
   public bool HudSwayEnabled { get; set; } = true;
   public bool KeyPressHudEnabled { get; set; } = true;
   public bool WallKickHudEnabled { get; set; } = true;
-
+  public float SprintBobScale { get; set; } = 1f;
 
   public static void Save()
   {

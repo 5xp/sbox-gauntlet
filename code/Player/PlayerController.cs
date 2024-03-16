@@ -30,9 +30,14 @@ public partial class PlayerController : Component
 	public GameObject CameraGameObject => CameraController.Camera.GameObject;
 
 	/// <summary>
-	/// Mechanics can add to this camera offset. Resets to zero after every frame.
+	/// Mechanics can add to this positional camera offset. Resets to zero after every frame.
 	/// </summary>
 	public Vector3 CurrentCameraOffset { get; set; }
+
+	/// <summary>
+	/// Mechanics can add to this rotational camera offset. Resets to zero after every frame.
+	/// </summary>
+	public Rotation CurrentCameraRotationOffset { get; set; }
 
 	/// <summary>
 	/// When we step, we add to this offset
@@ -146,8 +151,10 @@ public partial class PlayerController : Component
 
 			var lookDir = EyeAngles.ToRotation() * viewPunch.Spring.ToRotation();
 
-			cam.Transform.Rotation = lookDir;
+			cam.Transform.Rotation = lookDir * CurrentCameraRotationOffset;
 			EyeAngles.roll = 0;
+			CurrentCameraRotationOffset = Rotation.Identity;
+
 		}
 
 		float rotateDifference = 0;
