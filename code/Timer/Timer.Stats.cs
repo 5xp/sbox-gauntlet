@@ -11,6 +11,9 @@ public sealed partial class Timer
   public float BestTopSpeed { get; private set; }
   public int? BestFirstLoopTime { get; private set; }
   public int? BestLoopTime { get; private set; }
+  public bool HasJumped { get; private set; }
+  public bool HasSlid { get; private set; }
+  public bool HasWallran { get; private set; }
 
   public static string StatVersion => "v0.1";
 
@@ -54,9 +57,29 @@ public sealed partial class Timer
     {
       BestTopSpeed = TopSpeed;
     }
+
+    if ( Player.HasAnyTag( "jump", "walljump", "airjump" ) )
+    {
+      HasJumped = true;
+    }
+
+    if ( Player.HasTag( "slide" ) )
+    {
+      HasSlid = true;
+    }
+
+    if ( Player.HasTag( "wallrun" ) )
+    {
+      HasWallran = true;
+    }
   }
 
-  private bool UpdateBestTime( int ticks )
+  /// <summary>
+  /// Checks if the given time is the best time for the current loop, and if so, updates the stats and leaderboard.
+  /// </summary>
+  /// <param name="ticks">How many ticks it took to complete</param>
+  /// <returns>Whether the time is the best time for the current loop.</returns>
+  private bool CheckBestTime( int ticks )
   {
     string stat = Common.GetTimeStatIdent( Scene.Title, CurrentLoop );
 
@@ -84,5 +107,25 @@ public sealed partial class Timer
     }
 
     return false;
+  }
+
+  private bool IsRunValid()
+  {
+    if ( !HasJumped )
+    {
+      return false;
+    }
+
+    if ( !HasWallran && !HasSlid )
+    {
+      return false;
+    }
+
+    if ( TopSpeed < Player.PlayerSettings.WalkSpeed )
+    {
+      return false;
+    }
+
+    return true;
   }
 }

@@ -98,6 +98,9 @@ public sealed partial class Timer : Component
 		Time = 0;
 		Ticks = 0;
 		TopSpeed = 0;
+		HasJumped = false;
+		HasSlid = false;
+		HasWallran = false;
 		LastOrCurrentLoop = CurrentLoop;
 
 		InStartZone = false;
@@ -108,12 +111,13 @@ public sealed partial class Timer : Component
 	{
 		InStartZone = true;
 		BlockNextReset = true;
-		if ( IsDisqualified )
+
+		if ( IsDisqualified || !IsRunValid() )
 		{
 			return;
 		}
 
-		bool newBestTime = UpdateBestTime( Ticks );
+		bool newBestTime = CheckBestTime( Ticks );
 		NumCompletionsThisSession++;
 		LastOrCurrentLoop = CurrentLoop;
 		CurrentLoop++;
