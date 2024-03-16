@@ -5,16 +5,11 @@
 <root class="pk">
   @{
     string ident = Common.GetTimeStatIdent(Scene.Title, Timer.LastOrCurrentLoop);
-    List<Leaderboards.Entry> entries = AroundPlayer ?
-    LeaderboardManager.Instance.GetAroundPlayer(ident).Result
+    List<GauntletLeaderboardEntry> entries = AroundPlayer ?
+    LeaderboardManager.Instance.GetAroundPlayer(ident, Game.SteamId).Result
     : LeaderboardManager.Instance.GetTopTen(ident).Result;
 
     int lastRank = 0;
-  }
-
-  @if (entries.Count <= 0)
-  {
-    return;
   }
 
   <div class="leaderboard-header">
@@ -31,22 +26,22 @@
   </div>
 
   <div class="entry-container">
-    @foreach (Leaderboards.Entry entry in entries)
+    @foreach (var entry in entries)
     {
       <div class="entry @(entry.Me ? "me" : "") @(entry.Rank == 1 ? "top" : "")">
         <p class="entry-rank">@entry.Rank</p>
         <img src="avatar:@entry.SteamId" />
         <p class="entry-name">@entry.DisplayName</p>
-        <p class="entry-time">@(Common.TimeToString(Convert.ToInt32(entry.Value), Scene.FixedDelta, true))</p>
+        <p class="entry-time">@(Common.TimeToString(entry.TimeTicks, Scene.FixedDelta, true))</p>
       </div>
 
-      lastRank = Convert.ToInt32(entry.Rank);
+      lastRank = entry.Rank;
     }
 
-    @for (int i = lastRank + 1; i <= 10; i++)
+    @for (int i = lastRank; i < 10; i++)
     {
       <div class="entry">
-        <p class="entry-rank">@i</p>
+        <p class="entry-rank">@(i + 1)</p>
       </div>
     }
   </div>

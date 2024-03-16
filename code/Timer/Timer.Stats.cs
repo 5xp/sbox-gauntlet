@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Sandbox.Services;
+using Sandbox.Utility;
 
 namespace Tf;
 
@@ -28,14 +29,17 @@ public sealed partial class Timer
 
   private void SetStats()
   {
-    if ( LeaderboardManager.Instance.MyEntryCache.TryGetValue( Common.GetTimeStatIdent( Scene.Title, 1 ), out var entry ) )
+    string stat1 = Common.GetTimeStatIdent( Scene.Title, 1 );
+    string stat2 = Common.GetTimeStatIdent( Scene.Title, 2 );
+
+    if ( LeaderboardManager.Instance.MyEntryCache.TryGetValue( stat1, out var entry ) )
     {
-      BestFirstLoopTime = Convert.ToInt32( entry.Value );
+      BestFirstLoopTime = entry.TimeTicks;
     }
 
-    if ( LeaderboardManager.Instance.MyEntryCache.TryGetValue( Common.GetTimeStatIdent( Scene.Title, 2 ), out var entry2 ) )
+    if ( LeaderboardManager.Instance.MyEntryCache.TryGetValue( stat2, out var entry2 ) )
     {
-      BestLoopTime = Convert.ToInt32( entry2.Value );
+      BestLoopTime = entry2.TimeTicks;
     }
   }
 
@@ -56,9 +60,17 @@ public sealed partial class Timer
   {
     string stat = Common.GetTimeStatIdent( Scene.Title, CurrentLoop );
 
+    GauntletLeaderboardEntry entry = new()
+    {
+      DisplayName = Steam.PersonaName,
+      SteamId = Game.SteamId,
+      TimeTicks = ticks
+    };
+
     if ( CurrentLoop == 1 && (!BestFirstLoopTime.HasValue || ticks < BestFirstLoopTime.Value) )
     {
       Stats.SetValue( stat, ticks );
+      LeaderboardManager.Instance.AddOrUpdateEntry( stat, entry, true );
       BestFirstLoopTime = ticks;
       return true;
     }
@@ -66,6 +78,7 @@ public sealed partial class Timer
     if ( CurrentLoop > 1 && (!BestLoopTime.HasValue || ticks < BestLoopTime.Value) )
     {
       Stats.SetValue( stat, ticks );
+      LeaderboardManager.Instance.AddOrUpdateEntry( stat, entry, true );
       BestLoopTime = ticks;
       return true;
     }

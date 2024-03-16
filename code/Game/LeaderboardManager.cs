@@ -3,6 +3,23 @@ using System.Threading.Tasks;
 using Sandbox.Services;
 namespace Tf;
 
+public struct GauntletLeaderboardEntry
+{
+	public string DisplayName { get; set; }
+	public long SteamId { get; set; }
+	public int TimeTicks { get; set; }
+	public int Rank { get; set; }
+	public bool Me { get; set; }
+}
+
+class TimeComparer : IComparer<GauntletLeaderboardEntry>
+{
+	public int Compare( GauntletLeaderboardEntry x, GauntletLeaderboardEntry y )
+	{
+		return x.TimeTicks.CompareTo( y.TimeTicks );
+	}
+}
+
 public sealed class LeaderboardManager
 {
 	private static LeaderboardManager _instance;
@@ -23,20 +40,18 @@ public sealed class LeaderboardManager
 
 	/// <summary>
 	/// A dictionary of cached leaderboard entries, indexed by the leaderboard identifier.
-	/// 
-	/// The first item in the tuple is the top 10 entries, and the second item is the entries around the player.
 	/// </summary>
-	private readonly Dictionary<string, Tuple<List<Leaderboards.Entry>, List<Leaderboards.Entry>>> LeaderboardCache = new();
+	private readonly Dictionary<string, SortedSet<GauntletLeaderboardEntry>> LeaderboardCache = new();
 
 	/// <summary>
 	/// A dictionary of ongoing fetches, indexed by the leaderboard identifier.
 	/// </summary>
-	private readonly ConcurrentDictionary<string, Task<Tuple<List<Leaderboards.Entry>, List<Leaderboards.Entry>>>> OngoingFetches = new();
+	private readonly ConcurrentDictionary<string, Task<SortedSet<GauntletLeaderboardEntry>>> OngoingFetches = new();
 
 	/// <summary>
 	/// A dictionary of the player's leaderboard entries, indexed by the leaderboard identifier.
 	/// </summary>
-	public Dictionary<string, Leaderboards.Entry> MyEntryCache { get; private set; } = new();
+	public Dictionary<string, GauntletLeaderboardEntry> MyEntryCache { get; private set; } = new();
 
 	public Action OnLeaderboardRefresh;
 
@@ -48,7 +63,7 @@ public sealed class LeaderboardManager
 	/// <param name="ident">The leaderboard identifier in the backend.</param>
 	/// <param name="force">Whether to force a refresh of the leaderboard entries, even if they are already cached.</param>
 	/// <returns>A tuple containing the top 10 entries and the entries around the player.</returns>
-	public async Task<Tuple<List<Leaderboards.Entry>, List<Leaderboards.Entry>>> FetchLeaderboardEntries( string ident, bool force = false )
+	public async Task<SortedSet<GauntletLeaderboardEntry>> FetchLeaderboardEntries( string ident, bool force = false )
 	{
 		try
 		{
@@ -79,49 +94,66 @@ public sealed class LeaderboardManager
 		catch ( Exception e )
 		{
 			Log.Error( e );
-			return Tuple.Create( new List<Leaderboards.Entry>(), new List<Leaderboards.Entry>() );
+			return new();
 		}
 	}
 
-	private async Task<Tuple<List<Leaderboards.Entry>, List<Leaderboards.Entry>>> FetchFromLeaderboard( string key )
+	private async Task<SortedSet<GauntletLeaderboardEntry>> FetchFromLeaderboard( string key )
 	{
 		Leaderboards.Board board = Leaderboards.Get( key );
-		List<Leaderboards.Entry> topTen = new();
-		List<Leaderboards.Entry> aroundPlayer = new();
 
-		// First get the 10 entries around the player
-		board.MaxEntries = 10;
+		board.MaxEntries = 999999999;
 		await board.Refresh();
-		aroundPlayer.AddRange( board.Entries );
+		var entries = board.Entries;
 
-		foreach ( var entry in aroundPlayer )
+		if ( !LeaderboardCache.ContainsKey( key ) )
 		{
-			if ( entry.SteamId == Game.SteamId )
-			{
-				MyEntryCache[key] = entry;
-			}
+			LeaderboardCache[key] = new( new TimeComparer() );
 		}
 
-		// HACK: The leaderboard API doesn't support getting the top 10 entries, so we have to get the total number of entries first
-		board.MaxEntries = Convert.ToInt32( board.TotalEntries );
-		await board.Refresh();
-		topTen.AddRange( board.Entries.Take( 10 ) );
-
-		LeaderboardCache[key] = new( topTen, aroundPlayer );
+		foreach ( var entry in entries )
+		{
+			AddOrUpdateEntry( key, ConvertEntry( entry ) );
+		}
 
 		OnLeaderboardRefresh?.Invoke();
 
 		return LeaderboardCache[key];
+
 	}
 
-	public async Task<List<Leaderboards.Entry>> GetTopTen( string key, bool force = false )
+	public async Task<List<GauntletLeaderboardEntry>> GetTopTen( string key, bool force = false )
 	{
-		return (await FetchLeaderboardEntries( key, force )).Item1;
+		var entries = (await FetchLeaderboardEntries( key, force )).Take( 10 ).ToList();
+
+		entries = entries.Select( ( entry, index ) =>
+		{
+			entry.Rank = index + 1;
+			return entry;
+		} ).ToList();
+
+		return entries;
 	}
 
-	public async Task<List<Leaderboards.Entry>> GetAroundPlayer( string key, bool force = false )
+	public async Task<List<GauntletLeaderboardEntry>> GetAroundPlayer( string key, long steamId, int take = 10, bool force = false )
 	{
-		return (await FetchLeaderboardEntries( key, force )).Item2;
+		var entries = await FetchLeaderboardEntries( key, force );
+		var playerEntry = entries.FirstOrDefault( entry => entry.SteamId == steamId );
+
+		if ( playerEntry.Equals( default( GauntletLeaderboardEntry ) ) )
+		{
+			return new();
+		}
+
+		var playerIndex = entries.ToList().IndexOf( playerEntry );
+		var startIndex = Math.Max( 0, playerIndex - take / 2 );
+		var endIndex = Math.Min( entries.Count, startIndex + take );
+
+		return entries.ToList().GetRange( startIndex, endIndex - startIndex ).Select( ( entry, index ) =>
+		{
+			entry.Rank = startIndex + index + 1;
+			return entry;
+		} ).ToList();
 	}
 
 	/// <summary>
@@ -166,5 +198,42 @@ public sealed class LeaderboardManager
 	public void StopPolling()
 	{
 		ShouldPoll = false;
+	}
+
+	private static GauntletLeaderboardEntry ConvertEntry( Leaderboards.Entry entry )
+	{
+		return new()
+		{
+			DisplayName = entry.DisplayName,
+			SteamId = entry.SteamId,
+			TimeTicks = Convert.ToInt32( entry.Value )
+		};
+	}
+
+	/// <summary>
+	/// Adds or updates a leaderboard entry in the cache
+	/// </summary>
+	/// <param name="ident">The identifier of the leaderboard</param>
+	/// <param name="entry">The leaderboard entry</param>
+	/// <param name="updateSelf">Whether to add or update ourself. If called from the poll, this will be false
+	/// If called from new PB, this will be true
+	/// </param>
+	public void AddOrUpdateEntry( string ident, GauntletLeaderboardEntry entry, bool updateSelf = false )
+	{
+		if ( entry.SteamId == Game.SteamId )
+		{
+			entry.Me = true;
+
+			if ( MyEntryCache.ContainsKey( ident ) && !updateSelf )
+			{
+				return;
+			}
+
+			MyEntryCache[ident] = entry;
+		}
+
+		var entries = LeaderboardCache[ident];
+		entries.RemoveWhere( e => e.SteamId == entry.SteamId );
+		entries.Add( entry );
 	}
 }
