@@ -5,6 +5,10 @@ public sealed partial class Timer : Component
 {
 	[Property] public PlayerController Player { get; set; }
 	[Property, ReadOnly] public float Time { get; set; }
+	[Property] public SoundEvent StartSound { get; set; }
+	[Property] public SoundEvent EndSound { get; set; }
+	[Property] public SoundEvent NewBestTimeSound { get; set; }
+	[Property] public SoundEvent RestartSound { get; set; }
 	public int Ticks { get; set; }
 
 	/// <summary>
@@ -91,6 +95,7 @@ public sealed partial class Timer : Component
 		InStartZone = true;
 
 		OnTimerRestart?.Invoke();
+		Sound.Play( RestartSound );
 	}
 
 	public void StartTimer()
@@ -105,6 +110,7 @@ public sealed partial class Timer : Component
 
 		InStartZone = false;
 		OnTimerStart?.Invoke();
+		Sound.Play( StartSound );
 	}
 
 	public void EndTimer()
@@ -122,6 +128,9 @@ public sealed partial class Timer : Component
 		LastOrCurrentLoop = CurrentLoop;
 		CurrentLoop++;
 		OnTimerEnd?.Invoke( Time, newBestTime, CurrentLoop - 1 );
+
+		var sound = newBestTime ? NewBestTimeSound : EndSound;
+		Sound.Play( sound );
 	}
 
 	public override string ToString()
