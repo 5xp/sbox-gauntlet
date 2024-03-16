@@ -17,6 +17,7 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 	private SoundHandle SlideBoostSoundHandle { get; set; }
 	private SoundHandle SlideEndSoundHandle { get; set; }
 	public float StartSpeed { get; set; }
+	private bool SlidOffGround { get; set; }
 
 	public override int Priority => 15;
 
@@ -62,10 +63,13 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 	{
 		if ( !Controller.IsGrounded )
 		{
-			if ( !SlideEndSoundHandle.IsValid() )
+			if ( !SlidOffGround )
 			{
 				SlideEndSoundHandle = Sound.Play( Controller.SlideEndSound );
+				SlideEndSoundHandle.Volume *= 0.4f;
 			}
+
+			SlidOffGround = true;
 
 			return;
 		}
@@ -127,6 +131,7 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 	private void OnSlideStart()
 	{
 		UsedBoost = false;
+		SlidOffGround = false;
 		StartSpeed = Velocity.Length;
 
 		if ( TimeSinceLastStart >= PlayerSettings.SlideBoostCooldown )
@@ -156,6 +161,11 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 		}
 
 		SlideTiltLowerSpeedBound = PlayerSettings.SlideEndSpeed;
+
+		if ( SlideSoundHandle.IsValid() )
+		{
+			SlideSoundHandle.Stop();
+		}
 
 		SlideSoundHandle = Sound.Play( Controller.SlideSound );
 	}
