@@ -6,7 +6,6 @@
 public partial class SlideMechanic : BasePlayerControllerMechanic
 {
 	public bool UsedBoost { get; set; } = false;
-
 	private float SlideTiltFrac { get; set; }
 	private Vector3 SlideTiltAxis { get; set; }
 	private float SlideTiltLowerSpeedBound { get; set; }
@@ -38,7 +37,7 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 
 	public override bool ShouldBecomeActive()
 	{
-		if ( !HasTag( "crouch" ) ) return false;
+		if ( !Controller.GetMechanic<CrouchMechanic>().ShouldBecomeActive() ) return false;
 		if ( HasAnyTag( "wallrun", "jump", "airjump" ) ) return false;
 
 		// Can't initiate a slide in the air.
