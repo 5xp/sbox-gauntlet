@@ -92,7 +92,10 @@ public sealed partial class Timer
 
     if ( CurrentLoop == 1 && (!BestFirstLoopTime.HasValue || ticks < BestFirstLoopTime.Value) )
     {
-      Stats.SetValue( stat, ticks );
+      if ( !DebugConVars.DebugDisableTimeSubmission )
+      {
+        Stats.SetValue( stat, ticks );
+      }
       LeaderboardManager.Instance.AddOrUpdateEntry( stat, entry, true );
       BestFirstLoopTime = ticks;
       return true;
@@ -100,7 +103,10 @@ public sealed partial class Timer
 
     if ( CurrentLoop > 1 && (!BestLoopTime.HasValue || ticks < BestLoopTime.Value) )
     {
-      Stats.SetValue( stat, ticks );
+      if ( !DebugConVars.DebugDisableTimeSubmission )
+      {
+        Stats.SetValue( stat, ticks );
+      }
       LeaderboardManager.Instance.AddOrUpdateEntry( stat, entry, true );
       BestLoopTime = ticks;
       return true;

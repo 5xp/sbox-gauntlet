@@ -17,5 +17,8 @@ public static class DebugConVars
   [ConVar( "gauntlet_cheat_override_jump_buffer_ticks" )]
   public static int DebugOverrideJumpBufferTicks { get; set; } = -1;
 
+  [ConVar( "gauntlet_debug_disable_time_submission" )]
+  public static bool DebugDisableTimeSubmission { get; set; } = false;
+
   public static bool AnyCheatEnabled => DebugWallrunSettings || DebugOverrideJumpBufferTicks > 0;
 }
