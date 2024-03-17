@@ -674,8 +674,8 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "GameNetworkManager",
-          "__guid": "31420770-aa5e-4f0c-9afc-d9bf7f3ebe51",
+          "__type": "GameManager",
+          "__guid": "59b7b1c0-347f-4af8-bc17-05cde915e7f5",
           "IsMultiplayer": false,
           "PlayerPrefab": {
             "_type": "gameobject",
@@ -764,7 +764,7 @@
   },
   "Title": "level1",
   "Description": "",
-  "LastSaved": "2024-03-16T17:31:17.6866492-05:00",
+  "LastSaved": "2024-03-16T23:23:58.8739049-05:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": []

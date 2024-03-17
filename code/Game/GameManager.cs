@@ -2,7 +2,7 @@ using Sandbox.Network;
 
 namespace Tf;
 
-public sealed class GameNetworkManager : Component, Component.INetworkListener
+public sealed class GameManager : Component, Component.INetworkListener
 {
 	[Property] public GameObject PlayerPrefab { get; set; }
 	[Property] public GameObject SpawnPoint { get; set; }
@@ -10,14 +10,26 @@ public sealed class GameNetworkManager : Component, Component.INetworkListener
 	/// <summary>
 	/// Is this game multiplayer?
 	/// </summary>
-	[Property] public bool IsMultiplayer { get; set; } = true;
+	[Property] public bool IsMultiplayer { get; set; } = false;
 
 	protected override void OnStart()
 	{
 		LeaderboardManager.Instance.StopPolling();
 		LeaderboardManager.Instance.ResetSubscriptions();
-		_ = LeaderboardManager.Instance.FetchLeaderboardEntries( Common.GetTimeStatIdent( Scene.Title, 1 ), true );
-		_ = LeaderboardManager.Instance.FetchLeaderboardEntries( Common.GetTimeStatIdent( Scene.Title, 2 ), true );
+
+		string stat1, stat2;
+		try
+		{
+			stat1 = Common.GetTimeStatIdent( Scene.Title, 1 );
+			stat2 = Common.GetTimeStatIdent( Scene.Title, 2 );
+
+			_ = LeaderboardManager.Instance.FetchLeaderboardEntries( Common.GetTimeStatIdent( Scene.Title, 1 ), true );
+			_ = LeaderboardManager.Instance.FetchLeaderboardEntries( Common.GetTimeStatIdent( Scene.Title, 2 ), true );
+		}
+		catch ( Exception e )
+		{
+			Log.Warning( $"{e}. Skipping leaderboard fetch." );
+		}
 
 		PlayerPreferences.Load();
 
