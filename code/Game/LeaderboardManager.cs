@@ -38,6 +38,12 @@ public sealed class LeaderboardManager
 
 	private bool ShouldPoll { get; set; }
 
+	private List<long> BlacklistedSteamIds { get; } = new()
+	{
+		76561198356798272,
+		76561198927823324,
+	};
+
 	/// <summary>
 	/// A dictionary of cached leaderboard entries, indexed by the leaderboard identifier.
 	/// </summary>
@@ -174,6 +180,7 @@ public sealed class LeaderboardManager
 			{
 				while ( ShouldPoll )
 				{
+					await GameTask.MainThread();
 
 					if ( timer.InStartZone && timer.Scene is not null )
 					{
@@ -220,6 +227,11 @@ public sealed class LeaderboardManager
 	/// </param>
 	public void AddOrUpdateEntry( string ident, GauntletLeaderboardEntry entry, bool updateSelf = false )
 	{
+		if ( BlacklistedSteamIds.Contains( entry.SteamId ) )
+		{
+			return;
+		}
+
 		if ( entry.SteamId == Game.SteamId )
 		{
 			entry.Me = true;
@@ -233,6 +245,7 @@ public sealed class LeaderboardManager
 		}
 
 		var entries = LeaderboardCache[ident];
+
 		entries.RemoveWhere( e => e.SteamId == entry.SteamId );
 		entries.Add( entry );
 	}
