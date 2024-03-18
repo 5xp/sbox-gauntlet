@@ -13,7 +13,6 @@ public partial class SprintMechanic : BasePlayerControllerMechanic
 	private float SprintBobFrequency => 2f * MathF.PI / PlayerSettings.SprintBobCycleTime;
 	private float SprintBobFraction { get; set; }
 
-
 	public override int Priority => 70;
 
 	public override IEnumerable<string> GetTags()
@@ -30,7 +29,7 @@ public partial class SprintMechanic : BasePlayerControllerMechanic
 	{
 		if ( HasTag( "crouch" ) ) return false;
 
-		if ( !Input.Down( "Run" ) && !SprintToggled ) return false;
+		if ( !Input.Down( "Run" ) && !SprintToggled && !PlayerPreferences.Instance.AutoSprintEnabled ) return false;
 
 		if ( !Controller.IsGrounded ) return false;
 

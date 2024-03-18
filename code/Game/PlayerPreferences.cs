@@ -26,6 +26,7 @@ public sealed class PlayerPreferences
   public bool KeyPressHudEnabled { get; set; } = true;
   public bool WallKickHudEnabled { get; set; } = true;
   public float SprintBobScale { get; set; } = 1f;
+  public bool AutoSprintEnabled { get; set; } = false;
 
   public static void Save()
   {
