@@ -50,7 +50,7 @@ public static class Common
     return TimeToString( ticks * timeDelta, includeUnit );
   }
 
-  public static string GetTimeStatIdent( string title, int loopNum = 1 )
+  public static string ParseLeaderboardIdent( string title, int loopNum )
   {
     string levelNumber;
     Match match = Regex.Match( title, @"\d+" );
@@ -64,6 +64,21 @@ public static class Common
     }
 
     return $"{Timer.StatVersion}-{levelNumber}.{(loopNum > 1 ? 2 : 1)}.time";
+  }
+
+  public static bool TryGetLeaderboardIdent( string title, int loopNum, out string ident )
+  {
+    ident = null;
+
+    try
+    {
+      ident = ParseLeaderboardIdent( title, loopNum );
+      return true;
+    }
+    catch
+    {
+      return false;
+    }
   }
 
   /// <summary>

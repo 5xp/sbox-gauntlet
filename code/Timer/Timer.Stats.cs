@@ -22,8 +22,17 @@ public sealed partial class Timer
   /// </summary>
   private async Task GetStats()
   {
-    Task t1 = LeaderboardManager.Instance.FetchLeaderboardEntries( Common.GetTimeStatIdent( Scene.Title, 1 ) );
-    Task t2 = LeaderboardManager.Instance.FetchLeaderboardEntries( Common.GetTimeStatIdent( Scene.Title, 2 ) );
+
+    Common.TryGetLeaderboardIdent( Scene.Title, 1, out string id1 );
+    Common.TryGetLeaderboardIdent( Scene.Title, 2, out string id2 );
+
+    if ( id1 is null || id2 is null )
+    {
+      return;
+    }
+
+    Task t1 = LeaderboardManager.Instance.FetchLeaderboardEntries( id1 );
+    Task t2 = LeaderboardManager.Instance.FetchLeaderboardEntries( id2 );
 
     await Task.WhenAll( t1, t2 );
 
@@ -32,8 +41,8 @@ public sealed partial class Timer
 
   private void SetStats()
   {
-    string stat1 = Common.GetTimeStatIdent( Scene.Title, 1 );
-    string stat2 = Common.GetTimeStatIdent( Scene.Title, 2 );
+    string stat1 = Common.ParseLeaderboardIdent( Scene.Title, 1 );
+    string stat2 = Common.ParseLeaderboardIdent( Scene.Title, 2 );
 
     if ( LeaderboardManager.Instance.MyEntryCache.TryGetValue( stat1, out var entry ) )
     {
@@ -81,7 +90,7 @@ public sealed partial class Timer
   /// <returns>Whether the time is the best time for the current loop.</returns>
   private bool CheckBestTime( int ticks )
   {
-    string stat = Common.GetTimeStatIdent( Scene.Title, CurrentLoop );
+    string stat = Common.ParseLeaderboardIdent( Scene.Title, CurrentLoop );
 
     GauntletLeaderboardEntry entry = new()
     {

@@ -4,7 +4,13 @@
 
 <root class="pk">
   @{
-    string ident = Common.GetTimeStatIdent(Scene.Title, Timer.LastOrCurrentLoop);
+    Common.TryGetLeaderboardIdent(Scene.Title, Timer.LastOrCurrentLoop, out string ident);
+
+    if (ident is null)
+    {
+      return;
+    }
+
     List<GauntletLeaderboardEntry> entries = AroundPlayer ?
     LeaderboardManager.Instance.GetAroundPlayer(ident, Game.SteamId).Result
     : LeaderboardManager.Instance.GetTopTen(ident).Result;

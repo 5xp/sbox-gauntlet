@@ -17,18 +17,14 @@ public sealed class GameManager : Component, Component.INetworkListener
 		LeaderboardManager.Instance.StopPolling();
 		LeaderboardManager.Instance.ResetSubscriptions();
 
-		string stat1, stat2;
-		try
+		if ( Common.TryGetLeaderboardIdent( Scene.Title, 1, out string stat1 ) )
 		{
-			stat1 = Common.GetTimeStatIdent( Scene.Title, 1 );
-			stat2 = Common.GetTimeStatIdent( Scene.Title, 2 );
-
-			_ = LeaderboardManager.Instance.FetchLeaderboardEntries( Common.GetTimeStatIdent( Scene.Title, 1 ), true );
-			_ = LeaderboardManager.Instance.FetchLeaderboardEntries( Common.GetTimeStatIdent( Scene.Title, 2 ), true );
+			_ = LeaderboardManager.Instance.FetchLeaderboardEntries( stat1, true );
 		}
-		catch ( Exception e )
+
+		if ( Common.TryGetLeaderboardIdent( Scene.Title, 2, out string stat2 ) )
 		{
-			Log.Warning( $"{e}. Skipping leaderboard fetch." );
+			_ = LeaderboardManager.Instance.FetchLeaderboardEntries( stat2, true );
 		}
 
 		PlayerPreferences.Load();

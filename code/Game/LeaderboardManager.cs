@@ -184,7 +184,7 @@ public sealed class LeaderboardManager
 
 					if ( timer.InStartZone && timer.Scene is not null )
 					{
-						await FetchLeaderboardEntries( Common.GetTimeStatIdent( timer.Scene.Title, timer.CurrentLoop ), true );
+						await FetchLeaderboardEntries( Common.ParseLeaderboardIdent( timer.Scene.Title, timer.CurrentLoop ), true );
 					}
 					else
 					{
