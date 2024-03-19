@@ -1,17 +1,14 @@
 @namespace Tf.UI
 @inherits PanelComponent
 
-@if (PlayerPreferences.Instance.HudEnabled)
-{
-	<root class="pk"
-		style="transform: translateX(@(Position.x / 16)%) translateY(@(Position.y / 9)%) rotate(@(Position.z)deg) scale(@(GetScale()));">
-		@if (PlayerPreferences.Instance.KeyPressHudEnabled)
-		{
-			<KeyPressPanel />
-		}
-		<SpeedometerPanel Controller=@Controller />
-	</root>
-}
+<root class="pk"
+	style="transform: translateX(@(Position.x / 16)%) translateY(@(Position.y / 9)%) rotate(@(Position.z)deg) scale(@(GetScale()));">
+	@if (PlayerPreferences.Instance.KeyPressHudEnabled)
+	{
+		<KeyPressPanel />
+	}
+	<SpeedometerPanel Controller=@Controller />
+</root>
 
 @code
 {
@@ -136,7 +133,7 @@
 
 	private void OnTimerStart()
 	{
-		if (Timer.NumCompletionsThisSession == 0 && PlayerPreferences.Instance.HudEnabled)
+		if (PlayerPreferences.Instance.HudEnabled && TimerPanel is null)
 		{
 			TimerPanel = new();
 			TimerPanel.Timer = Timer;
@@ -149,10 +146,8 @@
 
 	private void OnTimerRestart()
 	{
-		if (Timer.NumCompletionsThisSession == 0)
-		{
-			TimerPanel?.Delete();
-		}
+		TimerPanel?.Delete();
+		TimerPanel = null;
 	}
 
 	private void OnTimerEnd(float _1, bool isBest, int _2)
@@ -169,8 +164,10 @@
 
 	private void OnPreferencesSavedOrLoaded()
 	{
-		ScreenPanel screenPanel = Components.Get<ScreenPanel>();
+		ScreenPanel screenPanel = Components.Get<ScreenPanel>(FindMode.EverythingInSelf);
 		screenPanel.Scale = PlayerPreferences.Instance.HudScale;
+		screenPanel.Enabled = PlayerPreferences.Instance.HudEnabled;
+
 		StateHasChanged();
 	}
 }

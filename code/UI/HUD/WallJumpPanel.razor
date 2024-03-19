@@ -10,7 +10,7 @@
 
     @if (ShowTime)
     {
-      <span class="time">@((Time * 1000).ToString("F0"))ms</span>
+      <span class="time @GetSpeedDiffClass(true)">@((Time * 1000).ToString("F0"))ms</span>
     }
   </div>
 </root>
@@ -22,11 +22,11 @@
   public bool ShowSpeedDiff { get; set; } = true;
   public bool ShowTime { get; set; } = true;
 
-  private string GetSpeedDiffClass()
+  private string GetSpeedDiffClass(bool perfectOverridesNegative = false)
   {
     string classString = "";
 
-    if (IsPerfect)
+    if (IsPerfect && (perfectOverridesNegative || SpeedDiff > 0))
     {
       classString += "perfect ";
     }
