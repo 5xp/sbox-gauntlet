@@ -18,7 +18,7 @@ public partial class MoveMechanic : BasePlayerControllerMechanic
     }
     else if ( Controller.GetMechanic<WallrunMechanic>() is WallrunMechanic wallrun && wallrun.WallNormal.HasValue )
     {
-      wallrun.WallrunMove();
+      wallrun.WallrunMove( wallrun.WallNormal.Value );
       wallrun.CategorizePosition();
     }
     else

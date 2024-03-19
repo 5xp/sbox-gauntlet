@@ -234,14 +234,14 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		TimeSinceTouchedWall = 0;
 	}
 
-	public void WallrunMove()
+	public void WallrunMove( Vector3 wallNormal )
 	{
-		Vector3 wishDir = BuildWishDirection( WallNormal.Value );
+		Vector3 wishDir = BuildWishDirection( wallNormal );
 
 		Vector3 halfGravity = 0.5f * Controller.GetPlayerGravity() * GetWallrunGravityScale() * Time.Delta;
 		Velocity += halfGravity;
 
-		Velocity = Vector3.VectorPlaneProject( Velocity, WallNormal.Value );
+		Velocity = Vector3.VectorPlaneProject( Velocity, wallNormal );
 
 		float horzFriction, vertFriction;
 		horzFriction = vertFriction = PlayerSettings.WallrunFriction;
@@ -256,7 +256,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 		ApplyFriction( horzFriction, vertFriction );
 		Accelerate( wishDir, PlayerSettings.WallrunAccelerationHorizontal, PlayerSettings.WallrunAccelerationVertical * GetSlipScale() );
-		Velocity = Vector3.VectorPlaneProject( Velocity, WallNormal.Value );
+		Velocity = Vector3.VectorPlaneProject( Velocity, wallNormal );
 
 		if ( Velocity.LengthSquared < 1f )
 		{
@@ -280,8 +280,8 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 			return;
 		}
 
-		float stepAmount = StepMove( PlayerSettings.GroundAngle, PlayerSettings.StepHeightMax, WallNormal.Value );
-		Controller.AddStepOffset( stepAmount * -WallNormal.Value );
+		float stepAmount = StepMove( PlayerSettings.GroundAngle, PlayerSettings.StepHeightMax, wallNormal );
+		Controller.AddStepOffset( stepAmount * -wallNormal );
 	}
 
 	public void CategorizePosition()
