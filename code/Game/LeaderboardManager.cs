@@ -42,6 +42,7 @@ public sealed class LeaderboardManager
 	{
 		76561198356798272,
 		76561198927823324,
+		76561198987213809,
 	};
 
 	/// <summary>

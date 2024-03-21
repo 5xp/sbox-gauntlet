@@ -431,6 +431,7 @@
               "__guid": "50915eb3-ff3c-4924-9f99-749d547b3da5",
               "Name": "LeaderboardPanel",
               "Position": "-2113.92,-3992.064,368.9423",
+              "Enabled": true,
               "NetworkMode": 2,
               "Components": [
                 {
@@ -764,7 +765,7 @@
   },
   "Title": "level1",
   "Description": "",
-  "LastSaved": "2024-03-16T23:23:58.8739049-05:00",
+  "LastSaved": "2024-03-21T14:01:09.6815154-05:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": []
