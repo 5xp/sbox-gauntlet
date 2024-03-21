@@ -1,0 +1,32 @@
+SettingsCategory {
+  flex-shrink: 0;
+
+  .category__title {
+    overflow: hidden;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .bg {
+    position: absolute;
+    background-image: url("assets/materials/checkerboard_tintable.png");
+    background-size: 80px 80px;
+    width: 150%;
+    height: 500%;
+    left: -25%;
+
+    background-repeat: repeat;
+    mix-blend-mode: multiply;
+    transform-origin: center;
+  }
+
+  .category__title.expanded .bg {
+    transform: rotate(15deg);
+    transition: transform 0.25s ease-out;
+  }
+
+  .category__title.collapsed .bg {
+    transform: rotate(0deg);
+    transition: transform 0.25s ease-out;
+  }
+}

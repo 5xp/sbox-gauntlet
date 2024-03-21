@@ -1,6 +1,7 @@
 @import "/UI/Styles/Theme.scss";
 @import "Settings/SettingsSlider.razor.scss";
 @import "Settings/SettingsToggle.razor.scss";
+@import "Settings/SettingsCategory.razor.scss";
 
 MenuPanel {
   width: 100%;
@@ -17,6 +18,21 @@ MenuPanel {
     justify-content: center;
     align-items: center;
     align-self: center;
+  }
+
+  .controls-container {
+    width: 1200px;
+    height: 900px;
+    padding: 60px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    backdrop-filter: blur(30px) brightness(0.6) contrast(1.2);
+    border-radius: 30px;
+  }
+
+  .settings-control {
+    height: 70px;
+    flex-shrink: 0;
   }
 
   .button.standard.backdrop {
