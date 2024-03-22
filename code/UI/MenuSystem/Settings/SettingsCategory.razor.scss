@@ -5,6 +5,30 @@ SettingsCategory {
     overflow: hidden;
     font-weight: bold;
     cursor: pointer;
+
+    label {
+      font-size: 40px;
+    }
+  }
+
+  .category__content {
+    overflow: hidden;
+
+    &.collapsed {
+      margin-top: 0px;
+      gap: -30px;
+      transition: all 0.3s ease-out;
+
+      .button {
+        pointer-events: none;
+      }
+    }
+
+    &.expanded {
+      margin-top: 16px;
+      gap: 16px;
+      transition: all 0.3s ease-out;
+    }
   }
 
   .bg {

@@ -27,17 +27,6 @@
       <label class="text title">Settings</label>
       <div class="layout column gap-extra controls-container">
 
-        <SettingsCategory Title="HUD">
-          <ChildContent>
-            <SettingsToggle Title="Enable HUD" Value:bind=@PlayerPreferences.Instance.HudEnabled />
-            <SettingsToggle Title="Enable HUD Sway" Value:bind=@PlayerPreferences.Instance.HudSwayEnabled />
-            <SettingsToggle Title="Enable Keypress HUD" Value:bind=@PlayerPreferences.Instance.KeyPressHudEnabled />
-            <SettingsToggle Title="Enable Wallkick HUD" Value:bind=@PlayerPreferences.Instance.WallKickHudEnabled />
-            <SettingsSlider Title="HUD Scale" Min=@(0.5f) Max=@(1.2f) Step=@(0.01f)
-              Value:bind=@PlayerPreferences.Instance.HudScale />
-          </ChildContent>
-        </SettingsCategory>
-
         <SettingsCategory Title="Gameplay">
           <ChildContent>
             <SettingsSlider Title="Sprint Bob" Min=@(0f) Max=@(2f) Step=@(0.01f)
@@ -45,6 +34,18 @@
             <SettingsToggle Title="Enable Auto-Sprint" Value:bind=@PlayerPreferences.Instance.AutoSprintEnabled />
           </ChildContent>
         </SettingsCategory>
+
+        <SettingsCategory Title="HUD">
+          <ChildContent>
+            <SettingsToggle Title="Enable HUD" Value:bind=@PlayerPreferences.Instance.HudEnabled />
+            <SettingsSlider Title="HUD Scale" Min=@(0.5f) Max=@(1.2f) Step=@(0.01f)
+              Value:bind=@PlayerPreferences.Instance.HudScale />
+            <SettingsToggle Title="Enable HUD Sway" Value:bind=@PlayerPreferences.Instance.HudSwayEnabled />
+            <SettingsToggle Title="Enable Keypress HUD" Value:bind=@PlayerPreferences.Instance.KeyPressHudEnabled />
+            <SettingsToggle Title="Enable Wallkick HUD" Value:bind=@PlayerPreferences.Instance.WallKickHudEnabled />
+          </ChildContent>
+        </SettingsCategory>
+
       </div>
     </div>
   }

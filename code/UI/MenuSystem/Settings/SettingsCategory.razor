@@ -1,15 +1,14 @@
 @namespace Tf.UI
 @inherits Panel
 
-<root class="layout column settings-category @(Collapsed ? "" : "gap-extra")">
+<root class="layout column settings-category">
   <div class="settings settings-control category__title text backdrop @(Collapsed ? "collapsed" : "expanded")"
     @ref=CategoryPanel onclick=@ToggleCollapsed>
     <div class="bg"></div>
     <div class="bg"></div>
     @Title
   </div>
-  <div class="layout column gap-extra category__content" style="display: @(Collapsed ? "none" : "flex")"
-    @ref=ContentPanel>
+  <div class="layout column category__content @(Collapsed ? "collapsed" : "expanded")" @ref=ContentPanel>
     @ChildContent
   </div>
 </root>
@@ -20,10 +19,20 @@
   private Panel CategoryPanel { get; set; }
   private Panel ContentPanel { get; set; }
   private float ScrollSpeedFraction { get; set; }
+  private float? ContentHeight { get; set; }
 
   private void ToggleCollapsed()
   {
     Collapsed = !Collapsed;
+
+    if (Collapsed)
+    {
+      ContentPanel.Style.MaxHeight = Length.Pixels(0f);
+    }
+    else
+    {
+      ContentPanel.Style.MaxHeight = Length.Pixels(ContentHeight.Value);
+    }
   }
 
   public override void Tick()
@@ -35,6 +44,18 @@
     if (CategoryPanel is null)
     {
       return;
+    }
+
+    if (ContentHeight is null && !Collapsed)
+    {
+      var height = ContentPanel.Box.RectInner.Size.y * ScaleFromScreen;
+
+      if (height > 0f)
+      {
+        ContentHeight = height;
+
+        ContentPanel.Style.MaxHeight = Length.Pixels(height);
+      }
     }
 
     var backgroundPanels = CategoryPanel.Children.Where(c => c.HasClass("bg")).ToList();
