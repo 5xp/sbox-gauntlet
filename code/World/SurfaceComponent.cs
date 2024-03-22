@@ -1,4 +1,4 @@
-namespace Tf;
+namespace Gauntlet;
 
 [Title( "Surface" ), Icon( "do_not_step" )]
 public sealed class SurfaceComponent : Component

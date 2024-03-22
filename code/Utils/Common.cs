@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Tf;
+namespace Gauntlet;
 
 public static class Common
 {

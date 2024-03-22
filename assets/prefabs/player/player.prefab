@@ -1,6 +1,6 @@
 {
   "RootObject": {
-    "__guid": "5318658c-42dd-4edc-a1c4-b4407237962d",
+    "__guid": "468bff3e-5b4f-40ff-ba99-6d3893552875",
     "Name": "player",
     "Tags": "player",
     "Enabled": true,
@@ -8,22 +8,22 @@
     "Components": [
       {
         "__type": "PlayerController",
-        "__guid": "093bc5d7-8549-4395-833b-f5abb5ad464c",
+        "__guid": "ec366958-4482-413e-bee8-d48b1934eeb5",
         "AirJumpSound": "assets/sounds/airjump.sound",
         "AnimationHelper": {
           "_type": "component",
-          "component_id": "c4988919-08d1-4eb5-b6ae-1da74aea2808",
-          "go": "fc331b8b-6321-4cea-a3de-d36704a70ee2",
+          "component_id": "d265435f-0237-4a67-ae47-e5f8129381f7",
+          "go": "f159b53e-bfb9-474a-a6ee-fc2277832f06",
           "component_type": "AnimationHelper"
         },
         "Body": {
           "_type": "gameobject",
-          "go": "fc331b8b-6321-4cea-a3de-d36704a70ee2"
+          "go": "f159b53e-bfb9-474a-a6ee-fc2277832f06"
         },
         "CameraController": {
           "_type": "component",
-          "component_id": "bf8e6f62-2e14-4595-819e-33d32d841bb2",
-          "go": "5318658c-42dd-4edc-a1c4-b4407237962d",
+          "component_id": "7074dcbd-4bef-4530-aaa4-bcd2bb0dcb56",
+          "go": "468bff3e-5b4f-40ff-ba99-6d3893552875",
           "component_type": "CameraController"
         },
         "CurrentHoldType": "None",
@@ -33,8 +33,8 @@
         "HardLandSound": "assets/sounds/hardlanding.sound",
         "HullCollider": {
           "_type": "component",
-          "component_id": "702f0546-a1b7-4fcf-be01-c009d76530f1",
-          "go": "5318658c-42dd-4edc-a1c4-b4407237962d",
+          "component_id": "2443c8a0-62cd-4ce5-8d12-da021fa9e572",
+          "go": "468bff3e-5b4f-40ff-ba99-6d3893552875",
           "component_type": "HullCollider"
         },
         "IsGrounded": false,
@@ -48,25 +48,25 @@
       },
       {
         "__type": "CameraController",
-        "__guid": "bf8e6f62-2e14-4595-819e-33d32d841bb2",
+        "__guid": "7074dcbd-4bef-4530-aaa4-bcd2bb0dcb56",
         "BaseFieldOfView": 90,
         "Camera": {
           "_type": "component",
-          "component_id": "d35a3e38-d837-4d0c-9786-abbc3d070334",
-          "go": "6d33145e-3407-4140-b428-f434cba8fc90",
+          "component_id": "14041f10-bbd7-4be4-a583-6f5815e52eb1",
+          "go": "82ab32b4-a0a3-4198-872e-4631e4905af8",
           "component_type": "CameraComponent"
         },
         "HideBody": true,
         "PlayerController": {
           "_type": "component",
-          "component_id": "093bc5d7-8549-4395-833b-f5abb5ad464c",
-          "go": "5318658c-42dd-4edc-a1c4-b4407237962d",
+          "component_id": "ec366958-4482-413e-bee8-d48b1934eeb5",
+          "go": "468bff3e-5b4f-40ff-ba99-6d3893552875",
           "component_type": "PlayerController"
         }
       },
       {
         "__type": "HullCollider",
-        "__guid": "702f0546-a1b7-4fcf-be01-c009d76530f1",
+        "__guid": "2443c8a0-62cd-4ce5-8d12-da021fa9e572",
         "BoxSize": "0,0,0",
         "Center": "0,0,0",
         "Height": 72,
@@ -79,13 +79,13 @@
       },
       {
         "__type": "Timer",
-        "__guid": "55720f78-398f-479b-917a-ec8174f8a7e5",
+        "__guid": "a56b11cb-26c4-4b52-8e35-b058d6572647",
         "EndSound": "assets/sounds/timer_complete.sound",
         "NewBestTimeSound": "assets/sounds/timer_pb.sound",
         "Player": {
           "_type": "component",
-          "component_id": "093bc5d7-8549-4395-833b-f5abb5ad464c",
-          "go": "5318658c-42dd-4edc-a1c4-b4407237962d",
+          "component_id": "ec366958-4482-413e-bee8-d48b1934eeb5",
+          "go": "468bff3e-5b4f-40ff-ba99-6d3893552875",
           "component_type": "PlayerController"
         },
         "StartSound": "assets/sounds/timer_start.sound",
@@ -94,13 +94,13 @@
     ],
     "Children": [
       {
-        "__guid": "fc331b8b-6321-4cea-a3de-d36704a70ee2",
+        "__guid": "f159b53e-bfb9-474a-a6ee-fc2277832f06",
         "Name": "Body",
         "NetworkMode": 2,
         "Components": [
           {
             "__type": "SkinnedModelRenderer",
-            "__guid": "e1da95e7-8cab-4dda-be6d-5a3439489321",
+            "__guid": "b6b98c19-83c7-4a60-829d-a6d82e8e02a6",
             "BodyGroups": 18446744073709551274,
             "CreateBoneObjects": false,
             "MaterialGroup": "default",
@@ -110,157 +110,157 @@
           },
           {
             "__type": "ModelHitboxes",
-            "__guid": "e1da7e4f-ba26-47b9-9b41-effca1eadc3f",
+            "__guid": "64e93952-e480-4b28-935c-0157ba45d708",
             "Renderer": {
               "_type": "component",
-              "component_id": "e1da95e7-8cab-4dda-be6d-5a3439489321",
-              "go": "fc331b8b-6321-4cea-a3de-d36704a70ee2",
+              "component_id": "b6b98c19-83c7-4a60-829d-a6d82e8e02a6",
+              "go": "f159b53e-bfb9-474a-a6ee-fc2277832f06",
               "component_type": "SkinnedModelRenderer"
             },
             "Target": {
               "_type": "gameobject",
-              "go": "fc331b8b-6321-4cea-a3de-d36704a70ee2"
+              "go": "f159b53e-bfb9-474a-a6ee-fc2277832f06"
             }
           },
           {
             "__type": "AnimationHelper",
-            "__guid": "c4988919-08d1-4eb5-b6ae-1da74aea2808",
+            "__guid": "d265435f-0237-4a67-ae47-e5f8129381f7",
             "EyeSource": {
               "_type": "gameobject",
-              "go": "6d33145e-3407-4140-b428-f434cba8fc90"
+              "go": "82ab32b4-a0a3-4198-872e-4631e4905af8"
             },
             "Height": 1,
             "LookAtObject": {
               "_type": "gameobject",
-              "go": "6d33145e-3407-4140-b428-f434cba8fc90"
+              "go": "82ab32b4-a0a3-4198-872e-4631e4905af8"
             },
             "Target": {
               "_type": "component",
-              "component_id": "e1da95e7-8cab-4dda-be6d-5a3439489321",
-              "go": "fc331b8b-6321-4cea-a3de-d36704a70ee2",
+              "component_id": "b6b98c19-83c7-4a60-829d-a6d82e8e02a6",
+              "go": "f159b53e-bfb9-474a-a6ee-fc2277832f06",
               "component_type": "SkinnedModelRenderer"
             }
           }
         ]
       },
       {
-        "__guid": "c7d055df-ac4f-4e91-9e09-b5cc3d5a34a5",
+        "__guid": "82b77dee-41c4-4374-a923-c5008f46bcb3",
         "Name": "Mechanics",
         "Enabled": true,
         "NetworkMode": 2,
         "Components": [
           {
             "__type": "CrouchMechanic",
-            "__guid": "9a5d4ecf-7182-45e4-ab4c-1118f6de4f8b",
+            "__guid": "4af81804-1b0a-47bd-8725-0a90224385cb",
             "Controller": {
               "_type": "component",
-              "component_id": "093bc5d7-8549-4395-833b-f5abb5ad464c",
-              "go": "5318658c-42dd-4edc-a1c4-b4407237962d",
+              "component_id": "ec366958-4482-413e-bee8-d48b1934eeb5",
+              "go": "468bff3e-5b4f-40ff-ba99-6d3893552875",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 364.86642
+              "Relative": 133.59105
             }
           },
           {
             "__type": "SprintMechanic",
-            "__guid": "b359acff-c1fd-40db-84bf-b53bfd8bcb5c",
+            "__guid": "04f8c58f-c620-4172-bade-7cc0f6091153",
             "Controller": {
               "_type": "component",
-              "component_id": "093bc5d7-8549-4395-833b-f5abb5ad464c",
-              "go": "5318658c-42dd-4edc-a1c4-b4407237962d",
+              "component_id": "ec366958-4482-413e-bee8-d48b1934eeb5",
+              "go": "468bff3e-5b4f-40ff-ba99-6d3893552875",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 364.86642
+              "Relative": 133.59105
             }
           },
           {
             "__type": "WalkMechanic",
-            "__guid": "9091b3e1-50fd-44a3-a773-2a86c8889567",
+            "__guid": "9acc56c2-257e-41bb-95b4-fc77546ec7a3",
             "Controller": {
               "_type": "component",
-              "component_id": "093bc5d7-8549-4395-833b-f5abb5ad464c",
-              "go": "5318658c-42dd-4edc-a1c4-b4407237962d",
+              "component_id": "ec366958-4482-413e-bee8-d48b1934eeb5",
+              "go": "468bff3e-5b4f-40ff-ba99-6d3893552875",
               "component_type": "PlayerController"
             },
             "IsActive": true,
             "TimeSinceActiveChanged": {
-              "Relative": 364.86642
+              "Relative": 133.59105
             }
           },
           {
             "__type": "AirMoveMechanic",
-            "__guid": "acf807ed-05b6-47f0-ad13-589c758e6f9e",
+            "__guid": "e76347ae-c7c7-40e3-99de-6508a829793e",
             "Controller": {
               "_type": "component",
-              "component_id": "093bc5d7-8549-4395-833b-f5abb5ad464c",
-              "go": "5318658c-42dd-4edc-a1c4-b4407237962d",
+              "component_id": "ec366958-4482-413e-bee8-d48b1934eeb5",
+              "go": "468bff3e-5b4f-40ff-ba99-6d3893552875",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 364.86642
+              "Relative": 133.59105
             }
           },
           {
             "__type": "JumpMechanic",
-            "__guid": "80ee068e-dd38-4738-b984-e7ff97ef3c4c",
+            "__guid": "547ec09a-e39a-4dce-8c9c-59f8c4df6e23",
             "Controller": {
               "_type": "component",
-              "component_id": "093bc5d7-8549-4395-833b-f5abb5ad464c",
-              "go": "5318658c-42dd-4edc-a1c4-b4407237962d",
+              "component_id": "ec366958-4482-413e-bee8-d48b1934eeb5",
+              "go": "468bff3e-5b4f-40ff-ba99-6d3893552875",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 364.86642
+              "Relative": 133.59105
             }
           },
           {
             "__type": "SlideMechanic",
-            "__guid": "b0e4c554-9c2d-41be-a828-68b1aaf78ecb",
+            "__guid": "89eb849a-6970-482b-9d72-d7c1169be517",
             "Controller": {
               "_type": "component",
-              "component_id": "093bc5d7-8549-4395-833b-f5abb5ad464c",
-              "go": "5318658c-42dd-4edc-a1c4-b4407237962d",
+              "component_id": "ec366958-4482-413e-bee8-d48b1934eeb5",
+              "go": "468bff3e-5b4f-40ff-ba99-6d3893552875",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 364.86642
+              "Relative": 133.59105
             }
           },
           {
             "__type": "ViewPunchMechanic",
-            "__guid": "a74ec28b-e34e-48c4-8297-dbc391b89463",
+            "__guid": "27d115c9-673c-4347-be01-e11df608c233",
             "IsActive": true,
             "TimeSinceActiveChanged": {
-              "Relative": 364.86642
+              "Relative": 133.59105
             }
           },
           {
             "__type": "WallrunMechanic",
-            "__guid": "be9068bc-f44f-419d-b07f-09db0a201059",
+            "__guid": "3b6aa034-955c-4601-91ff-6535de60098f",
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 364.86642
+              "Relative": 133.59105
             }
           },
           {
             "__type": "MoveMechanic",
-            "__guid": "35157ce0-caf0-476e-87e1-91b41b8576ef",
+            "__guid": "0b06e26b-754a-4cf8-8c52-ed211fd1cce2",
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 364.86642
+              "Relative": 133.59105
             }
           }
         ]
       },
       {
-        "__guid": "6d33145e-3407-4140-b428-f434cba8fc90",
+        "__guid": "82ab32b4-a0a3-4198-872e-4631e4905af8",
         "Name": "Player Camera",
         "Position": "0,0,60",
         "Enabled": true,
@@ -268,7 +268,7 @@
         "Components": [
           {
             "__type": "CameraComponent",
-            "__guid": "d35a3e38-d837-4d0c-9786-abbc3d070334",
+            "__guid": "14041f10-bbd7-4be4-a583-6f5815e52eb1",
             "BackgroundColor": "0.75478,0.83828,0.87624,1",
             "ClearFlags": "All",
             "FieldOfView": 90,
@@ -285,26 +285,26 @@
           },
           {
             "__type": "AudioListener",
-            "__guid": "46ba375a-33ce-489c-8499-c14b9418cb6b",
+            "__guid": "82f82fd2-900a-448e-9352-ab8624df51b7",
             "UseCameraDirection": true
           }
         ]
       },
       {
-        "__guid": "aea1e2e8-75ec-4b2a-814f-99fff1ec176e",
+        "__guid": "2cffabca-f1a5-4f11-b9f8-b2d0fb1c3a93",
         "Name": "UI",
         "Enabled": true,
         "NetworkMode": 2,
         "Children": [
           {
-            "__guid": "dc7667f9-188d-441f-9df6-3c705c6fda00",
+            "__guid": "9a52433b-4061-4112-91c4-82303cad938b",
             "Name": "HUD",
             "Enabled": true,
             "NetworkMode": 2,
             "Components": [
               {
                 "__type": "ScreenPanel",
-                "__guid": "eba096d8-e510-4037-91be-9b93ef90743f",
+                "__guid": "1ffc3343-845b-4ee1-9362-3d9a9ad719a6",
                 "AutoScreenScale": true,
                 "Opacity": 1,
                 "Scale": 1,
@@ -312,67 +312,47 @@
               },
               {
                 "__type": "HudPanel",
-                "__guid": "6fae75e5-57c6-46f6-9e87-a11dbce1bd49",
+                "__guid": "fb8b9bfb-f14e-43a6-ae1f-fa70aa661d92",
                 "Controller": {
                   "_type": "component",
-                  "component_id": "093bc5d7-8549-4395-833b-f5abb5ad464c",
-                  "go": "5318658c-42dd-4edc-a1c4-b4407237962d",
+                  "component_id": "ec366958-4482-413e-bee8-d48b1934eeb5",
+                  "go": "468bff3e-5b4f-40ff-ba99-6d3893552875",
                   "component_type": "PlayerController"
                 },
                 "Timer": {
                   "_type": "component",
-                  "component_id": "55720f78-398f-479b-917a-ec8174f8a7e5",
-                  "go": "5318658c-42dd-4edc-a1c4-b4407237962d",
+                  "component_id": "a56b11cb-26c4-4b52-8e35-b058d6572647",
+                  "go": "468bff3e-5b4f-40ff-ba99-6d3893552875",
                   "component_type": "Timer"
                 }
               }
             ]
           },
           {
-            "__guid": "cdb777dd-1426-4643-a8b6-f250c4f290ad",
+            "__guid": "14ed3aeb-2a49-4ab6-b08b-b2ebf9efdd2a",
             "Name": "Menu",
             "Enabled": true,
             "NetworkMode": 2,
             "Components": [
               {
                 "__type": "ScreenPanel",
-                "__guid": "936e83a1-3b13-4fce-9991-47861a19b595",
+                "__guid": "3c95f91d-79fe-404d-b055-ad8be3de26ba",
                 "AutoScreenScale": true,
                 "OnComponentUpdate": {
-                  "Version": 5,
+                  "__version": 5,
+                  "__guid": "163ea567-88ea-4a49-a947-1492b71b358e",
                   "UserData": {
-                    "Title": "On Component Update",
-                    "id": "163ea567-88ea-4a49-a947-1492b71b358e",
+                    "Title": "Enable/Disable Menu Panel",
                     "ReferencedComponentTypes": [
-                      "package.cflo.gauntlet/Tf.UI.MenuPanel"
-                    ]
+                      "package.cflo.gauntlet/Gauntlet.UI.MenuPanel"
+                    ],
+                    "Description": "Handles enabling and disabling the menu panel when pressing escape."
                   },
                   "Variables": [],
                   "Nodes": [
                     {
                       "Id": 0,
                       "Type": "input"
-                    },
-                    {
-                      "Id": 3,
-                      "Type": "property.get",
-                      "Properties": {
-                        "_type": "package.cflo.gauntlet/Tf.Common",
-                        "_name": "EscapePressed"
-                      },
-                      "UserData": {
-                        "Position": "64,64"
-                      }
-                    },
-                    {
-                      "Id": 4,
-                      "Type": "scene.get",
-                      "Properties": {
-                        "T": "package.cflo.gauntlet/Tf.UI.MenuPanel"
-                      },
-                      "UserData": {
-                        "Position": "320,160"
-                      }
                     },
                     {
                       "Id": 5,
@@ -385,39 +365,54 @@
                       "Id": 6,
                       "Type": "property.set",
                       "Properties": {
-                        "_type": "Sandbox.Game/Sandbox.Component",
-                        "_name": "Enabled"
+                        "_name": "Enabled",
+                        "_type": "Sandbox.Game/Sandbox.Component"
                       },
                       "UserData": {
-                        "Position": "800,96"
-                      }
-                    },
-                    {
-                      "Id": 7,
-                      "Type": "property.get",
-                      "Properties": {
-                        "_type": "Sandbox.Game/Sandbox.Component",
-                        "_name": "Enabled"
-                      },
-                      "UserData": {
-                        "Position": "544,288"
+                        "Position": "928,96"
                       }
                     },
                     {
                       "Id": 9,
                       "Type": "op.not",
                       "UserData": {
-                        "Position": "752,304"
+                        "Position": "784,240"
+                      }
+                    },
+                    {
+                      "Id": 10,
+                      "Type": "property.get",
+                      "Properties": {
+                        "_name": "EscapePressed",
+                        "_type": "package.cflo.gauntlet/Gauntlet.Common"
+                      },
+                      "UserData": {
+                        "Position": "16,80"
+                      }
+                    },
+                    {
+                      "Id": 18,
+                      "Type": "property.get",
+                      "Properties": {
+                        "_name": "Enabled",
+                        "_type": "Sandbox.Game/Sandbox.Component"
+                      },
+                      "UserData": {
+                        "Position": "512,304"
+                      }
+                    },
+                    {
+                      "Id": 19,
+                      "Type": "scene.get",
+                      "Properties": {
+                        "T": "package.cflo.gauntlet/Gauntlet.UI.MenuPanel"
+                      },
+                      "UserData": {
+                        "Position": "240,160"
                       }
                     }
                   ],
                   "Links": [
-                    {
-                      "SrcId": 0,
-                      "SrcName": "_target",
-                      "DstId": 4,
-                      "DstName": "_this"
-                    },
                     {
                       "SrcId": 0,
                       "SrcName": "_signal",
@@ -425,7 +420,7 @@
                       "DstName": "_signal"
                     },
                     {
-                      "SrcId": 3,
+                      "SrcId": 10,
                       "SrcName": "_result",
                       "DstId": 5,
                       "DstName": "condition"
@@ -437,7 +432,7 @@
                       "DstName": "_signal"
                     },
                     {
-                      "SrcId": 4,
+                      "SrcId": 19,
                       "SrcName": "_result",
                       "DstId": 6,
                       "DstName": "_target"
@@ -449,16 +444,22 @@
                       "DstName": "_value"
                     },
                     {
-                      "SrcId": 4,
-                      "SrcName": "_result",
-                      "DstId": 7,
-                      "DstName": "_target"
-                    },
-                    {
-                      "SrcId": 7,
+                      "SrcId": 18,
                       "SrcName": "_result",
                       "DstId": 9,
                       "DstName": "a"
+                    },
+                    {
+                      "SrcId": 19,
+                      "SrcName": "_result",
+                      "DstId": 18,
+                      "DstName": "_target"
+                    },
+                    {
+                      "SrcId": 0,
+                      "SrcName": "_target",
+                      "DstId": 19,
+                      "DstName": "_this"
                     }
                   ]
                 },
@@ -468,7 +469,7 @@
               },
               {
                 "__type": "MenuPanel",
-                "__guid": "e86d02e5-d13d-4e86-9cc8-f42b8b3eaa53",
+                "__guid": "cd83af3d-480e-4af5-b16c-1b83956ec01f",
                 "__enabled": false
               }
             ]

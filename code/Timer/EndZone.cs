@@ -1,4 +1,4 @@
-namespace Tf;
+namespace Gauntlet;
 
 [Icon( "stop_circle" )]
 public partial class EndZone : BaseZone

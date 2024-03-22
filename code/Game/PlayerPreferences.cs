@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Tf;
+namespace Gauntlet;
 
 public sealed class PlayerPreferences
 {

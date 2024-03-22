@@ -1,4 +1,4 @@
-namespace Tf;
+namespace Gauntlet;
 
 /// <summary>
 /// Placed on the player (or maybe just in loose space, we'll see), the client component holds network info about a player, and serves as an easy way to iterate through players in a game.

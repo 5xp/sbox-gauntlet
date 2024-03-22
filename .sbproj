@@ -17,7 +17,7 @@
     "MinPlayers": 1,
     "LeaderboardType": "None",
     "Compiler": {
-      "RootNamespace": "Tf",
+      "RootNamespace": "Gauntlet",
       "DefineConstants": "SANDBOX;ADDON;DEBUG",
       "NoWarn": "1701;1702;1591;",
       "WarningsAsErrors": "",

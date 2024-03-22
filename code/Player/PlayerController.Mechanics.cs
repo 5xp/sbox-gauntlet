@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
 
-namespace Tf;
+namespace Gauntlet;
 
 public partial class PlayerController
 {

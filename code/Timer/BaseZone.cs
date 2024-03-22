@@ -1,4 +1,4 @@
-namespace Tf;
+namespace Gauntlet;
 
 public abstract partial class BaseZone : Component, Component.ITriggerListener
 {

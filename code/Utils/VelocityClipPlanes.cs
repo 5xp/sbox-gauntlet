@@ -1,6 +1,6 @@
 ﻿using System.Buffers;
 
-namespace Tf;
+namespace Gauntlet;
 
 internal struct VelocityClipPlanes : IDisposable
 {

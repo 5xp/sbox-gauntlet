@@ -1,4 +1,4 @@
-namespace Tf;
+namespace Gauntlet;
 
 /// <summary>
 /// A simple component that plays a sound.

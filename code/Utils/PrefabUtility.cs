@@ -1,7 +1,7 @@
 using Sandbox.Diagnostics;
 using System.Text.Json.Nodes;
 
-namespace Tf;
+namespace Gauntlet;
 
 public static class PrefabUtility
 {

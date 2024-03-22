@@ -1,6 +1,6 @@
 using Sandbox.Network;
 
-namespace Tf;
+namespace Gauntlet;
 
 public sealed class GameManager : Component, Component.INetworkListener
 {

@@ -1,4 +1,4 @@
-﻿namespace Tf;
+﻿namespace Gauntlet;
 
 /// <summary>
 /// A damped spring system. Used for viewpunch/viewkick/recoil.

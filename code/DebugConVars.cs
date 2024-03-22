@@ -1,4 +1,4 @@
-namespace Tf;
+namespace Gauntlet;
 
 public static class DebugConVars
 {

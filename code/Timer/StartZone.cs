@@ -1,4 +1,4 @@
-namespace Tf;
+namespace Gauntlet;
 
 [Icon( "play_circle" )]
 public partial class StartZone : BaseZone

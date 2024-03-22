@@ -1,4 +1,4 @@
-namespace Tf;
+namespace Gauntlet;
 
 [Icon( "timer" )]
 public sealed partial class Timer : Component

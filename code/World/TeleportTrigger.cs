@@ -1,4 +1,4 @@
-namespace Tf;
+namespace Gauntlet;
 
 public sealed class TeleportTrigger : Component, Component.ITriggerListener
 {

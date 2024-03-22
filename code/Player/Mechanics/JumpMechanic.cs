@@ -1,4 +1,4 @@
-﻿namespace Tf;
+﻿namespace Gauntlet;
 
 /// <summary>
 /// A jumping mechanic.

@@ -84,15 +84,15 @@
                 "Type": "input"
               },
               {
-                "Id": 1,
+                "Id": 2,
                 "Type": "call",
                 "Properties": {
                   "_isStatic": true,
                   "_name": "Load",
-                  "_type": "package.cflo.gauntlet/Tf.PlayerPreferences"
+                  "_type": "package.cflo.gauntlet/Gauntlet.PlayerPreferences"
                 },
                 "UserData": {
-                  "Position": "240,0"
+                  "Position": "256,-16"
                 }
               }
             ],
@@ -100,7 +100,7 @@
               {
                 "SrcId": 0,
                 "SrcName": "_signal",
-                "DstId": 1,
+                "DstId": 2,
                 "DstName": "_signal"
               }
             ]
@@ -140,7 +140,7 @@
   },
   "Title": "mainmenu",
   "Description": "",
-  "LastSaved": "2024-03-22T16:50:29.1398838-05:00",
+  "LastSaved": "2024-03-22T18:35:40.6477331-05:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": []

@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Tf;
+namespace Gauntlet;
 
 public static class MathUtils
 {

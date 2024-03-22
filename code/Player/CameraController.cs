@@ -1,4 +1,4 @@
-namespace Tf;
+namespace Gauntlet;
 
 public sealed class CameraController : Component
 {

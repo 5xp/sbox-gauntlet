@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Sandbox.Services;
 using Sandbox.Utility;
 
-namespace Tf;
+namespace Gauntlet;
 
 public sealed partial class Timer
 {

@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Sandbox.Services;
-namespace Tf;
+namespace Gauntlet;
 
 public struct GauntletLeaderboardEntry
 {

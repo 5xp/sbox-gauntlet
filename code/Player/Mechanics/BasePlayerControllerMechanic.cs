@@ -1,4 +1,4 @@
-namespace Tf;
+namespace Gauntlet;
 
 /// <summary>
 /// A base for a player controller mechanic.
