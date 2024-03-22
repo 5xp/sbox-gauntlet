@@ -20,7 +20,6 @@
   }
   else if (CurrentView == View.Settings)
   {
-
     <button class="button standard backdrop icon backward back-button" onclick=@Back>navigate_before</button>
 
     <div class="layout padding-insane column settings-container">
@@ -29,6 +28,7 @@
 
         <SettingsCategory Title="Gameplay">
           <ChildContent>
+            <SettingsButton Title="Binds" Icon="launch" @onclick=@Game.Overlay.ShowBinds />
             <SettingsSlider Title="Sprint Bob" Min=@(0f) Max=@(2f) Step=@(0.01f)
               Value:bind=@PlayerPreferences.Instance.SprintBobScale />
             <SettingsToggle Title="Enable Auto-Sprint" Value:bind=@PlayerPreferences.Instance.AutoSprintEnabled />

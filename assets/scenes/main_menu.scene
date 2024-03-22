@@ -1,5 +1,5 @@
 {
-  "__guid": "9d1463ac-a949-437a-9b83-e8507a1180a2",
+  "__guid": "76097a00-09bf-4752-9b7f-ed02d872b846",
   "GameObjects": [
     {
       "__guid": "bfc59c12-1ed2-4f91-8956-a95a315eac3c",
@@ -71,10 +71,10 @@
           "__guid": "7ccb385d-f602-47a2-b667-9f8084d2dfef",
           "AutoScreenScale": true,
           "OnComponentStart": {
-            "Version": 5,
+            "__version": 5,
+            "__guid": "7e10dbd1-4230-466a-a306-3e60991a7884",
             "UserData": {
-              "Title": "On Component Start",
-              "id": "7e10dbd1-4230-466a-a306-3e60991a7884",
+              "Title": "Load Player Preferences",
               "ReferencedComponentTypes": []
             },
             "Variables": [],
@@ -140,7 +140,7 @@
   },
   "Title": "mainmenu",
   "Description": "",
-  "LastSaved": "2024-03-15T01:44:44.2289492-05:00",
+  "LastSaved": "2024-03-22T16:50:29.1398838-05:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": []

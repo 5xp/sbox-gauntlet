@@ -2,6 +2,7 @@
 @import "Settings/SettingsSlider.razor.scss";
 @import "Settings/SettingsToggle.razor.scss";
 @import "Settings/SettingsCategory.razor.scss";
+@import "Settings/SettingsButton.razor.scss";
 
 MenuPanel {
   width: 100%;
@@ -26,7 +27,7 @@ MenuPanel {
     padding: 60px;
     overflow-y: scroll;
     overflow-x: hidden;
-    backdrop-filter: blur(30px) brightness(0.6) contrast(1.2);
+    backdrop-filter: blur(30px);
     border-radius: 30px;
   }
 

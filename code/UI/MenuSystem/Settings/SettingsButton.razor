@@ -1,0 +1,12 @@
+@namespace Tf.UI
+@inherits Button
+
+<root class="settings-control settings-button backdrop button standard forward">
+  <label>@Title</label>
+  <i>@Icon</i>
+</root>
+
+@code {
+  public string Title { get; set; }
+  public new string Icon { get; set; }
+}
