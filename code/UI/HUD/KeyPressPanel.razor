@@ -19,6 +19,18 @@
         <p>@GetKeyCode("Right")</p>
       </div>
     </div>
+
+    @if (PlayerPreferences.Instance.KeyPressShowJumpAndCrouch)
+    {
+      <div class="key-row">
+        <div class="key backdrop @GetKeyHighlighted("Duck") @GetKeyHighlighted("Duck2")">
+          <p>C</p>
+        </div>
+        <div class="key double backdrop @GetKeyHighlighted("Jump")">
+          <p>J</p>
+        </div>
+      </div>
+    }
   </div>
 </root>
 

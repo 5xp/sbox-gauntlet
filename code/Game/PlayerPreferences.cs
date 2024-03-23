@@ -24,6 +24,7 @@ public sealed class PlayerPreferences
   public bool HudEnabled { get; set; } = true;
   public bool HudSwayEnabled { get; set; } = true;
   public bool KeyPressHudEnabled { get; set; } = true;
+  public bool KeyPressShowJumpAndCrouch { get; set; } = false;
   public bool WallKickHudEnabled { get; set; } = true;
   public float SprintBobScale { get; set; } = 1f;
   public bool AutoSprintEnabled { get; set; } = false;
