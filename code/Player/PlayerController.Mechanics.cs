@@ -66,8 +66,6 @@ public partial class PlayerController
 			if ( acceleration is not null ) accelerationOverride = acceleration;
 		}
 
-		CheckReachedApex( previousZVel, Velocity.z );
-
 		ActiveMechanics = activeMechanics.ToArray();
 
 		if ( lastUpdate is not null )

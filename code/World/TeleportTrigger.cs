@@ -16,9 +16,7 @@ public sealed class TeleportTrigger : Component, Component.ITriggerListener
 	{
 		if ( Destination is null ) return;
 		Vector3 relativePosition = player.Transform.World.Position - Transform.World.Position;
-		float relativeApexHeight = player.ApexHeight - Transform.World.Position.y;
 		player.Position = Destination.Transform.World.Position + relativePosition;
-		player.ApexHeight = Destination.Transform.World.Position.y + relativeApexHeight;
 		player.Transform.ClearLerp();
 	}
 

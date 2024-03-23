@@ -27,6 +27,8 @@ public partial class MoveMechanic : BasePlayerControllerMechanic
       airMove.AirMove();
       Controller.CategorizePosition( Controller.IsGrounded );
     }
+
+    Controller.LastVelocity = Velocity;
   }
 
   private void UpdateFootSteps()

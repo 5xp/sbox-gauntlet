@@ -79,12 +79,10 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 
 	private void DoFallPunch()
 	{
-		float fallDist = Controller.ApexHeight - Position.z;
-
-		if ( fallDist <= 0f )
+		if ( Controller.FallHeight <= 0f )
 			return;
 
-		float fallFraction = GetFallFraction( fallDist );
+		float fallFraction = GetFallFraction( Controller.FallHeight );
 
 		var (min, max) = GetViewPunchFallVectors();
 

@@ -56,7 +56,9 @@ public partial class PlayerController : Component
 	public float CurrentEyeHeight { get; set; }
 	public float CurrentHullHeight { get; set; }
 	public float DuckFraction { get; set; }
-	public float ApexHeight { get; set; }
+	public Vector3 LastVelocity { get; set; }
+	public float FallSpeed { get; set; }
+	public float FallHeight => FallSpeed * FallSpeed / (2 * PlayerSettings.Gravity) / 12f * MathF.Sign( -FallSpeed );
 
 	/// <summary>
 	/// Finds the first <see cref="SkinnedModelRenderer"/> on <see cref="Body"/>
@@ -286,11 +288,13 @@ public partial class PlayerController : Component
 		mover.TryMove( Time.Delta, Vector3.Up );
 
 		float beforeSpeed = HorzVelocity.Length;
+		float beforeZ = Velocity.z;
 		Position = mover.Position;
 		Velocity = mover.Velocity;
 
 		if ( mover.HitWall && mover.HitNormal.HasValue )
 		{
+			FallSpeed = beforeZ;
 			PreWallTouchSpeed = beforeSpeed;
 			GetMechanic<WallrunMechanic>().OnWallTouch( mover.HitNormal.Value );
 		}
@@ -406,14 +410,6 @@ public partial class PlayerController : Component
 		}
 	}
 
-	private void CheckReachedApex( float previousVelocity, float currentVelocity )
-	{
-		if ( HasTag( "wallrun" ) || currentVelocity.AlmostEqual( 0f ) || (currentVelocity < 0f && previousVelocity > 0f) )
-		{
-			ApexHeight = Position.z;
-		}
-	}
-
 	public Vector3 BuildWishDir( bool zeroPitch = true )
 	{
 		Angles angles = EyeAngles.WithRoll( 0f );
@@ -493,8 +489,9 @@ public partial class PlayerController : Component
 
 		if ( LastGroundObject is null && groundObject is not null )
 		{
-			float fallDist = ApexHeight - Position.z;
-			if ( fallDist >= 640f )
+			FallSpeed = LastVelocity.z;
+
+			if ( FallHeight >= PlayerSettings.HardFallDist )
 			{
 				LandSoundHandle = Sound.Play( HardLandSound );
 			}
@@ -517,42 +514,6 @@ public partial class PlayerController : Component
 		Vector3 nextPos = Position + Velocity * timeStep;
 		return TraceBBox( Position, nextPos );
 	}
-
-	// private void OnFootStepEvent( SceneModel.FootstepEvent footstepEvent )
-	// {
-	// 	if ( HasTag( "sprint" ) && TimeSinceFootStep < 0.3f )
-	// 	{
-	// 		return;
-	// 	}
-	// 	else if ( TimeSinceFootStep < 0.4f )
-	// 	{
-	// 		return;
-	// 	}
-
-	// 	var tr = Scene.Trace
-	// 		.Ray( footstepEvent.Transform.Position + Vector3.Up * 20, footstepEvent.Transform.Position + Vector3.Up * -20 )
-	// 		.Run();
-
-	// 	if ( !tr.Hit )
-	// 		return;
-
-	// 	if ( tr.Surface is null )
-	// 		return;
-
-	// 	TimeSinceFootStep = 0;
-
-	// 	var sound = footstepEvent.FootId == 0 ? tr.Surface.Sounds.FootLeft : tr.Surface.Sounds.FootRight;
-
-	// 	if ( sound is null )
-	// 	{
-	// 		Log.Info( "Sound is null" );
-	// 		return;
-	// 	}
-
-	// 	var handle = Sound.Play( sound, tr.HitPosition + tr.Normal * 5 );
-
-	// 	handle.Volume *= footstepEvent.Volume;
-	// }
 
 	public void Write( ref ByteStream stream )
 	{
@@ -582,7 +543,7 @@ public partial class PlayerController : Component
 		Gizmo.Draw.ScreenText( $"Velocity: {Velocity.Length:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
 		Gizmo.Draw.ScreenText( $"Horz vel: {HorzVelocity.Length:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
 		Gizmo.Draw.ScreenText( $"Vert vel: {Velocity.z:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
-		Gizmo.Draw.ScreenText( $"Apex: {ApexHeight:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
+		Gizmo.Draw.ScreenText( $"Fall speed: {FallSpeed:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
 		Gizmo.Draw.ScreenText( $"CamAngle: {camAngles.pitch:F2}, {camAngles.yaw:F2}, {camAngles.roll:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
 		Gizmo.Draw.ScreenText( $"CamPos: {cam.Transform.Position.x:F2}, {cam.Transform.Position.y:F2}, {cam.Transform.Position.z:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
 

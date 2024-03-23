@@ -151,8 +151,8 @@ public sealed class PlayerSettings
 	public float ViewPunchFallYawMax { get; set; } = 0f;
 	public float ViewPunchFallRollMin { get; set; } = -0.62f;
 	public float ViewPunchFallRollMax { get; set; } = 0.62f;
-	public float ViewPunchFallDistMin { get; set; } = 160f;
-	public float ViewPunchFallDistMax { get; set; } = 1160;
+	public float ViewPunchFallDistMin { get; set; } = 10f;
+	public float ViewPunchFallDistMax { get; set; } = 70f;
 	public float ViewPunchFallDistMaxScale { get; set; } = 12f;
 	public float ViewPunchWallrunStartPitchMin { get; set; } = -1.93f;
 	public float ViewPunchWallrunStartPitchMax { get; set; } = -2.42f;
@@ -202,4 +202,5 @@ public sealed class PlayerSettings
 	public float FootStepDuckRunSpeed { get; set; } = 120f;
 	public float FootStepNormalWalkSpeed { get; set; } = 30f;
 	public float FootStepNormalRunSpeed { get; set; } = 220f;
+	public float HardFallDist { get; set; } = 20f;
 }

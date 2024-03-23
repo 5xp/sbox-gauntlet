@@ -74,9 +74,11 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 			jumpType = JumpType.Air;
 		}
 
+		Vector3 halfGravity = Vector3.Down * 0.5f * PlayerSettings.Gravity * PlayerSettings.GravityScale * Time.Delta;
+		Velocity += halfGravity;
+
 		PlayJumpSound( jumpType );
 		Controller.BroadcastPlayerJumped( jumpType );
-		Controller.ApexHeight = Position.z;
 	}
 
 	public override void Simulate()
