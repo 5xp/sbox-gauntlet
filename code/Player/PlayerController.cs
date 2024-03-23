@@ -131,6 +131,11 @@ public partial class PlayerController : Component
 
 		BuildWishInput();
 		OnUpdateMechanics();
+
+		if ( Input.Pressed( "Restart" ) )
+		{
+			Restart();
+		}
 	}
 
 	protected override void OnUpdate()
@@ -188,6 +193,16 @@ public partial class PlayerController : Component
 		foreach ( var mechanic in Mechanics )
 		{
 			mechanic.FrameSimulate();
+		}
+	}
+
+	public void Restart()
+	{
+		GameManager gameManager = Scene.Components.Get<GameManager>( FindMode.InChildren );
+
+		if ( gameManager is not null )
+		{
+			gameManager.ShouldRespawn = true;
 		}
 	}
 

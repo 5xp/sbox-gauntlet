@@ -79,8 +79,15 @@
           "KeyboardCode": "Ctrl",
           "GamepadCode": "B",
           "GroupName": "Movement"
+        },
+        {
+          "Name": "Restart",
+          "KeyboardCode": "R",
+          "GamepadCode": "SwitchLeftMenu",
+          "GroupName": "Other"
         }
-      ]
+      ],
+      "__guid": "38aed561-932a-47ce-b7f4-27e0de299259"
     },
     "StartupScene": "assets/scenes/main_menu.scene",
     "MapStartupScene": "assets/scenes/map_only.scene",

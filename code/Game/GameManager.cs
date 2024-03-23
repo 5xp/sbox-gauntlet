@@ -5,12 +5,18 @@ namespace Gauntlet;
 public sealed class GameManager : Component, Component.INetworkListener
 {
 	[Property] public GameObject PlayerPrefab { get; set; }
+
+	/// <summary>
+	/// The spawn point to use for the player. If this is null, we try to get a random spawn point from the scene.
+	/// </summary>
 	[Property] public GameObject SpawnPoint { get; set; }
 
 	/// <summary>
 	/// Is this game multiplayer?
 	/// </summary>
 	[Property] public bool IsMultiplayer { get; set; } = false;
+
+	public bool ShouldRespawn { get; set; }
 
 	protected override void OnStart()
 	{
@@ -44,6 +50,15 @@ public sealed class GameManager : Component, Component.INetworkListener
 		}
 	}
 
+	protected override void OnFixedUpdate()
+	{
+		if ( ShouldRespawn )
+		{
+			RespawnPlayer();
+			ShouldRespawn = false;
+		}
+	}
+
 	public void OnActive( Connection channel )
 	{
 		if ( !IsMultiplayer ) return;
@@ -62,28 +77,72 @@ public sealed class GameManager : Component, Component.INetworkListener
 	{
 		Transform spawnTransform;
 
-		if ( SpawnPoint is null )
-		{
-			var spawnPoints = Scene.GetAllComponents<SpawnPoint>().ToArray();
+		GameObject spawnPoint = GetSpawnPoint();
 
-			if ( spawnPoints.Length == 0 )
-			{
-				Log.Error( "No spawn points found" );
-				return null;
-			}
-
-			spawnTransform = Game.Random.FromArray( spawnPoints ).GameObject.Transform.World;
-		}
-		else
+		if ( spawnPoint is null )
 		{
-			spawnTransform = SpawnPoint.Transform.World;
+			Log.Error( "No spawn points found" );
+			return null;
 		}
 
-		Angles angles = spawnTransform.Rotation.Angles();
-		spawnTransform = spawnTransform.WithRotation( Rotation.Identity );
-		var player = PlayerPrefab.Clone( spawnTransform, name: Connection.Local.DisplayName );
+		spawnTransform = spawnPoint.Transform.World;
+		var player = PlayerPrefab.Clone();
 		player.BreakFromPrefab();
-		player.Components.GetInChildrenOrSelf<PlayerController>().EyeAngles = angles;
+		SetPlayerTransform( player, spawnTransform );
+		player.Name = Connection.Local.DisplayName;
 		return player;
+	}
+
+	public void RespawnPlayer( GameObject player )
+	{
+		GameObject spawnPoint = GetSpawnPoint();
+
+		if ( spawnPoint is null )
+		{
+			Log.Error( "No spawn points found" );
+			return;
+		}
+
+		SetPlayerTransform( player, spawnPoint.Transform.World );
+	}
+
+	public void RespawnPlayer()
+	{
+		GameObject player = Scene.Directory.FindByName( Connection.Local.DisplayName ).First();
+
+		if ( player is null )
+		{
+			Log.Error( "Player not found" );
+			return;
+		}
+
+		RespawnPlayer( player );
+	}
+
+	private void SetPlayerTransform( GameObject player, Transform transform )
+	{
+		Angles angles = transform.Rotation.Angles();
+		player.Transform.World = transform;
+
+		PlayerController controller = player.Components.GetInChildrenOrSelf<PlayerController>();
+		controller.EyeAngles = angles;
+		controller.Velocity = 0;
+	}
+
+	private GameObject GetSpawnPoint()
+	{
+		if ( SpawnPoint is not null )
+		{
+			return SpawnPoint;
+		}
+
+		var spawnPoints = Scene.GetAllComponents<SpawnPoint>().ToArray();
+
+		if ( spawnPoints.Length == 0 )
+		{
+			return null;
+		}
+
+		return Game.Random.FromArray( spawnPoints ).GameObject;
 	}
 }

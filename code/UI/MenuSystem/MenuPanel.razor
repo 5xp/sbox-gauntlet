@@ -5,6 +5,11 @@
 <root class="pk">
   <div class="background" @ref=BackgroundPanel />
 
+  @if (IsInGame() || CurrentView == View.Settings)
+  {
+    <button class="button standard backdrop icon backward back-button" onclick=@BackButton>navigate_before</button>
+  }
+
   @if (CurrentView == View.MainMenu)
   {
     <div class="layout padding-insane column main-container">
@@ -20,8 +25,6 @@
   }
   else if (CurrentView == View.Settings)
   {
-    <button class="button standard backdrop icon backward back-button" onclick=@Back>navigate_before</button>
-
     <div class="layout padding-insane column settings-container">
       <label class="text title">Settings</label>
       <div class="layout column gap-extra controls-container">
@@ -122,7 +125,14 @@
   {
     if (IsInGame())
     {
-      Game.ActiveScene.Load(Game.ActiveScene.Source);
+      GameManager gameManager = Scene.Components.Get<GameManager>(FindMode.InChildren);
+
+      if (gameManager is not null)
+      {
+        gameManager.ShouldRespawn = true;
+      }
+
+      BackButton();
     }
     else
     {
@@ -138,6 +148,16 @@
   private bool IsInGame()
   {
     return Scene.Title != "mainmenu";
+  }
+
+  private void BackButton()
+  {
+    if (CurrentView == View.MainMenu)
+    {
+      Enabled = false;
+    }
+
+    Back();
   }
 
   private void Back()
