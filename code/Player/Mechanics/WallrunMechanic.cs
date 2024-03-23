@@ -139,7 +139,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 	public override void OnActiveUpdate()
 	{
-		if ( Input.Down( "Duck" ) )
+		if ( Common.DuckDown() )
 		{
 			FallAwayFromWall( false );
 			Controller.AfterWallJumpSpeed = HorzVelocity.Length;

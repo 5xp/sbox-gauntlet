@@ -4,7 +4,7 @@ namespace Gauntlet;
 
 public static class Common
 {
-  public static float HUPSToKPH( float hups ) => hups * 0.091392f;
+  public static float HUPSToKPH( float hups ) => hups * 0.09f;
 
   public static string ToOrdinal( this int num )
   {
@@ -98,4 +98,9 @@ public static class Common
   }
 
   public static bool EscapePressed => Input.EscapePressed;
+
+  public static bool DuckDown()
+  {
+    return Input.Down( "Duck" ) || Input.Down( "Duck2" );
+  }
 }

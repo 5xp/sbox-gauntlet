@@ -77,7 +77,7 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 		float forceSpeed = PlayerSettings.SlideForceSlideSpeed;
 		float decelAmount = PlayerSettings.SlideDecel;
 
-		if ( !Input.Down( "Duck" ) && HorzVelocity.LengthSquared > forceSpeed * forceSpeed )
+		if ( !Common.DuckDown() && HorzVelocity.LengthSquared > forceSpeed * forceSpeed )
 		{
 			// This should somehow depend on SlideVelocityDecay and current speed but I can't figure it out
 			decelAmount += PlayerSettings.SlideForceSlideUnduckDecel;

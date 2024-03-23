@@ -85,6 +85,11 @@
           "KeyboardCode": "R",
           "GamepadCode": "SwitchLeftMenu",
           "GroupName": "Other"
+        },
+        {
+          "Name": "Duck2",
+          "KeyboardCode": "V",
+          "GroupName": "Movement"
         }
       ],
       "__guid": "38aed561-932a-47ce-b7f4-27e0de299259"

@@ -210,7 +210,7 @@ public partial class PlayerController : Component
 
 	public void SimulateEyes()
 	{
-		float targetDuckFraction = Input.Down( "Duck" ) ? 1f : 0f;
+		float targetDuckFraction = Common.DuckDown() ? 1f : 0f;
 		float targetHullHeight = PlayerSettings.HullHeightStanding.LerpTo( PlayerSettings.HullHeightCrouching, targetDuckFraction );
 		// Unducking
 		if ( DuckFraction > targetDuckFraction )

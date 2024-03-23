@@ -12,7 +12,7 @@ public partial class CrouchMechanic : BasePlayerControllerMechanic
 
 		if ( ShouldStayDucked() ) return true;
 
-		if ( !Input.Down( "Duck" ) ) return false;
+		if ( !Common.DuckDown() ) return false;
 
 		return true;
 	}

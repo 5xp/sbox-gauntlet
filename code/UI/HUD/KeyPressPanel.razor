@@ -31,6 +31,8 @@
     hash.Add(Input.Down("Left"));
     hash.Add(Input.Down("Backward"));
     hash.Add(Input.Down("Right"));
+    hash.Add(Common.DuckDown());
+    hash.Add(Input.Down("Jump"));
     return hash.ToHashCode();
   }
 
