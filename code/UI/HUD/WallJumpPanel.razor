@@ -12,15 +12,22 @@
     {
       <span class="time @GetSpeedDiffClass(true)">@((Time * 1000).ToString("F0"))ms</span>
     }
+
+    @if (ShowCrouchKicks && IsCrouchKick)
+    {
+      <span class="crouch-kick">CK</span>
+    }
   </div>
 </root>
 
 @code {
   public float SpeedDiff { get; set; }
   public bool IsPerfect { get; set; }
+  public bool IsCrouchKick { get; set; }
   public float Time { get; set; }
   public bool ShowSpeedDiff { get; set; } = true;
   public bool ShowTime { get; set; } = true;
+  public bool ShowCrouchKicks { get; set; } = true;
 
   private string GetSpeedDiffClass(bool perfectOverridesNegative = false)
   {

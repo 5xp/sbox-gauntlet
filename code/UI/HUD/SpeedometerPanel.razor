@@ -41,6 +41,9 @@
     // There will always be at least 1 tick between touching the wall and being able to jump
     wallJumpPanel.IsPerfect = time / Controller.Scene.FixedDelta == 1;
 
+    CrouchMechanic crouch = Controller.GetMechanic<CrouchMechanic>();
+    wallJumpPanel.IsCrouchKick = crouch.TimeSinceStart == 0;
+
     wallJumpPanel.Time = time - Controller.Scene.FixedDelta;
     wallJumpPanel.Parent = WallJumpContainerPanel;
     DeletePanelAfterTime(wallJumpPanel, 1000);

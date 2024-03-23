@@ -28,6 +28,14 @@ WallJumpPanel {
     text-shadow: 0 0 10px #ffd700;
   }
 
+  .crouch-kick {
+    color: linear-gradient(90deg, #e51fff, #ff68f2);
+    text-shadow: 0 0 3px #9c00b177;
+    font-size: 30px;
+    padding-left: 8px;
+    padding-bottom: 5px;
+  }
+
   .time {
     font-size: 30px;
     padding-left: 8px;
