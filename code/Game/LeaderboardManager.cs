@@ -38,11 +38,12 @@ public sealed class LeaderboardManager
 
 	private bool ShouldPoll { get; set; }
 
-	private List<long> BlacklistedSteamIds { get; } = new()
+	public List<long> BlacklistedSteamIds { get; } = new()
 	{
 		76561198356798272,
 		76561198927823324,
 		76561198987213809,
+		76561198203150213,
 	};
 
 	/// <summary>

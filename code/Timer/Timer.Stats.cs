@@ -101,7 +101,7 @@ public sealed partial class Timer
 
     if ( CurrentLoop == 1 && (!BestFirstLoopTime.HasValue || ticks < BestFirstLoopTime.Value) )
     {
-      if ( !DebugConVars.DebugDisableTimeSubmission )
+      if ( ShouldSubmitTime() )
       {
         Stats.SetValue( stat, ticks );
       }
@@ -112,7 +112,7 @@ public sealed partial class Timer
 
     if ( CurrentLoop > 1 && (!BestLoopTime.HasValue || ticks < BestLoopTime.Value) )
     {
-      if ( !DebugConVars.DebugDisableTimeSubmission )
+      if ( ShouldSubmitTime() )
       {
         Stats.SetValue( stat, ticks );
       }
@@ -137,6 +137,21 @@ public sealed partial class Timer
     }
 
     if ( TopSpeed < Player.PlayerSettings.WalkSpeed )
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  private bool ShouldSubmitTime()
+  {
+    if ( DebugConVars.DebugDisableTimeSubmission )
+    {
+      return false;
+    }
+
+    if ( LeaderboardManager.Instance.BlacklistedSteamIds.Contains( Game.SteamId ) )
     {
       return false;
     }
