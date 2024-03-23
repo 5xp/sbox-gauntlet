@@ -37,8 +37,6 @@
 
   public override void Tick()
   {
-    base.Tick();
-
     ScrollSpeedFraction = ScrollSpeedFraction.Approach(Collapsed ? 0f : 1f, 3f * Time.Delta);
 
     if (CategoryPanel is null)

@@ -22,12 +22,16 @@ SettingsCategory {
       .button {
         pointer-events: none;
       }
+
+      sound-out: "ui.drag.stop";
     }
 
     &.expanded {
       margin-top: 16px;
       gap: 16px;
       transition: all 0.3s ease-out;
+
+      sound-out: "ui.drag.stop";
     }
   }
 
