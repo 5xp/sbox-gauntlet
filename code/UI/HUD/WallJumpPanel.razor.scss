@@ -1,61 +1,61 @@
 WallJumpPanel {
-  font-size: 50px;
-  font-family: $main-font;
-  color: white;
-  font-weight: bold;
-  position: absolute;
-  align-content: center;
+	font-size: 50px;
+	font-family: $main-font;
+	color: white;
+	font-weight: bold;
+	position: absolute;
+	align-content: center;
 
-  text-align: center;
-  transition: opacity 0.5s ease-out;
-  opacity: 1;
-  animation: slideUp 1.5s ease-out;
+	text-align: center;
+	transition: opacity 0.5s ease-out;
+	opacity: 1;
+	animation: slideUp 1.5s ease-out;
 
-  .text-container {
-    align-items: flex-end;
-  }
+	.text-container {
+		align-items: flex-end;
+	}
 
-  .gain {
-    color: linear-gradient(90deg, #4bd2ff, #24b6ff);
-  }
+	.gain {
+		color: linear-gradient(90deg, #4bd2ff, #24b6ff);
+	}
 
-  .loss {
-    color: linear-gradient(90deg, #ff7171, #ff2424);
-  }
+	.loss {
+		color: linear-gradient(90deg, #ff7171, #ff2424);
+	}
 
-  .perfect {
-    color: linear-gradient(90deg, #ffd700, #ffbb00);
-    text-shadow: 0 0 10px #ffd700;
-  }
+	.perfect {
+		color: linear-gradient(90deg, #ffd700, #ffbb00);
+		text-shadow: 0 0 10px #ffd700;
+	}
 
-  .crouch-kick {
-    color: linear-gradient(90deg, #e51fff, #ff68f2);
-    text-shadow: 0 0 3px #9c00b177;
-    font-size: 30px;
-    padding-left: 8px;
-    padding-bottom: 5px;
-  }
+	.crouch-kick {
+		color: linear-gradient(90deg, #e51fff, #ff68f2);
+		text-shadow: 0 0 3px #9c00b177;
+		font-size: 30px;
+		padding-left: 8px;
+		padding-bottom: 5px;
+	}
 
-  .time {
-    font-size: 30px;
-    padding-left: 8px;
-    padding-bottom: 5px;
-  }
+	.time {
+		font-size: 30px;
+		padding-left: 8px;
+		padding-bottom: 5px;
+	}
 
-  &:intro {
-    opacity: 0;
-  }
+	&:intro {
+		opacity: 0;
+	}
 
-  &:outro {
-    opacity: 0;
-  }
+	&:outro {
+		opacity: 0;
+	}
 }
 
 @keyframes slideUp {
-  0% {
-    transform: translateY(-20%);
-  }
-  100% {
-    transform: translateY(-200%);
-  }
+	0% {
+		transform: translateY(-20%);
+	}
+	100% {
+		transform: translateY(-200%);
+	}
 }

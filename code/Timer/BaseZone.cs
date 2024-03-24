@@ -1,4 +1,4 @@
-namespace Gauntlet;
+namespace Gauntlet.Timer;
 
 public abstract partial class BaseZone : Component, Component.ITriggerListener
 {

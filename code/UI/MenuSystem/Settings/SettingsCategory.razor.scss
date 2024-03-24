@@ -1,60 +1,60 @@
 SettingsCategory {
-  flex-shrink: 0;
+	flex-shrink: 0;
 
-  .category__title {
-    overflow: hidden;
-    font-weight: bold;
-    cursor: pointer;
+	.category__title {
+		overflow: hidden;
+		font-weight: bold;
+		cursor: pointer;
 
-    label {
-      font-size: 40px;
-    }
-  }
+		label {
+			font-size: 40px;
+		}
+	}
 
-  .category__content {
-    overflow: hidden;
+	.category__content {
+		overflow: hidden;
 
-    &.collapsed {
-      margin-top: 0px;
-      gap: -30px;
-      transition: all 0.3s ease-out;
+		&.collapsed {
+			margin-top: 0px;
+			gap: -30px;
+			transition: all 0.3s ease-out;
 
-      .button {
-        pointer-events: none;
-      }
+			.button {
+				pointer-events: none;
+			}
 
-      sound-out: "ui.drag.stop";
-    }
+			sound-out: "ui.drag.stop";
+		}
 
-    &.expanded {
-      margin-top: 16px;
-      gap: 16px;
-      transition: all 0.3s ease-out;
+		&.expanded {
+			margin-top: 16px;
+			gap: 16px;
+			transition: all 0.3s ease-out;
 
-      sound-out: "ui.drag.stop";
-    }
-  }
+			sound-out: "ui.drag.stop";
+		}
+	}
 
-  .bg {
-    position: absolute;
-    background-image: url("assets/materials/checkerboard_tintable.png");
-    background-size: 80px 80px;
-    width: 150%;
-    height: 500%;
-    left: -25%;
+	.bg {
+		position: absolute;
+		background-image: url("assets/materials/checkerboard_tintable.png");
+		background-size: 80px 80px;
+		width: 150%;
+		height: 500%;
+		left: -25%;
 
-    background-repeat: repeat;
-    mix-blend-mode: multiply;
-    transform-origin: center;
-  }
+		background-repeat: repeat;
+		mix-blend-mode: multiply;
+		transform-origin: center;
+	}
 
-  .category__title.expanded .bg {
-    transform: rotate(15deg);
-    transition: transform 0.25s ease-out;
-  }
+	.category__title.expanded .bg {
+		transform: rotate(15deg);
+		transition: transform 0.25s ease-out;
+	}
 
-  .category__title.collapsed .bg {
-    transform: rotate(0deg);
-    transition: transform 0.25s ease-out;
-  }
+	.category__title.collapsed .bg {
+		transform: rotate(0deg);
+		transition: transform 0.25s ease-out;
+	}
 }

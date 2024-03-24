@@ -1,4 +1,4 @@
-﻿namespace Gauntlet;
+﻿namespace Gauntlet.Utils;
 
 public struct MoveHelper
 {
@@ -104,7 +104,7 @@ public struct MoveHelper
 
 			bool isFloor = IsFloor( pm, up );
 
-			if ( bump == 0 && pm.Hit && !isFloor )
+			if ( bump == 0 && !isFloor )
 			{
 				HitWall = true;
 				HitNormal = pm.Normal;
@@ -127,7 +127,7 @@ public struct MoveHelper
 	/// <summary>
 	/// Return true if this is the trace is a floor. Checks hit and normal angle.
 	/// </summary>
-	public bool IsFloor( SceneTraceResult tr, Vector3 up )
+	private bool IsFloor( SceneTraceResult tr, Vector3 up )
 	{
 		if ( !tr.Hit ) return false;
 		return tr.Normal.Angle( up ) < MaxStandableAngle;
@@ -137,7 +137,7 @@ public struct MoveHelper
 	/// Move our position by this delta using trace. If we hit something we'll stop,
 	/// we won't slide across it nicely like TryMove does.
 	/// </summary>
-	public SceneTraceResult TraceMove( Vector3 delta )
+	private SceneTraceResult TraceMove( Vector3 delta )
 	{
 		var tr = TraceFromTo( Position, Position + delta );
 		Position = tr.EndPosition;
@@ -203,15 +203,13 @@ public struct MoveHelper
 	public bool TryUnstuck()
 	{
 		var tr = TraceFromTo( Position, Position );
-		if ( !tr.StartedSolid ) return true;
-
-		return Unstuck();
+		return !tr.StartedSolid || Unstuck();
 	}
 
 	/// <summary>
 	/// We're inside something solid, lets try to get out of it.
 	/// </summary>
-	bool Unstuck()
+	private bool Unstuck()
 	{
 
 		//
@@ -238,12 +236,14 @@ public struct MoveHelper
 			var tryPos = Position + Vector3.Random * i;
 
 			var tr = TraceFromTo( tryPos, Position );
-			if ( !tr.StartedSolid )
+			if ( tr.StartedSolid )
 			{
-				Position = tryPos + tr.Direction.Normal * (tr.Distance - 0.5f);
-				Velocity = 0;
-				return true;
+				continue;
 			}
+
+			Position = tryPos + tr.Direction.Normal * (tr.Distance - 0.5f);
+			Velocity = 0;
+			return true;
 		}
 
 		return false;

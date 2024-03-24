@@ -1,6 +1,6 @@
 ﻿using System.Buffers;
 
-namespace Gauntlet;
+namespace Gauntlet.Utils;
 
 internal struct VelocityClipPlanes : IDisposable
 {

@@ -1,66 +1,69 @@
 @namespace Gauntlet.UI
+@using Gauntlet.Utils
 @inherits Panel
 
 <root class="pk">
-  <div class="text-container @GetSpeedDiffClass()">
-    @if (ShowSpeedDiff)
-    {
-      <span class="speed">@GetSpeedDiffString()</span>
-    }
+	<div class="text-container @GetSpeedDiffClass()">
+		@if ( ShowSpeedDiff )
+		{
+			<span class="speed">@GetSpeedDiffString()</span>
+		}
 
-    @if (ShowTime)
-    {
-      <span class="time @GetSpeedDiffClass(true)">@((Time * 1000).ToString("F0"))ms</span>
-    }
+		@if ( ShowTime )
+		{
+			<span class="time @GetSpeedDiffClass( true )">@( (Time * 1000).ToString( "F0" ) )ms</span>
+		}
 
-    @if (ShowCrouchKicks && IsCrouchKick)
-    {
-      <span class="crouch-kick">CK</span>
-    }
-  </div>
+		@if ( ShowCrouchKicks && IsCrouchKick )
+		{
+			<span class="crouch-kick">CK</span>
+		}
+	</div>
 </root>
 
 @code {
-  public float SpeedDiff { get; set; }
-  public bool IsPerfect { get; set; }
-  public bool IsCrouchKick { get; set; }
-  public float Time { get; set; }
-  public bool ShowSpeedDiff { get; set; } = true;
-  public bool ShowTime { get; set; } = true;
-  public bool ShowCrouchKicks { get; set; } = true;
+	public float SpeedDiff { get; set; }
+	public bool IsPerfect { get; set; }
+	public bool IsCrouchKick { get; set; }
+	public float Time { get; set; }
+	private bool ShowSpeedDiff { get; set; } = true;
+	private bool ShowTime { get; set; } = true;
+	private bool ShowCrouchKicks { get; set; } = true;
 
-  private string GetSpeedDiffClass(bool perfectOverridesNegative = false)
-  {
-    string classString = "";
+	private string GetSpeedDiffClass( bool perfectOverridesNegative = false )
+	{
+		string classString = "";
 
-    if (IsPerfect && (perfectOverridesNegative || SpeedDiff > 0))
-    {
-      classString += "perfect ";
-    }
+		if ( IsPerfect && (perfectOverridesNegative || SpeedDiff > 0) )
+		{
+			classString += "perfect ";
+		}
 
-    if (SpeedDiff > 0)
-    {
-      classString += "gain";
-    }
-    else if (SpeedDiff < 0)
-    {
-      classString += "loss";
-    }
+		switch ( SpeedDiff )
+		{
+			case > 0:
+				classString += "gain";
+				break;
+			case < 0:
+				classString += "loss";
+				break;
+		}
 
-    return classString;
-  }
+		return classString;
+	}
 
-  private string GetSpeedDiffString()
-  {
-    string speedDiffString = "";
+	private string GetSpeedDiffString()
+	{
+		string speedDiffString = "";
 
-    if (SpeedDiff > 0)
-    {
-      speedDiffString += "+";
-    }
+		if ( SpeedDiff > 0 )
+		{
+			speedDiffString += "+";
+		}
 
-    speedDiffString += Common.HUPSToKPH(SpeedDiff).ToString("F1");
+		speedDiffString += Common.HUPSToKPH( SpeedDiff ).ToString( "F1" );
 
-    return speedDiffString;
-  }
+		return speedDiffString;
+	}
+
 }

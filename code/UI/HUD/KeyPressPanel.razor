@@ -1,54 +1,55 @@
 @namespace Gauntlet.UI
+@using Gauntlet.Utils
 @inherits Panel
 
 <root class="pk">
-  <div class="keys-container">
-    <div class="key-row">
-      <div class="key backdrop @GetKeyHighlighted("Forward")">
-        <p>@GetKeyCode("Forward")</p>
-      </div>
-    </div>
-    <div class="key-row">
-      <div class="key backdrop @GetKeyHighlighted("Left")">
-        <p>@GetKeyCode("Left")</p>
-      </div>
-      <div class="key backdrop @GetKeyHighlighted("Backward")">
-        <p>@GetKeyCode("Backward")</p>
-      </div>
-      <div class="key backdrop @GetKeyHighlighted("Right")">
-        <p>@GetKeyCode("Right")</p>
-      </div>
-    </div>
+	<div class="keys-container">
+		<div class="key-row">
+			<div class="key backdrop @GetKeyHighlighted( "Forward" )">
+				<p>@GetKeyCode( "Forward" )</p>
+			</div>
+		</div>
+		<div class="key-row">
+			<div class="key backdrop @GetKeyHighlighted( "Left" )">
+				<p>@GetKeyCode( "Left" )</p>
+			</div>
+			<div class="key backdrop @GetKeyHighlighted( "Backward" )">
+				<p>@GetKeyCode( "Backward" )</p>
+			</div>
+			<div class="key backdrop @GetKeyHighlighted( "Right" )">
+				<p>@GetKeyCode( "Right" )</p>
+			</div>
+		</div>
 
-    @if (PlayerPreferences.Instance.KeyPressShowJumpAndCrouch)
-    {
-      <div class="key-row">
-        <div class="key backdrop @GetKeyHighlighted("Duck") @GetKeyHighlighted("Duck2")">
-          <p>C</p>
-        </div>
-        <div class="key double backdrop @GetKeyHighlighted("Jump")">
-          <p>J</p>
-        </div>
-      </div>
-    }
-  </div>
+		@if ( PlayerPreferences.Instance.KeyPressShowJumpAndCrouch )
+		{
+			<div class="key-row">
+				<div class="key backdrop @GetKeyHighlighted( "Duck" ) @GetKeyHighlighted( "Duck2" )">
+					<p>C</p>
+				</div>
+				<div class="key double backdrop @GetKeyHighlighted( "Jump" )">
+					<p>J</p>
+				</div>
+			</div>
+		}
+	</div>
 </root>
 
 @code
 {
-  protected override int BuildHash()
-  {
-    HashCode hash = new();
-    hash.Add(Input.Down("Forward"));
-    hash.Add(Input.Down("Left"));
-    hash.Add(Input.Down("Backward"));
-    hash.Add(Input.Down("Right"));
-    hash.Add(Common.DuckDown());
-    hash.Add(Input.Down("Jump"));
-    return hash.ToHashCode();
-  }
+	protected override int BuildHash()
+	{
+		HashCode hash = new();
+		hash.Add( Input.Down( "Forward" ) );
+		hash.Add( Input.Down( "Left" ) );
+		hash.Add( Input.Down( "Backward" ) );
+		hash.Add( Input.Down( "Right" ) );
+		hash.Add( Common.DuckDown() );
+		hash.Add( Input.Down( "Jump" ) );
+		return hash.ToHashCode();
+	}
 
-  private string GetKeyCode(string key) => Input.GetButtonOrigin(key, true);
+	private static string GetKeyCode( string key ) => Input.GetButtonOrigin( key, true );
 
-  private string GetKeyHighlighted(string key) => Input.Down(key) ? "highlighted" : "";
+	private static string GetKeyHighlighted( string key ) => Input.Down( key ) ? "highlighted" : "";
 }

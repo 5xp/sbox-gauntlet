@@ -2,49 +2,50 @@ $radius: 24px;
 $width: 48px;
 
 SettingsToggle {
-  flex-shrink: 0;
+	flex-shrink: 0;
 
-  SettingsToggle {
-    margin-left: 32px;
-  }
+	SettingsToggle {
+		margin-left: 32px;
+	}
 
-  .toggle__content {
-    overflow: hidden;
+	.toggle__content {
+		overflow: hidden;
 
-    &.collapsed {
-      margin-top: 0px;
-      gap: -30px;
-      transition: all 0.3s ease-out;
-    }
+		&.collapsed {
+			margin-top: 0px;
+			gap: -30px;
+			transition: all 0.3s ease-out;
+		}
 
-    &.expanded {
-      margin-top: 16px;
-      gap: 16px;
-      transition: all 0.3s ease-out;
-    }
-  }
+		&.expanded {
+			margin-top: 16px;
+			gap: 16px;
+			transition: all 0.3s ease-out;
+		}
+	}
 
-  .switchcontrol {
-    &.inactive .switch-frame,
-    &.active .switch-frame {
-      background-color: rgba(14, 14, 14, 0.363);
-      height: $radius;
-      width: $width;
-      > .switch-inner {
-        background-color: white;
-        transition: all 0.2s ease-out;
-        width: $radius;
-        height: $radius;
-        border-radius: $radius;
-      }
-    }
+	.switchcontrol {
+		&.inactive .switch-frame,
+		&.active .switch-frame {
+			background-color: rgba(14, 14, 14, 0.363);
+			height: $radius;
+			width: $width;
 
-    &.active > .switch-frame {
-      background-color: rgba(194, 194, 194, 0.226);
-    }
+			> .switch-inner {
+				background-color: white;
+				transition: all 0.2s ease-out;
+				width: $radius;
+				height: $radius;
+				border-radius: $radius;
+			}
+		}
 
-    &:active {
-      sound-out: $button-click-sound;
-    }
-  }
+		&.active > .switch-frame {
+			background-color: rgba(194, 194, 194, 0.226);
+		}
+
+		&:active {
+			sound-out: $button-click-sound;
+		}
+	}
 }

@@ -1,4 +1,4 @@
-namespace Gauntlet;
+namespace Gauntlet.Utils;
 
 /// <summary>
 /// A simple component that destroys its GameObject.

@@ -2,26 +2,27 @@
 @inherits Panel
 
 <root class="settings-control settings-slider backdrop">
-  <div class="settings slider__title text">@Title</div>
-  <SliderControl Value:bind=@Value Min=@Min Max=@Max Step=@Step ShowValueTooltip=@false
-    OnValueChanged=@OnValueChanged />
-  <div class="settings slider__value text bold number">@Value.ToString("F2")</div>
+	<div class="settings slider__title text">@Title</div>
+	<SliderControl Value:bind="@Value" Min="@Min" Max="@Max" Step="@Step" ShowValueTooltip="@false"
+	               OnValueChanged="@OnValueChanged"/>
+	<div class="settings slider__value text bold number">@Value.ToString( "F2" )</div>
 </root>
 
 @code {
-  public string Title { get; set; }
-  public float Value { get; set; }
-  public float Min { get; set; }
-  public float Max { get; set; }
-  public float Step { get; set; }
-  private TimeSince TimeSinceLastSound { get; set; }
+	public string Title { get; set; }
+	public float Value { get; set; }
+	public float Min { get; set; }
+	public float Max { get; set; }
+	public float Step { get; set; }
+	private TimeSince TimeSinceLastSound { get; set; }
 
-  public void OnValueChanged(float value)
-  {
-    if (TimeSinceLastSound < 0.04f || value == Value)
-      return;
+	private void OnValueChanged( float value )
+	{
+		if ( TimeSinceLastSound < 0.04f || value.AlmostEqual( Value ) )
+			return;
 
-    Sound.Play("ui.drag.start");
-    TimeSinceLastSound = 0;
-  }
+		Sound.Play( "ui.drag.start" );
+		TimeSinceLastSound = 0;
+	}
+
 }

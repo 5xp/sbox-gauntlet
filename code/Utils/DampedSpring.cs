@@ -1,15 +1,15 @@
-﻿namespace Gauntlet;
+﻿namespace Gauntlet.Utils;
 
 /// <summary>
 /// A damped spring system. Used for viewpunch/viewkick/recoil.
 /// </summary>
 public class DampedSpring
 {
-	public Vector3 SpringConstant { get; set; }
-	public Vector3 Damping { get; set; }
+	private Vector3 SpringConstant { get; set; }
+	private Vector3 Damping { get; set; }
 	public Vector3 TargetPosition { get; set; }
-	public Vector3 Position { get; set; }
-	public Vector3 Velocity { get; set; }
+	public Vector3 Position { get; private set; }
+	public Vector3 Velocity { get; private set; }
 
 	public DampedSpring( Vector3 springConstant, Vector3 damping )
 	{

@@ -1,8 +1,8 @@
-namespace Gauntlet;
+namespace Gauntlet.Utils;
 
 public partial class ComponentNotFoundException : Exception
 {
-	string CustomMessage { get; set; } = null;
+	private string CustomMessage { get; set; } = null;
 
 	public override string Message => string.IsNullOrEmpty( CustomMessage ) ? "Couldn't find a component." : CustomMessage;
 

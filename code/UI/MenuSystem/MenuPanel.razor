@@ -3,175 +3,180 @@
 @inherits PanelComponent
 
 <root class="pk">
-  <div class="background" @ref=BackgroundPanel />
+	<div class="background" @ref=" BackgroundPanel"></div>
 
-  @if (IsInGame() || CurrentView == View.Settings)
-  {
-    <button class="button standard backdrop icon backward back-button" onclick=@BackButton>navigate_before</button>
-  }
+	@if ( IsInGame() || CurrentView == View.Settings )
+	{
+		<button class="button standard backdrop icon backward back-button" onclick="@BackButton">navigate_before</button>
+	}
 
-  @if (CurrentView == View.MainMenu)
-  {
-    <div class="layout padding-insane column main-container">
-      <label class="text title">Gauntlet</label>
-      <div class="layout row gap">
-        <button class="button standard backdrop icon forward" onclick=@Play>@((IsInGame() ? "replay" :
-        "play_arrow"))</button>
-        <button class="button standard backdrop icon forward" onclick=@(() => CurrentView =
-        View.Settings)>settings</button>
-        <button class="button standard backdrop icon backward" onclick=@Quit>power_settings_new</button>
-      </div>
-    </div>
-  }
-  else if (CurrentView == View.Settings)
-  {
-    <div class="layout padding-insane column settings-container">
-      <label class="text title">Settings</label>
-      <div class="layout column gap-extra controls-container">
+	@switch ( CurrentView )
+	{
+		default:
+		case View.MainMenu:
+			{
+				<div class="layout padding-insane column main-container">
+					<label class="text title">Gauntlet</label>
+					<div class="layout row gap">
+						<button class="button standard backdrop icon forward" onclick="@Play">
+							@( (IsInGame() ? "replay" : "play_arrow") )
+						</button>
+						<button class="button standard backdrop icon forward" onclick=@( () => CurrentView = View.Settings )>
+							settings
+						</button>
+						<button class="button standard backdrop icon backward" onclick="@Quit">power_settings_new</button>
+					</div>
+				</div>
+				break;
+			}
+		case View.Settings:
+			{
+				<div class="layout padding-insane column settings-container">
+					<label class="text title">Settings</label>
+					<div class="layout column gap-extra controls-container">
 
-        <SettingsCategory Title="Gameplay">
-          <ChildContent>
-            <SettingsButton Title="Binds" Icon="launch" @onclick=@Game.Overlay.ShowBinds />
-            <SettingsSlider Title="Sprint Bob" Min=@(0f) Max=@(2f) Step=@(0.01f)
-              Value:bind=@PlayerPreferences.Instance.SprintBobScale />
-            <SettingsToggle Title="Enable Auto-Sprint" Value:bind=@PlayerPreferences.Instance.AutoSprintEnabled />
-          </ChildContent>
-        </SettingsCategory>
+						<SettingsCategory Title="Gameplay">
+							<ChildContent>
+								<SettingsButton Title="Binds" Icon="launch" @onclick="@Game.Overlay.ShowBinds"/>
+								<SettingsSlider Title="Sprint Bob" Min=@( 0f ) Max=@( 2f ) Step=@( 0.01f )
+								                Value:bind="@PlayerPreferences.Instance.SprintBobScale"/>
+								<SettingsToggle Title="Enable Auto-Sprint" Value:bind="@PlayerPreferences.Instance.AutoSprintEnabled"/>
+							</ChildContent>
+						</SettingsCategory>
 
-        <SettingsCategory Title="HUD">
-          <ChildContent>
-            <SettingsToggle Title="Enable HUD" Value:bind=@PlayerPreferences.Instance.HudEnabled />
-            <SettingsSlider Title="HUD Scale" Min=@(0.5f) Max=@(1.2f) Step=@(0.01f)
-              Value:bind=@PlayerPreferences.Instance.HudScale />
-            <SettingsToggle Title="Enable HUD Sway" Value:bind=@PlayerPreferences.Instance.HudSwayEnabled />
-            <SettingsToggle Title="Enable Keypress HUD" Value:bind=@PlayerPreferences.Instance.KeyPressHudEnabled>
-              <ChildContent>
-                <SettingsToggle Title="Show Jump and Crouch"
-                  Value:bind=@PlayerPreferences.Instance.KeyPressShowJumpAndCrouch />
-              </ChildContent>
-            </SettingsToggle>
-            <SettingsToggle Title="Enable Wallkick HUD" Value:bind=@PlayerPreferences.Instance.WallKickHudEnabled />
-          </ChildContent>
-        </SettingsCategory>
+						<SettingsCategory Title="HUD">
+							<ChildContent>
+								<SettingsToggle Title="Enable HUD" Value:bind="@PlayerPreferences.Instance.HudEnabled"/>
+								<SettingsSlider Title="HUD Scale" Min=@( 0.5f ) Max=@( 1.2f ) Step=@( 0.01f )
+								                Value:bind="@PlayerPreferences.Instance.HudScale"/>
+								<SettingsToggle Title="Enable HUD Sway" Value:bind="@PlayerPreferences.Instance.HudSwayEnabled"/>
+								<SettingsToggle Title="Enable Keypress HUD" Value:bind="@PlayerPreferences.Instance.KeyPressHudEnabled">
+									<ChildContent>
+										<SettingsToggle Title="Show Jump and Crouch"
+										                Value:bind="@PlayerPreferences.Instance.KeyPressShowJumpAndCrouch"/>
+									</ChildContent>
+								</SettingsToggle>
+								<SettingsToggle Title="Enable Wallkick HUD" Value:bind="@PlayerPreferences.Instance.WallKickHudEnabled"/>
+							</ChildContent>
+						</SettingsCategory>
 
-      </div>
-    </div>
-  }
+					</div>
+				</div>
+				break;
+			}
+	}
 </root>
 
 @code
 {
-  [Property] public SceneFile PlayScene { get; set; }
-  private Panel BackgroundPanel { get; set; }
-  private string[] BackgroundTextures = new string[]
-  {
-"assets/materials/grid_tintable.png",
-"assets/materials/checkerboard_tintable.png",
-  };
+	[Property] public SceneFile PlayScene { get; set; }
 
-  private View CurrentView { get; set; } = View.MainMenu;
+	private Panel BackgroundPanel { get; set; }
 
-  private enum View
-  {
-    MainMenu,
-    Settings
-  };
+	private readonly string[] _backgroundTextures = { "assets/materials/grid_tintable.png", "assets/materials/checkerboard_tintable.png", };
 
-  protected override void OnTreeFirstBuilt()
-  {
-    if (BackgroundPanel is null)
-    {
-      return;
-    }
+	private View CurrentView { get; set; } = View.MainMenu;
 
-    bool isInGame = IsInGame();
+	private enum View
+	{
+		MainMenu,
+		Settings
+	};
 
-    string backgroundTexture = Game.Random.FromArray<string>(BackgroundTextures);
+	protected override void OnTreeFirstBuilt()
+	{
+		if ( BackgroundPanel is null )
+		{
+			return;
+		}
 
-    BackgroundPanel.Style.Set("background-image", $"url({backgroundTexture})");
+		bool isInGame = IsInGame();
 
-    if (isInGame)
-    {
-      BackgroundPanel.Style.Opacity = 0.1f;
-      BackgroundPanel.Style.FilterBrightness = Length.Fraction(0.5f);
-      Panel.Style.BackdropFilterBrightness = Length.Fraction(0.3f);
-      Panel.Style.BackdropFilterContrast = Length.Fraction(1.5f);
-      Panel.Style.BackdropFilterBlur = Length.Pixels(10);
-    }
-    else
-    {
-      BackgroundPanel.Style.FilterSepia = Length.Fraction(1);
-      BackgroundPanel.Style.FilterSaturate = Length.Fraction(2.5f);
-    }
-  }
+		string backgroundTexture = Game.Random.FromArray<string>( _backgroundTextures );
 
-  protected override void OnUpdate()
-  {
-    if (Input.EscapePressed)
-    {
-      Back();
-      StateHasChanged();
-    }
+		BackgroundPanel.Style.Set( "background-image", $"url({backgroundTexture})" );
 
-    if (BackgroundPanel is not null)
-    {
-      if (!IsInGame())
-      {
-        BackgroundPanel.Style.FilterHueRotate = Length.Fraction(-10f * Time.Now);
-      }
+		if ( isInGame )
+		{
+			BackgroundPanel.Style.Opacity = 0.1f;
+			BackgroundPanel.Style.FilterBrightness = Length.Fraction( 0.5f );
+			Panel.Style.BackdropFilterBrightness = Length.Fraction( 0.3f );
+			Panel.Style.BackdropFilterContrast = Length.Fraction( 1.5f );
+			Panel.Style.BackdropFilterBlur = Length.Pixels( 10 );
+		}
+		else
+		{
+			BackgroundPanel.Style.FilterSepia = Length.Fraction( 1 );
+			BackgroundPanel.Style.FilterSaturate = Length.Fraction( 2.5f );
+		}
+	}
 
-      float scale = IsInGame() ? 0.25f : 0.5f;
-      BackgroundPanel.Style.BackgroundPositionX = Length.Percent(Time.Now * scale);
-      BackgroundPanel.Style.BackgroundPositionY = Length.Percent(Time.Now * scale);
-    }
-  }
+	protected override void OnUpdate()
+	{
+		if ( Input.EscapePressed )
+		{
+			Back();
+			StateHasChanged();
+		}
 
-  void Play()
-  {
-    if (IsInGame())
-    {
-      GameManager gameManager = Scene.Components.Get<GameManager>(FindMode.InChildren);
+		if ( BackgroundPanel is null ) return;
 
-      if (gameManager is not null)
-      {
-        gameManager.ShouldRespawn = true;
-      }
+		if ( !IsInGame() )
+		{
+			BackgroundPanel.Style.FilterHueRotate = Length.Fraction( -10f * Time.Now );
+		}
 
-      BackButton();
-    }
-    else
-    {
-      Game.ActiveScene.Load(PlayScene);
-    }
-  }
+		float scale = IsInGame() ? 0.25f : 0.5f;
+		BackgroundPanel.Style.BackgroundPositionX = Length.Percent( Time.Now * scale );
+		BackgroundPanel.Style.BackgroundPositionY = Length.Percent( Time.Now * scale );
+	}
 
-  void Quit()
-  {
-    Game.Disconnect();
-  }
+	void Play()
+	{
+		if ( IsInGame() )
+		{
+			GameManager gameManager = Scene.Components.Get<GameManager>( FindMode.InChildren );
 
-  private bool IsInGame()
-  {
-    return Scene.Title != "mainmenu";
-  }
+			if ( gameManager is not null )
+			{
+				gameManager.ShouldRespawn = true;
+			}
 
-  private void BackButton()
-  {
-    if (CurrentView == View.MainMenu)
-    {
-      Enabled = false;
-    }
+			BackButton();
+		}
+		else
+		{
+			Game.ActiveScene.Load( PlayScene );
+		}
+	}
 
-    Back();
-  }
+	static void Quit()
+	{
+		Game.Disconnect();
+	}
 
-  private void Back()
-  {
-    if (CurrentView == View.Settings)
-    {
-      PlayerPreferences.Save();
-    }
+	private bool IsInGame()
+	{
+		return Scene.Title != "mainmenu";
+	}
 
-    CurrentView = View.MainMenu;
-  }
+	private void BackButton()
+	{
+		if ( CurrentView == View.MainMenu )
+		{
+			Enabled = false;
+		}
+
+		Back();
+	}
+
+	private void Back()
+	{
+		if ( CurrentView == View.Settings )
+		{
+			PlayerPreferences.Save();
+		}
+
+		CurrentView = View.MainMenu;
+	}
 }

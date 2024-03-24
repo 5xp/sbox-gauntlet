@@ -1,105 +1,106 @@
 @import "UI/Styles/Theme.scss";
 
 LeaderboardPanel {
-  width: 100%;
-  height: 100%;
-  flex-direction: column;
+	width: 100%;
+	height: 100%;
+	flex-direction: column;
 
-  h1 {
-    font-size: 200px;
-    font-family: $main-font;
-    color: white;
-    font-weight: 500;
-    text-align: left;
-  }
+	h1 {
+		font-size: 200px;
+		font-family: $main-font;
+		color: white;
+		font-weight: 500;
+		text-align: left;
+	}
 
-  h2 {
-    font-size: 120px;
-    font-family: $main-font;
-    color: white;
-    font-weight: 500;
-    text-align: left;
-  }
+	h2 {
+		font-size: 120px;
+		font-family: $main-font;
+		color: white;
+		font-weight: 500;
+		text-align: left;
+	}
 
-  p {
-    font-size: 80px;
-    font-family: $main-font;
-    color: white;
-    font-weight: normal;
-  }
+	p {
+		font-size: 80px;
+		font-family: $main-font;
+		color: white;
+		font-weight: normal;
+	}
 
-  img {
-    height: 100px;
-    width: 100px;
-  }
+	img {
+		height: 100px;
+		width: 100px;
+	}
 
-  .leaderboard-header {
-    margin: 40px 0 40px 0;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: baseline;
-    width: 100%;
+	.leaderboard-header {
+		margin: 40px 0 40px 0;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: baseline;
+		width: 100%;
 
-    > .leaderboard-title {
-      flex: 1;
-    }
-    > .loop-label {
-      text-align: right;
-    }
-  }
+		> .leaderboard-title {
+			flex: 1;
+		}
 
-  .entry-container {
-    flex-direction: column;
-    border-radius: 75px;
-    border: 5px solid rgba(35, 35, 35, 0.352);
-    overflow: hidden;
-  }
+		> .loop-label {
+			text-align: right;
+		}
+	}
 
-  .entry {
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-    justify-content: space-between;
-    height: 150px;
+	.entry-container {
+		flex-direction: column;
+		border-radius: 75px;
+		border: 5px solid rgba(35, 35, 35, 0.352);
+		overflow: hidden;
+	}
 
-    &.even {
-      background-color: rgba(35, 35, 35, 0.352);
-    }
-  }
+	.entry {
+		flex-direction: row;
+		align-items: center;
+		width: 100%;
+		justify-content: space-between;
+		height: 150px;
 
-  .entry.me {
-    // text-shadow: 0 0 20px rgba($main-color-primary, 0.7);
-    background-color: rgba($main-color-primary, 0.05);
+		&.even {
+			background-color: rgba(35, 35, 35, 0.352);
+		}
+	}
 
-    p {
-      color: $main-color-primary;
-    }
-  }
+	.entry.me {
+		// text-shadow: 0 0 20px rgba($main-color-primary, 0.7);
+		background-color: rgba($main-color-primary, 0.05);
 
-  .entry.top {
-    // text-shadow: 0 0 20px rgba($color-top1, 1);
-    background-color: rgba($color-top1, 0.02);
+		p {
+			color: $main-color-primary;
+		}
+	}
 
-    p {
-      color: $color-top1;
-    }
-  }
+	.entry.top {
+		// text-shadow: 0 0 20px rgba($color-top1, 1);
+		background-color: rgba($color-top1, 0.02);
 
-  .entry-rank {
-    padding-left: 50px;
-    font-family: $main-font-mono;
-    width: 320px;
-  }
+		p {
+			color: $color-top1;
+		}
+	}
 
-  .entry-name {
-    flex: 1;
-    padding-left: 80px;
-    text-align: left;
-    text-overflow: ellipsis;
-  }
+	.entry-rank {
+		padding-left: 50px;
+		font-family: $main-font-mono;
+		width: 320px;
+	}
 
-  .entry-time {
-    text-align: right;
-    padding-right: 80px;
-  }
+	.entry-name {
+		flex: 1;
+		padding-left: 80px;
+		text-align: left;
+		text-overflow: ellipsis;
+	}
+
+	.entry-time {
+		text-align: right;
+		padding-right: 80px;
+	}
 }

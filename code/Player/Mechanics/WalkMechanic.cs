@@ -1,9 +1,9 @@
-﻿namespace Gauntlet;
+﻿namespace Gauntlet.Player.Mechanics;
 
 /// <summary>
 /// A walking mechanic.
 /// </summary>
-public partial class WalkMechanic : BasePlayerControllerMechanic
+public class WalkMechanic : BasePlayerControllerMechanic
 {
 	public override int Priority => 5;
 
@@ -39,7 +39,7 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 		Vector3 dest = (Position + Velocity * Time.Delta).WithZ( Position.z );
 		SceneTraceResult tr = Controller.TraceBBox( Position, dest );
 
-		if ( tr.Fraction == 1f )
+		if ( tr.Fraction.AlmostEqual( 1f ) )
 		{
 			Position = tr.EndPosition;
 			StayOnGround();
@@ -62,10 +62,25 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 
 		tr = Controller.TraceBBox( start, end );
 
-		if ( tr.Fraction <= 0f ) return;
-		if ( tr.Fraction >= 1 ) return;
-		if ( tr.StartedSolid ) return;
-		if ( Vector3.GetAngle( Vector3.Up, tr.Normal ) > PlayerSettings.GroundAngle ) return;
+		if ( tr.Fraction.AlmostEqual( 0f ) )
+		{
+			return;
+		}
+
+		if ( tr.Fraction.AlmostEqual( 1f ) )
+		{
+			return;
+		}
+
+		if ( tr.StartedSolid )
+		{
+			return;
+		}
+
+		if ( Vector3.GetAngle( Vector3.Up, tr.Normal ) > PlayerSettings.GroundAngle )
+		{
+			return;
+		}
 
 		Position = tr.EndPosition;
 	}
@@ -79,7 +94,9 @@ public partial class WalkMechanic : BasePlayerControllerMechanic
 	private void ApplySlideStepVelocityReduction( float stepAmount )
 	{
 		if ( !HasTag( "slide" ) || stepAmount < PlayerSettings.StepHeightMin )
+		{
 			return;
+		}
 
 		Velocity = Velocity.Approach( 0f, stepAmount * PlayerSettings.SlideStepVelocityReduction );
 	}

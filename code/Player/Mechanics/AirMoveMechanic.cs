@@ -1,6 +1,6 @@
-﻿namespace Gauntlet;
+﻿namespace Gauntlet.Player.Mechanics;
 
-public partial class AirMoveMechanic : BasePlayerControllerMechanic
+public class AirMoveMechanic : BasePlayerControllerMechanic
 {
 	public override bool ShouldBecomeActive() => !Controller.IsGrounded && !Controller.GetMechanic<WallrunMechanic>().WallNormal.HasValue;
 	public override float? GetSpeed() => PlayerSettings.AirSpeed;
@@ -26,7 +26,7 @@ public partial class AirMoveMechanic : BasePlayerControllerMechanic
 		Velocity += halfGravity;
 	}
 
-	public void Accelerate( Vector3 wishDir, float wishSpeed, float acceleration, float extraAcceleration = 0f )
+	private void Accelerate( Vector3 wishDir, float wishSpeed, float acceleration, float extraAcceleration = 0f )
 	{
 		float currentSpeed = HorzVelocity.Dot( wishDir );
 		float addSpeed = MathF.Max( extraAcceleration * Time.Delta, wishSpeed - currentSpeed );

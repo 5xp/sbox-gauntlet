@@ -1,8 +1,9 @@
 using System.Threading.Tasks;
+using Gauntlet.Utils;
 using Sandbox.Services;
 using Sandbox.Utility;
 
-namespace Gauntlet;
+namespace Gauntlet.Timer;
 
 public sealed partial class Timer
 {
@@ -144,7 +145,7 @@ public sealed partial class Timer
     return true;
   }
 
-  private bool ShouldSubmitTime()
+  private static bool ShouldSubmitTime()
   {
     if ( DebugConVars.DebugDisableTimeSubmission )
     {

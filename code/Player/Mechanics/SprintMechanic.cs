@@ -1,9 +1,9 @@
-namespace Gauntlet;
+namespace Gauntlet.Player.Mechanics;
 
 /// <summary>
 /// A sprinting mechanic.
 /// </summary>
-public partial class SprintMechanic : BasePlayerControllerMechanic
+public class SprintMechanic : BasePlayerControllerMechanic
 {
 	private bool SprintToggled { get; set; } = false;
 	private bool SprintCanToggleOff { get; set; } = false;

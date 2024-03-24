@@ -1,27 +1,29 @@
 @namespace Gauntlet.UI
+@using Gauntlet.Timer
+@using Gauntlet.Utils
 @inherits Panel
 
 <root class="pk">
-  <article class="data-row">
-    <div class="data-cell">
-      <div class="data-label">Top Speed</div>
-      <div class="data-value">
-        <div class="speed number">@Common.HUPSToKPH(Timer.TopSpeed).ToString("F2")</div>
-        kph
-      </div>
-      <div class="data-label-small speed">
-        <span>Best:</span>
-        <span class="number">@Common.HUPSToKPH(Timer.BestTopSpeed).ToString("F2")</span>
-        kph
-      </div>
-    </div>
-    <div class="vl"></div>
-    <div class="icon speed">directions_run</div>
-  </article>
+	<article class="data-row">
+		<div class="data-cell">
+			<div class="data-label">Top Speed</div>
+			<div class="data-value">
+				<div class="speed number">@Common.HUPSToKPH( Timer.TopSpeed ).ToString( "F2" )</div>
+				kph
+			</div>
+			<div class="data-label-small speed">
+				<span>Best:</span>
+				<span class="number">@Common.HUPSToKPH( Timer.BestTopSpeed ).ToString( "F2" )</span>
+				kph
+			</div>
+		</div>
+		<div class="vl"></div>
+		<div class="icon speed">directions_run</div>
+	</article>
 </root>
 
 @code {
-  public Timer Timer { get; set; }
+	public Timer Timer { get; set; }
 
-  protected override int BuildHash() => Timer.TopSpeed.GetHashCode();
+	protected override int BuildHash() => Timer.TopSpeed.GetHashCode();
 }

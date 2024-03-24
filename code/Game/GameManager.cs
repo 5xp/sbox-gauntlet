@@ -1,3 +1,5 @@
+using Gauntlet.Player;
+using Gauntlet.Utils;
 using Sandbox.Network;
 
 namespace Gauntlet;
@@ -9,14 +11,33 @@ public sealed class GameManager : Component, Component.INetworkListener
 	/// <summary>
 	/// The spawn point to use for the player. If this is null, we try to get a random spawn point from the scene.
 	/// </summary>
-	[Property] public GameObject SpawnPoint { get; set; }
+	[Property]
+	public GameObject SpawnPoint { get; set; }
 
 	/// <summary>
 	/// Is this game multiplayer?
 	/// </summary>
-	[Property] public bool IsMultiplayer { get; set; } = false;
+	[Property]
+	private bool IsMultiplayer { get; } = false;
 
 	public bool ShouldRespawn { get; set; }
+
+	public void OnActive( Connection channel )
+	{
+		if ( !IsMultiplayer )
+		{
+			return;
+		}
+
+		Log.Info( $"Player '{channel.DisplayName}' is becoming active" );
+
+		GameObject player = SpawnPlayer();
+
+		var cl = player.Components.Create<Client>();
+		cl.Setup( channel );
+
+		player.NetworkSpawn( channel );
+	}
 
 	protected override void OnStart()
 	{
@@ -52,31 +73,17 @@ public sealed class GameManager : Component, Component.INetworkListener
 
 	protected override void OnFixedUpdate()
 	{
-		if ( ShouldRespawn )
+		if ( !ShouldRespawn )
 		{
-			RespawnPlayer();
-			ShouldRespawn = false;
+			return;
 		}
-	}
 
-	public void OnActive( Connection channel )
-	{
-		if ( !IsMultiplayer ) return;
-
-		Log.Info( $"Player '{channel.DisplayName}' is becoming active" );
-
-		var player = SpawnPlayer();
-
-		var cl = player.Components.Create<Client>();
-		cl.Setup( channel );
-
-		player.NetworkSpawn( channel );
+		RespawnPlayer();
+		ShouldRespawn = false;
 	}
 
 	private GameObject SpawnPlayer()
 	{
-		Transform spawnTransform;
-
 		GameObject spawnPoint = GetSpawnPoint();
 
 		if ( spawnPoint is null )
@@ -85,15 +92,15 @@ public sealed class GameManager : Component, Component.INetworkListener
 			return null;
 		}
 
-		spawnTransform = spawnPoint.Transform.World;
-		var player = PlayerPrefab.Clone();
+		Transform spawnTransform = spawnPoint.Transform.World;
+		GameObject player = PlayerPrefab.Clone();
 		player.BreakFromPrefab();
 		SetPlayerTransform( player, spawnTransform );
 		player.Name = Connection.Local.DisplayName;
 		return player;
 	}
 
-	public void RespawnPlayer( GameObject player )
+	private void RespawnPlayer( GameObject player )
 	{
 		GameObject spawnPoint = GetSpawnPoint();
 
@@ -106,7 +113,7 @@ public sealed class GameManager : Component, Component.INetworkListener
 		SetPlayerTransform( player, spawnPoint.Transform.World );
 	}
 
-	public void RespawnPlayer()
+	private void RespawnPlayer()
 	{
 		GameObject player = Scene.Directory.FindByName( Connection.Local.DisplayName ).First();
 
@@ -119,12 +126,12 @@ public sealed class GameManager : Component, Component.INetworkListener
 		RespawnPlayer( player );
 	}
 
-	private void SetPlayerTransform( GameObject player, Transform transform )
+	private static void SetPlayerTransform( GameObject player, Transform transform )
 	{
 		Angles angles = transform.Rotation.Angles();
 		player.Transform.World = transform;
 
-		PlayerController controller = player.Components.GetInChildrenOrSelf<PlayerController>();
+		var controller = player.Components.GetInChildrenOrSelf<PlayerController>();
 		controller.EyeAngles = angles;
 		controller.Velocity = 0;
 	}
@@ -136,13 +143,8 @@ public sealed class GameManager : Component, Component.INetworkListener
 			return SpawnPoint;
 		}
 
-		var spawnPoints = Scene.GetAllComponents<SpawnPoint>().ToArray();
+		SpawnPoint[] spawnPoints = Scene.GetAllComponents<SpawnPoint>().ToArray();
 
-		if ( spawnPoints.Length == 0 )
-		{
-			return null;
-		}
-
-		return Game.Random.FromArray( spawnPoints ).GameObject;
+		return spawnPoints.Length == 0 ? null : Game.Random.FromArray( spawnPoints ).GameObject;
 	}
 }

@@ -661,7 +661,7 @@
         {
           "__type": "MapInstance",
           "__guid": "ccad0aef-fe3c-4973-b54a-78731b108986",
-          "MapName": "maps/level1.vpk",
+          "MapName": "maps/level1.vmap",
           "UseMapFromLaunch": false
         }
       ],
@@ -765,7 +765,7 @@
   },
   "Title": "level1",
   "Description": "",
-  "LastSaved": "2024-03-21T14:01:09.6815154-05:00",
+  "LastSaved": "2024-03-23T18:50:11.3918403-05:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": []

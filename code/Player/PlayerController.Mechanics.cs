@@ -1,17 +1,16 @@
 using System.Collections.Immutable;
+using Gauntlet.Player.Mechanics;
 
-namespace Gauntlet;
+namespace Gauntlet.Player;
 
 public partial class PlayerController
 {
 	/// <summary>
 	/// Maintains a list of mechanics that are associated with this player controller.
 	/// </summary>
-	public IEnumerable<BasePlayerControllerMechanic> Mechanics => Components.GetAll<BasePlayerControllerMechanic>( FindMode.EnabledInSelfAndDescendants ).OrderBy( x => x.Priority );
+	private IEnumerable<BasePlayerControllerMechanic> Mechanics => Components.GetAll<BasePlayerControllerMechanic>( FindMode.EnabledInSelfAndDescendants ).OrderBy( x => x.Priority );
 
-	public float? CurrentSpeedOverride;
-	public float? CurrentHullHeightOverride;
-	public float? CurrentFrictionOverride;
+	private float? CurrentSpeedOverride;
 	public float? CurrentAccelerationOverride;
 
 	BasePlayerControllerMechanic[] ActiveMechanics;
@@ -19,22 +18,19 @@ public partial class PlayerController
 	/// <summary>
 	/// Called on <see cref="OnUpdate"/>.
 	/// </summary>
-	protected void OnUpdateMechanics()
+	private void OnUpdateMechanics()
 	{
 		var lastUpdate = ActiveMechanics;
 		var sortedMechanics = Mechanics.Where( x => x.ShouldBecomeActive() );
 		var activeMechanics = new List<BasePlayerControllerMechanic>();
 
 		// Copy the previous update's tags so we can compare / send tag changed events later.
-		var previousUpdateTags = tags;
+		var previousUpdateTags = _tags;
 
 		// Clear the current tags
 		var currentTags = new List<string>();
 
 		float? speedOverride = null;
-		float? eyeHeightOverride = null;
-		float? hullHeightOverride = null;
-		float? frictionOverride = null;
 		float? accelerationOverride = null;
 
 		float previousZVel = Velocity.z;
@@ -61,8 +57,6 @@ public partial class PlayerController
 			mechanic.BuildWishInput( ref WishMove );
 
 			if ( speed is not null ) speedOverride = speed;
-			if ( eyeHeight is not null ) eyeHeightOverride = eyeHeight;
-			if ( hullHeight is not null ) hullHeightOverride = hullHeight;
 			if ( acceleration is not null ) accelerationOverride = acceleration;
 		}
 
@@ -78,11 +72,9 @@ public partial class PlayerController
 		}
 
 		CurrentSpeedOverride = speedOverride;
-		CurrentHullHeightOverride = hullHeightOverride;
-		CurrentFrictionOverride = frictionOverride;
 		CurrentAccelerationOverride = accelerationOverride;
 
-		tags = currentTags.ToImmutableArray();
+		_tags = currentTags.ToImmutableArray();
 
 		if ( RecordWallJumpThisTick )
 		{

@@ -1,3 +1,5 @@
+using Gauntlet.Player;
+
 namespace Gauntlet;
 
 public sealed class TeleportTrigger : Component, Component.ITriggerListener

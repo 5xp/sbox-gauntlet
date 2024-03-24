@@ -1,57 +1,60 @@
 @namespace Gauntlet.UI
+@using Gauntlet.Player
+@using Gauntlet.Player.Mechanics
+@using Gauntlet.Utils
 @inherits Panel
 
 <root class="pk">
-  <div class="speedometer-container backdrop">
-    <p class="mono">@Common.HUPSToKPH(Controller.HorzVelocity.Length).ToString("F1")</p>
-    <div class="spacer" />
-    <p>kph</p>
-  </div>
-  <div class="walljump-container" @ref=WallJumpContainerPanel>
-  </div>
+	<div class="speedometer-container backdrop">
+		<p class="mono">@Common.HUPSToKPH( Controller.HorzVelocity.Length ).ToString( "F1" )</p>
+		<div class="spacer"></div>
+		<p>kph</p>
+	</div>
+	<div class="walljump-container" @ref=" WallJumpContainerPanel"></div>
 </root>
 
 @code
 {
-  public PlayerController Controller { get; set; }
-  public Panel WallJumpContainerPanel { get; set; }
-  protected override int BuildHash() =>
-  System.HashCode.Combine(Common.HUPSToKPH(Controller.HorzVelocity.Length).ToString("F1"));
+	public PlayerController Controller { get; set; }
+	private Panel WallJumpContainerPanel { get; set; }
 
-  protected override void OnAfterTreeRender(bool firstTime)
-  {
-    if (!firstTime)
-    {
-      return;
-    }
+	protected override int BuildHash() =>
+		System.HashCode.Combine( Common.HUPSToKPH( Controller.HorzVelocity.Length ).ToString( "F1" ) );
 
-    Controller.OnFastWallJump += OnFastWallJump;
-  }
+	protected override void OnAfterTreeRender( bool firstTime )
+	{
+		if ( !firstTime )
+		{
+			return;
+		}
 
-  public void OnFastWallJump(float speedDiff, float time)
-  {
-    if (!PlayerPreferences.Instance.WallKickHudEnabled)
-    {
-      return;
-    }
+		Controller.OnFastWallJump += OnFastWallJump;
+	}
 
-    WallJumpPanel wallJumpPanel = new WallJumpPanel();
-    wallJumpPanel.SpeedDiff = speedDiff;
+	private void OnFastWallJump( float speedDiff, float time )
+	{
+		if ( !PlayerPreferences.Instance.WallKickHudEnabled )
+		{
+			return;
+		}
 
-    // There will always be at least 1 tick between touching the wall and being able to jump
-    wallJumpPanel.IsPerfect = time / Controller.Scene.FixedDelta == 1;
+		WallJumpPanel wallJumpPanel = new WallJumpPanel();
+		wallJumpPanel.SpeedDiff = speedDiff;
 
-    CrouchMechanic crouch = Controller.GetMechanic<CrouchMechanic>();
-    wallJumpPanel.IsCrouchKick = crouch.TimeSinceStart == 0;
+		// There will always be at least 1 tick between touching the wall and being able to jump
+		wallJumpPanel.IsPerfect = time / Controller.Scene.FixedDelta == 1;
 
-    wallJumpPanel.Time = time - Controller.Scene.FixedDelta;
-    wallJumpPanel.Parent = WallJumpContainerPanel;
-    DeletePanelAfterTime(wallJumpPanel, 1000);
-  }
+		CrouchMechanic crouch = Controller.GetMechanic<CrouchMechanic>();
+		wallJumpPanel.IsCrouchKick = crouch.TimeSinceStart == 0;
 
-  public async void DeletePanelAfterTime(WallJumpPanel panel, int time)
-  {
-    await Task.Delay(time);
-    panel.Delete();
-  }
+		wallJumpPanel.Time = time - Controller.Scene.FixedDelta;
+		wallJumpPanel.Parent = WallJumpContainerPanel;
+		DeletePanelAfterTime( wallJumpPanel, 1000 );
+	}
+
+	private async void DeletePanelAfterTime( Panel panel, int time )
+	{
+		await Task.Delay( time );
+		panel.Delete();
+	}
 }

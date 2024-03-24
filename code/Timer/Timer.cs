@@ -1,15 +1,18 @@
-namespace Gauntlet;
+using Gauntlet.Player;
+using Gauntlet.Utils;
+
+namespace Gauntlet.Timer;
 
 [Icon( "timer" )]
 public sealed partial class Timer : Component
 {
 	[Property] public PlayerController Player { get; set; }
-	[Property, ReadOnly] public float Time { get; set; }
+	[Property, ReadOnly] private float Time { get; set; }
 	[Property] public SoundEvent StartSound { get; set; }
 	[Property] public SoundEvent EndSound { get; set; }
 	[Property] public SoundEvent NewBestTimeSound { get; set; }
 	[Property] public SoundEvent RestartSound { get; set; }
-	public int Ticks { get; set; }
+	private int Ticks { get; set; }
 
 	/// <summary>
 	/// The player must be moving at this speed to not reset the loop counter.
@@ -30,7 +33,7 @@ public sealed partial class Timer : Component
 	/// </summary>
 	public int LastOrCurrentLoop { get; private set; } = 1;
 	public bool InStartZone { get; private set; }
-	public bool BlockNextReset { get; private set; }
+	private bool BlockNextReset { get; set; }
 
 	/// <summary>
 	/// Invoked when the timer starts -- when we exit the start zone.

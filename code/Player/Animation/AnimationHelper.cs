@@ -1,4 +1,4 @@
-namespace Gauntlet;
+namespace Gauntlet.Player.Animation;
 
 public sealed class AnimationHelper : Component
 {
@@ -72,7 +72,8 @@ public sealed class AnimationHelper : Component
 	/// <summary>
 	/// Have the player look at this point in the world
 	/// </summary>
-	public void WithLook( Vector3 lookDirection, float eyesWeight = 1.0f, float headWeight = 1.0f, float bodyWeight = 1.0f )
+	public void WithLook( Vector3 lookDirection, float eyesWeight = 1.0f, float headWeight = 1.0f,
+		float bodyWeight = 1.0f )
 	{
 		Target.SetLookDirection( "aim_eyes", lookDirection );
 		Target.SetLookDirection( "aim_head", lookDirection );

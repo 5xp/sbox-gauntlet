@@ -1,7 +1,7 @@
-using Sandbox.Diagnostics;
 using System.Text.Json.Nodes;
+using Sandbox.Diagnostics;
 
-namespace Gauntlet;
+namespace Gauntlet.Utils;
 
 public static class PrefabUtility
 {
@@ -39,7 +39,7 @@ public static class PrefabUtility
 	/// This is used to make GameObject serializations unique, so when
 	/// you duplicate stuff, it copies over uniquely and keeps associations.
 	/// </summary>
-	public static void MakeGameObjectsUnique( JsonObject json )
+	private static void MakeGameObjectsUnique( JsonObject json )
 	{
 		Dictionary<Guid, Guid> translate = new();
 

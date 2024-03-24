@@ -1,41 +1,37 @@
 @namespace Gauntlet.UI
+@using Gauntlet.Timer
 @inherits PanelComponent
 
 <root class="pk backdrop-world">
-  <section class="leaderboard-container">
-    <LeaderboardPanel Timer=@Timer AroundPlayer=@false @ref=LeaderboardPanel />
-  </section>
+	<section class="leaderboard-container">
+		<LeaderboardPanel Timer="@Timer" AroundPlayer="@false" @ref=" LeaderboardPanel"/>
+	</section>
 </root>
 
 @code
 {
-  private Timer Timer { get; set; }
-  private LeaderboardPanel LeaderboardPanel { get; set; }
+	private Timer Timer { get; set; }
+	private LeaderboardPanel LeaderboardPanel { get; set; }
 
-  protected override void OnStart()
-  {
-    base.OnStart();
-    if (Scene.Components.TryGet<Timer>(out Timer timer, FindMode.EnabledInSelfAndChildren))
-    {
-      Timer = timer;
-    }
-    else
-    {
-      Log.Error("Timer not found");
-    }
+	protected override void OnStart()
+	{
+		base.OnStart();
+		if ( Scene.Components.TryGet<Timer>( out Timer timer, FindMode.EnabledInSelfAndChildren ) )
+		{
+			Timer = timer;
+		}
+		else
+		{
+			Log.Error( "Timer not found" );
+		}
 
-    LeaderboardManager.Instance.OnLeaderboardRefresh += OnLeaderboardRefresh;
-  }
+		LeaderboardManager.Instance.OnLeaderboardRefresh += OnLeaderboardRefresh;
+	}
 
-  private async void OnLeaderboardRefresh()
-  {
-    await GameTask.MainThread();
+	private async void OnLeaderboardRefresh()
+	{
+		await GameTask.MainThread();
 
-    if (LeaderboardPanel is null)
-    {
-      return;
-    }
-
-    LeaderboardPanel.StateHasChanged();
-  }
+		LeaderboardPanel?.StateHasChanged();
+	}
 }

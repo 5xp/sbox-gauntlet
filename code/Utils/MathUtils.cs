@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Gauntlet;
+namespace Gauntlet.Utils;
 
 public static class MathUtils
 {
@@ -139,5 +139,4 @@ public static class MathUtils
 	{
 		return a.Forward.Distance( b.Forward );
 	}
-
 }

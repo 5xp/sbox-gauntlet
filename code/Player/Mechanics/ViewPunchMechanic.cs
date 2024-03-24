@@ -1,14 +1,16 @@
-﻿namespace Gauntlet;
+﻿using Gauntlet.Utils;
+
+namespace Gauntlet.Player.Mechanics;
 
 /// <summary>
 /// Player's viewpunch mechanic.
 /// Responsible for punching the view when landing, jumping, airjumping, and wallrunning.
 /// </summary>
-public partial class ViewPunchMechanic : BasePlayerControllerMechanic
+public class ViewPunchMechanic : BasePlayerControllerMechanic
 {
-	public DampedSpring Spring { get; set; }
+	public DampedSpring Spring { get; private set; }
 
-	private float VelocityPerDegree => 17f;
+	private static float VelocityPerDegree => 17f;
 
 	public override int Priority => 500;
 
@@ -17,7 +19,7 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 	protected override void OnAwake()
 	{
 		base.OnAwake();
-		Spring = new( PlayerSettings.ViewPunchSpringConstant, PlayerSettings.ViewPunchSpringDamping );
+		Spring = new DampedSpring( PlayerSettings.ViewPunchSpringConstant, PlayerSettings.ViewPunchSpringDamping );
 	}
 
 	protected override void OnStart()
@@ -116,11 +118,9 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 		{
 			return MathUtils.EaseOutSine( fallDist / PlayerSettings.ViewPunchFallDistMin );
 		}
-		else
-		{
-			float t = fallDist.LerpInverse( PlayerSettings.ViewPunchFallDistMin, PlayerSettings.ViewPunchFallDistMax );
-			return MathX.Lerp( 1f, PlayerSettings.ViewPunchFallDistMaxScale, t );
-		}
+
+		float t = fallDist.LerpInverse( PlayerSettings.ViewPunchFallDistMin, PlayerSettings.ViewPunchFallDistMax );
+		return MathX.Lerp( 1f, PlayerSettings.ViewPunchFallDistMaxScale, t );
 	}
 
 	private (Vector3 min, Vector3 max) GetViewPunchGroundJumpVectors()
@@ -132,8 +132,8 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 		float rollMin = PlayerSettings.ViewPunchJumpRollMin;
 		float rollMax = PlayerSettings.ViewPunchJumpRollMax;
 
-		Vector3 minPunch = new( pitchMin, yawMin, rollMin );
-		Vector3 maxPunch = new( pitchMax, yawMax, rollMax );
+		Vector3 minPunch = new(pitchMin, yawMin, rollMin);
+		Vector3 maxPunch = new(pitchMax, yawMax, rollMax);
 
 		minPunch *= VelocityPerDegree;
 		maxPunch *= VelocityPerDegree;
@@ -150,8 +150,8 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 		float rollMin = PlayerSettings.ViewPunchAirJumpRollMin;
 		float rollMax = PlayerSettings.ViewPunchAirJumpRollMax;
 
-		Vector3 minPunch = new( pitchMin, yawMin, rollMin );
-		Vector3 maxPunch = new( pitchMax, yawMax, rollMax );
+		Vector3 minPunch = new(pitchMin, yawMin, rollMin);
+		Vector3 maxPunch = new(pitchMax, yawMax, rollMax);
 
 		minPunch *= VelocityPerDegree;
 		maxPunch *= VelocityPerDegree;
@@ -168,8 +168,8 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 		float rollMin = PlayerSettings.ViewPunchFallRollMin;
 		float rollMax = PlayerSettings.ViewPunchFallRollMax;
 
-		Vector3 minPunch = new( pitchMin, yawMin, rollMin );
-		Vector3 maxPunch = new( pitchMax, yawMax, rollMax );
+		Vector3 minPunch = new(pitchMin, yawMin, rollMin);
+		Vector3 maxPunch = new(pitchMax, yawMax, rollMax);
 
 		minPunch *= VelocityPerDegree;
 		maxPunch *= VelocityPerDegree;
@@ -186,8 +186,8 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 		float rollMin = PlayerSettings.ViewPunchWallrunStartRollMin * forwardFraction;
 		float rollMax = PlayerSettings.ViewPunchWallrunStartRollMax * forwardFraction;
 
-		Vector3 minPunch = new( pitchMin, yawMin, rollMin );
-		Vector3 maxPunch = new( pitchMax, yawMax, rollMax );
+		Vector3 minPunch = new(pitchMin, yawMin, rollMin);
+		Vector3 maxPunch = new(pitchMax, yawMax, rollMax);
 
 		minPunch *= VelocityPerDegree;
 		maxPunch *= VelocityPerDegree;
@@ -202,7 +202,8 @@ public partial class ViewPunchMechanic : BasePlayerControllerMechanic
 			return;
 		}
 
-		if ( !Spring.Position.x.AlmostEqual( 0f, 0.1f ) && (afterSpeed.AlmostEqual( 0f ) || (afterSpeed < 0f && beforeSpeed > 0f)) )
+		if ( !Spring.Position.x.AlmostEqual( 0f, 0.1f ) &&
+		     (afterSpeed.AlmostEqual( 0f ) || (afterSpeed < 0f && beforeSpeed > 0f)) )
 		{
 			Log.Info( $"Pitch {Spring.Position.x}, Yaw: {Spring.Position.y}, Roll: {Spring.Position.z}" );
 		}

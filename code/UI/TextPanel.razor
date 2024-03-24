@@ -2,14 +2,13 @@
 @inherits PanelComponent
 
 <root class="pk">
-	<div class="text" style="font-weight: bolder; font-size: @(FontSizePixels);">@MyStringValue</div>
+	<div class="text" style="font-size: @( FontSizePixels );">@MyStringValue</div>
 </root>
 
 @code
 {
-
 	[Property, TextArea] public string MyStringValue { get; set; } = "Hello World!";
 	[Property] public int FontSizePixels { get; set; } = 20;
 
-	protected override int BuildHash() => System.HashCode.Combine(MyStringValue, FontSizePixels);
+	protected override int BuildHash() => System.HashCode.Combine( MyStringValue, FontSizePixels );
 }

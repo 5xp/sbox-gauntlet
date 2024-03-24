@@ -1,35 +1,35 @@
 .pk .text {
-  font-family: $main-font;
-  color: white;
+	font-family: $main-font;
+	color: white;
 
-  &.title {
-    font-size: 104px;
-    font-weight: bolder;
-    text-transform: uppercase;
-  }
+	&.title {
+		font-size: 104px;
+		font-weight: bolder;
+		text-transform: uppercase;
+	}
 
-  &.header {
-    font-size: 104px;
-    font-weight: bold;
-  }
+	&.header {
+		font-size: 104px;
+		font-weight: bold;
+	}
 
-  &.sub-header {
-    font-size: 32px;
-  }
+	&.sub-header {
+		font-size: 32px;
+	}
 
-  &.settings {
-    font-size: 32px;
-  }
+	&.settings {
+		font-size: 32px;
+	}
 
-  &.number {
-    font-family: $main-font-mono;
-  }
+	&.number {
+		font-family: $main-font-mono;
+	}
 
-  &.bold {
-    font-weight: bold;
-  }
+	&.bold {
+		font-weight: bold;
+	}
 }
 
 .pk .icon {
-  font-family: "Material Icons";
+	font-family: "Material Icons";
 }

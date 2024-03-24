@@ -1,4 +1,4 @@
-namespace Gauntlet;
+namespace Gauntlet.Player;
 
 /// <summary>
 /// Placed on the player (or maybe just in loose space, we'll see), the client component holds network info about a player, and serves as an easy way to iterate through players in a game.
@@ -8,7 +8,7 @@ public sealed class Client : Component
 	/// <summary>
 	/// Get a list of all clients in the game's active scene.
 	/// </summary>
-	public static IEnumerable<Client> All => Game.ActiveScene.GetAllComponents<Client>();
+	private static IEnumerable<Client> All => Game.ActiveScene.GetAllComponents<Client>();
 
 	/// <summary>
 	/// Gets a reference to the local client.
@@ -33,7 +33,7 @@ public sealed class Client : Component
 	/// <summary>
 	/// The client's SteamId
 	/// </summary>
-	[Property] public ulong SteamId { get; private set; } = 0;
+	[Property] private ulong SteamId { get; set; } = 0;
 
 	/// <summary>
 	/// The client's DisplayName

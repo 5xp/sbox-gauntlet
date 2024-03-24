@@ -1,29 +1,24 @@
-﻿namespace Gauntlet;
+﻿using Gauntlet.Utils;
+
+namespace Gauntlet.Player.Mechanics;
 
 /// <summary>
 /// A wallrun mechanic.
 /// </summary>
-public partial class WallrunMechanic : BasePlayerControllerMechanic
+public class WallrunMechanic : BasePlayerControllerMechanic
 {
-	public bool ShouldWallrun { get; set; } = false;
+	private Vector3? _targetWallNormal;
 
 	private Vector3? _wallNormal;
+	private bool ShouldWallrun { get; set; }
 
 	/// <summary>
 	/// Our current wall normal. Will be null when not on the wall.
 	/// </summary>
 	public Vector3? WallNormal
 	{
-		get
-		{
-			if ( !PlayerSettings.WallrunEnable )
-			{
-				return null;
-			}
-
-			return _wallNormal;
-		}
-		set
+		get => !PlayerSettings.WallrunEnable ? null : _wallNormal;
+		private set
 		{
 			if ( value.HasValue )
 			{
@@ -33,8 +28,6 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 			_wallNormal = value;
 		}
 	}
-
-	private Vector3? _targetWallNormal;
 
 	/// <summary>
 	/// Our target wall normal. Mostly only relevant when the wall is rotating. Set to null when not on the wall.
@@ -48,12 +41,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 				return null;
 			}
 
-			if ( Controller.IsGrounded )
-			{
-				return null;
-			}
-
-			return _targetWallNormal;
+			return Controller.IsGrounded ? null : _targetWallNormal;
 		}
 		set => _targetWallNormal = value;
 	}
@@ -67,20 +55,20 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	/// <summary>
 	/// Our predicted wall normal.
 	/// </summary>
-	private Vector3? PredictedWallNormal { get; set; } = null;
-
+	private Vector3? PredictedWallNormal { get; set; }
 
 	/// <summary>
 	/// Gets set when we start wallrunning, then set to null when we touch the ground.
 	/// </summary>
-	private Vector3? LastWallrunStartPos { get; set; } = null;
+	private Vector3? LastWallrunStartPos { get; set; }
 
-	private bool HasBoost { get; set; } = false;
+	private bool HasBoost { get; set; }
 
 	private Vector3 TiltVector { get; set; } = Vector3.Zero;
 
 	/// <summary>
-	/// A wallrun is considered weak if we land on the same wall twice, or if we touch the wall without jumping (i.e. after walking off a ledge or after falling off a wall)
+	/// A wallrun is considered weak if we land on the same wall twice, or if we touch the wall without jumping (i.e. after
+	/// walking off a ledge or after falling off a wall)
 	/// </summary>
 	private bool IsWallrunWeak { get; set; }
 
@@ -95,13 +83,16 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	private TimeSince TimeSincePushingAway { get; set; }
 
 	/// <summary>
-	/// When the wall normal towards the target wall normal, we add it to this and then apply it our eyes to maintain the same relative angle.
+	/// When the wall normal towards the target wall normal, we add it to this and then apply it our eyes to maintain the
+	/// same relative angle.
 	/// </summary>
 	private Angles RelativeAnglesOffset { get; set; } = Angles.Zero;
 
 	/// <summary>
-	/// When we have a new target wall normal, this will be set to the 2 * the yaw angle difference between the current wall normal and the target wall normal.
-	/// At minimum, our angle will correct at this speed. It can be more if our wall normal is rotating fast so that our view doesn't lag behind.
+	/// When we have a new target wall normal, this will be set to the 2 * the yaw angle difference between the current
+	/// wall normal and the target wall normal.
+	/// At minimum, our angle will correct at this speed. It can be more if our wall normal is rotating fast so that our
+	/// view doesn't lag behind.
 	/// </summary>
 	private float RelativeAngleCorrectSpeed { get; set; }
 
@@ -111,7 +102,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	/// <summary>
 	/// This gets set when we fall away the wall
 	/// </summary>
-	public TimeSince TimeSinceFellAwayFromWall { get; set; }
+	public TimeSince TimeSinceFellAwayFromWall { get; private set; }
 
 	public override int Priority => 2;
 
@@ -128,11 +119,20 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 	public override bool ShouldBecomeActive()
 	{
-		if ( !PlayerSettings.WallrunEnable ) return false;
+		if ( !PlayerSettings.WallrunEnable )
+		{
+			return false;
+		}
 
-		if ( Controller.IsGrounded ) return false;
+		if ( Controller.IsGrounded )
+		{
+			return false;
+		}
 
-		if ( !ShouldWallrun ) return false;
+		if ( !ShouldWallrun )
+		{
+			return false;
+		}
 
 		return true;
 	}
@@ -151,13 +151,16 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 			return;
 		}
 
-		if ( WallNormal.HasValue && TargetWallNormal.HasValue )
+		if ( !WallNormal.HasValue || !TargetWallNormal.HasValue )
 		{
-			Vector3 originalWallNormal = WallNormal.Value;
-			WallNormal = WallNormal.Value.RotateTowards( TargetWallNormal.Value, PlayerSettings.WallrunRotateMaxRate * Time.Delta );
-			Angles angleDiff = WallNormal.Value.EulerAngles - originalWallNormal.EulerAngles;
-			RelativeAnglesOffset += angleDiff;
+			return;
 		}
+
+		Vector3 originalWallNormal = WallNormal.Value;
+		WallNormal = WallNormal.Value.RotateTowards( TargetWallNormal.Value,
+			PlayerSettings.WallrunRotateMaxRate * Time.Delta );
+		Angles angleDiff = WallNormal.Value.EulerAngles - originalWallNormal.EulerAngles;
+		RelativeAnglesOffset += angleDiff;
 	}
 
 	public override void Simulate()
@@ -243,19 +246,22 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 		Velocity = Vector3.VectorPlaneProject( Velocity, wallNormal );
 
-		float horzFriction, vertFriction;
-		horzFriction = vertFriction = PlayerSettings.WallrunFriction;
+		float vertFriction;
+		float horzFriction = vertFriction = PlayerSettings.WallrunFriction;
 
 		if ( Velocity.z < 0f )
 		{
 			vertFriction *= GetSlipScale();
 
 			if ( wishDir.AlmostEqual( 0f ) )
+			{
 				vertFriction *= 1f - PlayerSettings.WallrunNoInputSlipFrac;
+			}
 		}
 
 		ApplyFriction( horzFriction, vertFriction );
-		Accelerate( wishDir, PlayerSettings.WallrunAccelerationHorizontal, PlayerSettings.WallrunAccelerationVertical * GetSlipScale() );
+		Accelerate( wishDir, PlayerSettings.WallrunAccelerationHorizontal,
+			PlayerSettings.WallrunAccelerationVertical * GetSlipScale() );
 		Velocity = Vector3.VectorPlaneProject( Velocity, wallNormal );
 
 		if ( Velocity.LengthSquared < 1f )
@@ -274,7 +280,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 			return;
 		}
 
-		if ( tr.Fraction == 1f )
+		if ( tr.Fraction.AlmostEqual( 1f ) )
 		{
 			Position = tr.EndPosition;
 			return;
@@ -294,7 +300,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		float maxStep = MathF.Max( PlayerSettings.StepHeightMax, PlayerSettings.WallrunAllowedWallDist );
 		Vector3 point = Position - TargetWallNormal.Value * maxStep;
 		Vector3 bumpOrigin = Position;
-		bool moveToEndPos = true;
+		var moveToEndPos = true;
 
 		if ( !CanFeetReachWall( Position, WallNormal.Value ) )
 		{
@@ -314,7 +320,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		}
 
 		// If our target wall normal and current wall normal are too different, don't step down
-		if ( moveToEndPos && WallNormal?.Dot( TargetWallNormal.Value ) < PlayerSettings.WallrunAngleChangeMinCos )
+		if ( WallNormal?.Dot( TargetWallNormal.Value ) < PlayerSettings.WallrunAngleChangeMinCos )
 		{
 			moveToEndPos = false;
 		}
@@ -326,10 +332,8 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 			ClearWallNormal();
 			return;
 		}
-		else
-		{
-			UpdateWallNormal( tr.Normal );
-		}
+
+		UpdateWallNormal( tr.Normal );
 
 		Vector3 wishDir = Controller.BuildWishDir();
 		if ( wishDir.Dot( WallNormal.Value ) < 0.71f )
@@ -355,7 +359,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 	private float StepMove( float wallAngle, float stepSize, Vector3 wallNormal )
 	{
-		MoveHelper mover = new( Position, Velocity )
+		MoveHelper mover = new(Position, Velocity)
 		{
 			Trace = Scene.Trace.Size( Controller.Hull )
 				.WithoutTags( "player" ),
@@ -389,17 +393,16 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	/// <param name="wallNormal">The new wall normal.</param>
 	private void UpdateWallNormal( Vector3 wallNormal )
 	{
-		if ( !WallNormal.HasValue )
+		WallNormal ??= wallNormal;
+
+		if ( TargetWallNormal.HasValue && wallNormal.AlmostEqual( TargetWallNormal.Value ) )
 		{
-			WallNormal = wallNormal;
+			return;
 		}
 
-		if ( !TargetWallNormal.HasValue || !wallNormal.AlmostEqual( TargetWallNormal.Value ) )
-		{
-			TargetWallNormal = wallNormal;
-			Angles angleDiff = TargetWallNormal.Value.EulerAngles - WallNormal.Value.EulerAngles;
-			RelativeAngleCorrectSpeed = MathF.Abs( angleDiff.Normal.yaw ) * 2f;
-		}
+		TargetWallNormal = wallNormal;
+		Angles angleDiff = TargetWallNormal.Value.EulerAngles - WallNormal.Value.EulerAngles;
+		RelativeAngleCorrectSpeed = MathF.Abs( angleDiff.Normal.yaw ) * 2f;
 	}
 
 	private void ClearWallNormal( bool skipNextTick = true )
@@ -430,10 +433,10 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	/// <summary>
 	/// Builds the wish direction for wallrunning.
 	/// If we're looking perpendicular to the wall, forward input is vertical.
-	/// Otherwise, forward input is camera forward, and into the wall input is camera up. (Out of the wall input is not allowed).
+	/// Otherwise, forward input is camera forward, and into the wall input is camera up. (Out of the wall input is not
+	/// allowed).
 	/// Also we add a small amount of upward auto push when moving forward.
 	/// Then we project the wish direction onto the wall plane to make sure our input is always on the wall plane.
-	/// 
 	/// Kinda feels like a mess right now.
 	/// </summary>
 	/// <param name="wallNormal">The normal vector of the wall.</param>
@@ -448,7 +451,8 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 		if ( tryingToClimb )
 		{
-			wishDir = Controller.WishMove * Rotation.LookAt( Vector3.Down * MathF.Sign( lookingNormalAmount ), wallNormal );
+			wishDir = Controller.WishMove *
+			          Rotation.LookAt( Vector3.Down * MathF.Sign( lookingNormalAmount ), wallNormal );
 			wishDir = wishDir.Normal;
 			return wishDir;
 		}
@@ -463,7 +467,8 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 		Vector3 forwardBackMove = Controller.WishMove.WithY( 0f );
 
-		float upwardAutoPushAmount = MathF.Max( 0f, PlayerSettings.WallrunUpwardAutoPush - angles.Forward.Dot( Vector3.Up ).Clamp( 0f, 1f ) );
+		float upwardAutoPushAmount = MathF.Max( 0f,
+			PlayerSettings.WallrunUpwardAutoPush - angles.Forward.Dot( Vector3.Up ).Clamp( 0f, 1f ) );
 		Vector3 upwardAutoPush = Vector3.Zero;
 
 		if ( forwardBackMove.x > 0f )
@@ -491,12 +496,14 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		MaintainRelativeYaw( horzEyeAngles );
 
 		// If we're wallrunning and looking and moving forward
-		if ( WallNormal.HasValue && horzEyeAngles.Forward.Dot( Velocity.Normal ) >= 0f )
+		if ( !WallNormal.HasValue || !(horzEyeAngles.Forward.Dot( Velocity.Normal ) >= 0f) )
 		{
-			Angles wallAngles = WallNormal.Value.EulerAngles.WithPitch( 0f ).Normal;
-			CorrectYaw( wallAngles, horzEyeAngles, speedFraction );
-			CorrectPitch( wallAngles, vertEyeAngles, speedFraction );
+			return;
 		}
+
+		Angles wallAngles = WallNormal.Value.EulerAngles.WithPitch( 0f ).Normal;
+		CorrectYaw( wallAngles, horzEyeAngles, speedFraction );
+		CorrectPitch( wallAngles, vertEyeAngles, speedFraction );
 	}
 
 	/// <summary>
@@ -532,19 +539,23 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		float correctedAngleOffset = PlayerSettings.WallrunViewYawOffset;
 
 		if ( MathF.Abs( angleDiff.yaw ) < correctedAngleOffset )
+		{
 			return;
+		}
 
 		// We are looking too much into the wall, correct our view back away from the wall
 		Angles correctedAngle1 = wallAngles + Angles.Zero.WithYaw( correctedAngleOffset );
 		Angles correctedAngle2 = wallAngles - Angles.Zero.WithYaw( correctedAngleOffset );
-		Angles closerAngle = horzEyeAngles.Distance( correctedAngle1 ) < horzEyeAngles.Distance( correctedAngle2 ) ? correctedAngle1 : correctedAngle2;
+		Angles closerAngle = horzEyeAngles.Distance( correctedAngle1 ) < horzEyeAngles.Distance( correctedAngle2 )
+			? correctedAngle1
+			: correctedAngle2;
 
 		// This is kinda cursed, but I can't think of a better way to do it
 		float t = MathUtils.EaseOutCubic( speedFraction * Time.Delta );
 		Vector3 anglesVec = horzEyeAngles.Forward;
 		Angles newAngle = horzEyeAngles.LerpTo( closerAngle, t ).Normal;
 		Vector3 newAnglesVec = newAngle.Forward;
-		anglesVec = anglesVec.RotateTowards( newAnglesVec, MathX.DegreeToRadian( 85f * Time.Delta ) );
+		anglesVec = anglesVec.RotateTowards( newAnglesVec, (85f * Time.Delta).DegreeToRadian() );
 		Controller.EyeAngles = Controller.EyeAngles.WithYaw( anglesVec.EulerAngles.yaw );
 	}
 
@@ -558,14 +569,20 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		float correctedAngleOffsetMax = PlayerSettings.WallrunViewPitchOffsetMax;
 		float correctSpeed = PlayerSettings.WallrunViewPitchOffsetCorrectSpeed;
 
-		if ( MathF.Abs( angleDiff.pitch ) < correctedAngleOffsetMin || MathF.Abs( angleDiff.pitch ) > correctedAngleOffsetMax )
+		if ( MathF.Abs( angleDiff.pitch ) < correctedAngleOffsetMin ||
+		     MathF.Abs( angleDiff.pitch ) > correctedAngleOffsetMax )
+		{
 			return;
+		}
 
 		Angles correctedAngle1 = wallAngles + Angles.Zero.WithPitch( correctedAngleOffsetMin );
 		Angles correctedAngle2 = wallAngles - Angles.Zero.WithPitch( correctedAngleOffsetMin );
-		Angles closerAngle = vertEyeAngles.Distance( correctedAngle1 ) < vertEyeAngles.Distance( correctedAngle2 ) ? correctedAngle1 : correctedAngle2;
+		Angles closerAngle = vertEyeAngles.Distance( correctedAngle1 ) < vertEyeAngles.Distance( correctedAngle2 )
+			? correctedAngle1
+			: correctedAngle2;
 
-		vertEyeAngles.pitch = vertEyeAngles.pitch.Approach( closerAngle.pitch, speedFraction * correctSpeed * Time.Delta );
+		vertEyeAngles.pitch =
+			vertEyeAngles.pitch.Approach( closerAngle.pitch, speedFraction * correctSpeed * Time.Delta );
 		Controller.EyeAngles = Controller.EyeAngles.WithPitch( vertEyeAngles.pitch );
 	}
 
@@ -589,7 +606,9 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 	private void ApplyWallrunTilt()
 	{
-		bool wallrunEndingSoon = IsActive && TimeSinceStart > PlayerSettings.WallrunTimeLimit - 1f / PlayerSettings.WallrunTiltEndSpeed;
+		bool wallrunEndingSoon = IsActive &&
+		                         TimeSinceStart > PlayerSettings.WallrunTimeLimit -
+		                         1f / PlayerSettings.WallrunTiltEndSpeed;
 		float tiltSpeed = wallrunEndingSoon ? PlayerSettings.WallrunTiltEndSpeed : PlayerSettings.WallrunTiltSpeed;
 
 		Vector3? wallNormal = WallNormal ?? PredictedWallNormal;
@@ -611,7 +630,10 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	/// </summary>
 	private void ApplyBoost()
 	{
-		if ( !HasBoost ) return;
+		if ( !HasBoost )
+		{
+			return;
+		}
 
 		HasBoost = false;
 
@@ -660,7 +682,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		return tr.Normal;
 	}
 
-	public Vector3? PredictWallrun()
+	private Vector3? PredictWallrun()
 	{
 		return PredictWallrun( PlayerSettings.WallrunTiltPredictTime );
 	}
@@ -683,7 +705,8 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	}
 
 	/// <summary>
-	/// Takes a given position and traces backwards towards the wall and finds if we are near the top of the wall (but not a ceiling).
+	/// Takes a given position and traces backwards towards the wall and finds if we are near the top of the wall (but not
+	/// a ceiling).
 	/// </summary>
 	/// <param name="position">The position of the player.</param>
 	/// <param name="wallNormal">The normal vector of the wall.</param>
@@ -699,7 +722,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 			return false;
 		}
 
-		float stepSize = 20f;
+		const float stepSize = 20f;
 
 		// First trace up
 		position = tr.EndPosition;
@@ -721,12 +744,7 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		nextPos = position - Vector3.Up * stepSize;
 		tr = Controller.TraceBBox( position, nextPos );
 
-		if ( tr.Hit && Controller.IsFloor( tr.Normal ) )
-		{
-			return true;
-		}
-
-		return false;
+		return tr.Hit && Controller.IsFloor( tr.Normal );
 	}
 
 	/// <summary>
@@ -784,14 +802,6 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		return WallrunEligibility.Weak;
 	}
 
-	[Flags]
-	private enum WallrunEligibility
-	{
-		Ineligible = 0,
-		Eligible = 1 << 0,
-		Weak = 1 << 1 | Eligible,
-	}
-
 	/// <summary>
 	/// Applies friction to the given velocity vector.
 	/// </summary>
@@ -816,11 +826,13 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 			newSpeed = 0f;
 		}
 
-		if ( newSpeed != speed )
+		if ( newSpeed.AlmostEqual( speed ) )
 		{
-			newSpeed /= speed;
-			velocity *= newSpeed;
+			return velocity;
 		}
+
+		newSpeed /= speed;
+		velocity *= newSpeed;
 
 		return velocity;
 	}
@@ -885,9 +897,10 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 		}
 		else
 		{
-			horzMaxSpeed = MathF.Min( (horzWishDir * PlayerSettings.WallrunMaxSpeedHorizontal).Length, PlayerSettings.WallrunMaxSpeedHorizontal );
-			vertMaxSpeed = MathF.Min( (vertWishDir * PlayerSettings.WallrunMaxSpeedVertical).Length, PlayerSettings.WallrunMaxSpeedVertical );
-
+			horzMaxSpeed = MathF.Min( (horzWishDir * PlayerSettings.WallrunMaxSpeedHorizontal).Length,
+				PlayerSettings.WallrunMaxSpeedHorizontal );
+			vertMaxSpeed = MathF.Min( (vertWishDir * PlayerSettings.WallrunMaxSpeedVertical).Length,
+				PlayerSettings.WallrunMaxSpeedVertical );
 		}
 
 		Vector3 horzVelocity = HorzVelocity;
@@ -905,7 +918,8 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 	/// <returns>The slip fraction value.</returns>
 	private float GetSlipFraction()
 	{
-		return ((TimeSinceStart - PlayerSettings.WallrunSlipStartTime) / PlayerSettings.WallrunSlipDuration).Clamp( 0f, 1f );
+		return ((TimeSinceStart - PlayerSettings.WallrunSlipStartTime) / PlayerSettings.WallrunSlipDuration).Clamp( 0f,
+			1f );
 	}
 
 	/// <summary>
@@ -928,21 +942,38 @@ public partial class WallrunMechanic : BasePlayerControllerMechanic
 
 	protected override void DrawGizmos()
 	{
-		if ( !DebugConVars.DebugWallrunGizmos ) return;
+		if ( !DebugConVars.DebugWallrunGizmos )
+		{
+			return;
+		}
 
 		Gizmo.Draw.Color = Color.White;
 
 		if ( WallNormal.HasValue )
+		{
 			Gizmo.Draw.Arrow( Vector3.Left * 5f, Vector3.Left * 5f + WallNormal.Value * 50f );
+		}
 
 		Gizmo.Draw.Color = Color.Red;
 
 		if ( TargetWallNormal.HasValue )
+		{
 			Gizmo.Draw.Arrow( 0f, TargetWallNormal.Value * 50f );
+		}
 
 		Gizmo.Draw.Color = Color.Green;
 
 		if ( WallNormal.HasValue )
+		{
 			Gizmo.Draw.Arrow( Vector3.Zero, BuildWishDirection( WallNormal.Value ) * 60f );
+		}
+	}
+
+	[Flags]
+	private enum WallrunEligibility
+	{
+		Ineligible = 0,
+		Eligible = 1 << 0,
+		Weak = (1 << 1) | Eligible
 	}
 }

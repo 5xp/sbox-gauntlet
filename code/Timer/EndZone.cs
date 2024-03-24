@@ -1,4 +1,4 @@
-namespace Gauntlet;
+namespace Gauntlet.Timer;
 
 [Icon( "stop_circle" )]
 public partial class EndZone : BaseZone

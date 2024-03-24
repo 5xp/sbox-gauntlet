@@ -1,21 +1,23 @@
-﻿namespace Gauntlet;
+﻿using Gauntlet.Utils;
+
+namespace Gauntlet.Player.Mechanics;
 
 /// <summary>
 /// A sliding mechanic.
 /// </summary>
-public partial class SlideMechanic : BasePlayerControllerMechanic
+public class SlideMechanic : BasePlayerControllerMechanic
 {
-	public bool UsedBoost { get; set; } = false;
+	public bool UsedBoost { get; private set; } = false;
 	private float SlideTiltFrac { get; set; }
 	private Vector3 SlideTiltAxis { get; set; }
 	private float SlideTiltLowerSpeedBound { get; set; }
 	private TimeSince TimeSinceUsedBoost { get; set; }
-	private float FOVScaleTargetFraction { get; set; }
-	private float FOVScaleFraction { get; set; }
+	private float FovScaleTargetFraction { get; set; }
+	private float FovScaleFraction { get; set; }
 	private SoundHandle SlideSoundHandle { get; set; }
 	private SoundHandle SlideBoostSoundHandle { get; set; }
 	private SoundHandle SlideEndSoundHandle { get; set; }
-	public float StartSpeed { get; set; }
+	private float StartSpeed { get; set; }
 	private bool SlidOffGround { get; set; }
 
 	public override int Priority => 15;
@@ -98,7 +100,7 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 	public override void FrameSimulate()
 	{
 		ApplySlideTilt();
-		ApplyFOVScale();
+		ApplyFovScale();
 	}
 
 	public override void Simulate()
@@ -143,7 +145,7 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 			SlideTiltAxis = dir;
 			TimeSinceUsedBoost = 0;
 			UsedBoost = true;
-			FOVScaleTargetFraction = 1f;
+			FovScaleTargetFraction = 1f;
 
 			SlideBoostSoundHandle = Sound.Play( Controller.SlideBoostSound );
 		}
@@ -156,7 +158,7 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 		// Don't scale FOV if we're skipping
 		if ( Controller.TimeSinceLastLanding > PlayerSettings.SkipTime )
 		{
-			FOVScaleTargetFraction = 1f;
+			FovScaleTargetFraction = 1f;
 		}
 
 		SlideTiltLowerSpeedBound = PlayerSettings.SlideEndSpeed;
@@ -171,7 +173,7 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 
 	private void OnSlideStop()
 	{
-		FOVScaleTargetFraction = 0f;
+		FovScaleTargetFraction = 0f;
 		SlideTiltLowerSpeedBound = PlayerSettings.SlideRequiredStartSpeed;
 
 		if ( Controller.IsGrounded )
@@ -259,15 +261,15 @@ public partial class SlideMechanic : BasePlayerControllerMechanic
 	/// <summary>
 	/// When we start sliding, scale out the FOV, and when we stop, scale it back in
 	/// </summary>
-	private void ApplyFOVScale()
+	private void ApplyFovScale()
 	{
-		float baseFOV = Controller.CameraController.BaseFieldOfView;
+		float baseFov = Controller.CameraController.BaseFieldOfView;
 
-		float lerpTime = FOVScaleTargetFraction == 0f ? PlayerSettings.SlideFOVLerpOutTime : PlayerSettings.SlideFOVLerpInTime;
-		FOVScaleFraction = FOVScaleFraction.Approach( FOVScaleTargetFraction, 1f / lerpTime * Time.Delta );
+		float lerpTime = FovScaleTargetFraction == 0f ? PlayerSettings.SlideFovLerpOutTime : PlayerSettings.SlideFovLerpInTime;
+		FovScaleFraction = FovScaleFraction.Approach( FovScaleTargetFraction, 1f / lerpTime * Time.Delta );
 
 		CameraComponent cam = Controller.CameraController.Camera;
-		cam.FieldOfView = baseFOV.LerpTo( baseFOV * PlayerSettings.SlideFOVScale, FOVScaleFraction );
+		cam.FieldOfView = baseFov.LerpTo( baseFov * PlayerSettings.SlideFovScale, FovScaleFraction );
 	}
 
 	/// <summary>

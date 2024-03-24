@@ -1,4 +1,4 @@
-namespace Gauntlet;
+namespace Gauntlet.Timer;
 
 [Icon( "play_circle" )]
 public partial class StartZone : BaseZone

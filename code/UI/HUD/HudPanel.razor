@@ -1,26 +1,31 @@
 @namespace Gauntlet.UI
+@using Gauntlet.Player
+@using Gauntlet.Player.Mechanics
+@using Gauntlet.Timer
+@using Gauntlet.Utils
 @inherits PanelComponent
 
 <root class="pk"
-	style="transform: translateX(@(Position.x / 16)%) translateY(@(Position.y / 9)%) rotate(@(Position.z)deg) scale(@(GetScale()));">
-	@if (PlayerPreferences.Instance.KeyPressHudEnabled)
+      style="transform: translateX(@( Position.x / 16 )%) translateY(@( Position.y / 9 )%) rotate(@( Position.z )deg) scale(@( GetScale() ));">
+	@if ( PlayerPreferences.Instance.KeyPressHudEnabled )
 	{
-		<KeyPressPanel />
+		<KeyPressPanel/>
 	}
-	<SpeedometerPanel Controller=@Controller />
+	<SpeedometerPanel Controller="@Controller"/>
 </root>
 
 @code
 {
 	[Property] private PlayerController Controller { get; set; }
 	[Property] private Timer Timer { get; set; }
-	public TimerPanel TimerPanel { get; set; }
+	private TimerPanel TimerPanel { get; set; }
 
 	/// <summary>
 	/// The z component is rotation.
 	/// The w component is depth (negative is closer to the camera, positive is further away).
 	/// </summary>
 	private Vector4 Position { get; set; } = Vector4.Zero;
+
 	private Vector4 WishSwayContribution { get; set; }
 	private Vector4 SwayContribution { get; set; }
 	private DampedSpring ViewPunchSpring { get; set; }
@@ -28,7 +33,7 @@
 	protected override int BuildHash()
 	{
 		HashCode hash = new();
-		hash.Add(Position);
+		hash.Add( Position );
 		return hash.ToHashCode();
 	}
 
@@ -58,7 +63,7 @@
 
 	private void UpdatePosition()
 	{
-		if (!PlayerPreferences.Instance.HudSwayEnabled)
+		if ( !PlayerPreferences.Instance.HudSwayEnabled )
 		{
 			Position = Vector4.Zero;
 			return;
@@ -69,7 +74,7 @@
 		Vector4 swayMoveContribution = GetSwayMoveContribution();
 
 		WishSwayContribution = swayTurnContribution + swayMoveContribution;
-		SwayContribution = SwayContribution.LerpTo(WishSwayContribution, Time.Delta);
+		SwayContribution = SwayContribution.LerpTo( WishSwayContribution, Time.Delta );
 
 		Position = viewPunchContribution + SwayContribution;
 	}
@@ -92,9 +97,9 @@
 		swayContribution.y *= -23f;
 		swayContribution.z *= -0.2f;
 
-		swayContribution.x = swayContribution.x.Clamp(-20f, 20f);
-		swayContribution.y = swayContribution.y.Clamp(-20f, 20f);
-		swayContribution.z = swayContribution.z.Clamp(-20f, 20f);
+		swayContribution.x = swayContribution.x.Clamp( -20f, 20f );
+		swayContribution.y = swayContribution.y.Clamp( -20f, 20f );
+		swayContribution.z = swayContribution.z.Clamp( -20f, 20f );
 
 		return swayContribution;
 	}
@@ -102,24 +107,24 @@
 	private Vector4 GetSwayMoveContribution()
 	{
 		Vector3 velocity = Controller.Velocity;
-		Vector3 projVel = Vector3.VectorPlaneProject(velocity, Controller.EyeAngles.Forward);
-		Vector3 rightEye = Controller.EyeAngles.Forward.Cross(Vector3.Up).Normal;
-		Vector3 upEye = rightEye.Cross(Controller.EyeAngles.Forward).Normal;
+		Vector3 projVel = Vector3.VectorPlaneProject( velocity, Controller.EyeAngles.Forward );
+		Vector3 rightEye = Controller.EyeAngles.Forward.Cross( Vector3.Up ).Normal;
+		Vector3 upEye = rightEye.Cross( Controller.EyeAngles.Forward ).Normal;
 
-		float relativeHorzVelocity = projVel.Dot(rightEye);
-		float relativeVertVelocity = projVel.Dot(upEye);
-		float relativeForwardVelocity = velocity.Dot(Controller.EyeAngles.Forward);
+		float relativeHorzVelocity = projVel.Dot( rightEye );
+		float relativeVertVelocity = projVel.Dot( upEye );
+		float relativeForwardVelocity = velocity.Dot( Controller.EyeAngles.Forward );
 
-		float relativeHorzVelocityFrac = MathF.Abs(relativeHorzVelocity).LerpInverse(0f, Controller.PlayerSettings.SprintSpeed
-		) * MathF.Sign(relativeHorzVelocity);
-		float relativeVertVelocityFrac = MathF.Abs(relativeVertVelocity).LerpInverse(0f, Controller.PlayerSettings.SprintSpeed
-		) * MathF.Sign(relativeVertVelocity);
-		float relativeForwardVelocityFrac = MathF.Abs(relativeForwardVelocity).LerpInverse(0f,
-		Controller.PlayerSettings.SprintSpeed
-		) * MathF.Sign(relativeForwardVelocity);
+		float relativeHorzVelocityFrac = MathF.Abs( relativeHorzVelocity ).LerpInverse( 0f, Controller.PlayerSettings.SprintSpeed
+		) * MathF.Sign( relativeHorzVelocity );
+		float relativeVertVelocityFrac = MathF.Abs( relativeVertVelocity ).LerpInverse( 0f, Controller.PlayerSettings.SprintSpeed
+		) * MathF.Sign( relativeVertVelocity );
+		float relativeForwardVelocityFrac = MathF.Abs( relativeForwardVelocity ).LerpInverse( 0f,
+			Controller.PlayerSettings.SprintSpeed
+		) * MathF.Sign( relativeForwardVelocity );
 
 		Vector4 swayContribution = new(relativeHorzVelocityFrac, relativeVertVelocityFrac, relativeHorzVelocityFrac,
-		relativeForwardVelocityFrac);
+			relativeForwardVelocityFrac);
 
 		swayContribution.x *= -16f;
 		swayContribution.y *= 16f;
@@ -133,15 +138,13 @@
 
 	private void OnTimerStart()
 	{
-		if (PlayerPreferences.Instance.HudEnabled && TimerPanel is null)
+		if ( PlayerPreferences.Instance.HudEnabled && TimerPanel is null )
 		{
-			TimerPanel = new();
-			TimerPanel.Timer = Timer;
-			TimerPanel.Parent = Panel;
+			TimerPanel = new TimerPanel { Timer = Timer, Parent = Panel };
 		}
 
-		TimerPanel?.RemoveClass("complete");
-		TimerPanel?.RemoveClass("pb");
+		TimerPanel?.RemoveClass( "complete" );
+		TimerPanel?.RemoveClass( "pb" );
 	}
 
 	private void OnTimerRestart()
@@ -150,21 +153,14 @@
 		TimerPanel = null;
 	}
 
-	private void OnTimerEnd(float _1, bool isBest, int _2)
+	private void OnTimerEnd( float _1, bool isBest, int _2 )
 	{
-		if (isBest)
-		{
-			TimerPanel?.AddClass("pb");
-		}
-		else
-		{
-			TimerPanel?.AddClass("complete");
-		}
+		TimerPanel?.AddClass( isBest ? "pb" : "complete" );
 	}
 
 	private void OnPreferencesSavedOrLoaded()
 	{
-		ScreenPanel screenPanel = Components.Get<ScreenPanel>(FindMode.EverythingInSelf);
+		ScreenPanel screenPanel = Components.Get<ScreenPanel>( FindMode.EverythingInSelf );
 		screenPanel.Scale = PlayerPreferences.Instance.HudScale;
 		screenPanel.Enabled = PlayerPreferences.Instance.HudEnabled;
 

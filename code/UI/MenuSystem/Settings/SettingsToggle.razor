@@ -2,51 +2,51 @@
 @inherits Panel
 
 <root class="layout column settings-toggle">
-  <div class="settings settings-control toggle__title text backdrop">
-    <div class="settings toggle__title text">@Title</div>
-    <SwitchControl Value:bind=@Value OnValueChanged=@OnValueChanged />
-  </div>
+	<div class="settings settings-control toggle__title text backdrop">
+		<div class="settings toggle__title text">@Title</div>
+		<SwitchControl Value:bind="@Value" OnValueChanged="@OnValueChanged"/>
+	</div>
 
-  <div class="layout column toggle__content @((Value && ChildContent is not null) ? "expanded" : "collapsed")"
-    @ref=ContentPanel>
-    @ChildContent
-  </div>
+	<div class="layout column toggle__content @( (Value && ChildContent is not null) ? "expanded" : "collapsed" )"
+	     @ref=" ContentPanel">
+		@ChildContent
+	</div>
 </root>
 
 @code {
-  public string Title { get; set; }
-  public bool Value { get; set; }
-  private Panel ContentPanel { get; set; }
-  private float? ContentHeight { get; set; }
+	public string Title { get; set; }
+	public bool Value { get; set; }
+	private Panel ContentPanel { get; set; }
+	private float? ContentHeight { get; set; }
 
-  private void OnValueChanged(bool value)
-  {
-    if (!value)
-    {
-      ContentPanel.Style.MaxHeight = Length.Pixels(0f);
-    }
-    else if (ContentHeight.HasValue)
-    {
-      ContentPanel.Style.MaxHeight = Length.Pixels(ContentHeight.Value);
-    }
-    else
-    {
-      ContentPanel.Style.MaxHeight = Length.Pixels(9999f);
-    }
-  }
+	private void OnValueChanged( bool value )
+	{
+		if ( !value )
+		{
+			ContentPanel.Style.MaxHeight = Length.Pixels( 0f );
+		}
+		else if ( ContentHeight.HasValue )
+		{
+			ContentPanel.Style.MaxHeight = Length.Pixels( ContentHeight.Value );
+		}
+		else
+		{
+			ContentPanel.Style.MaxHeight = Length.Pixels( 9999f );
+		}
+	}
 
-  public override void Tick()
-  {
-    if (ChildContent is not null)
-    {
-      var height = ContentPanel.Box.RectInner.Size.y * ScaleFromScreen * 1.5f;
+	public override void Tick()
+	{
+		if ( ChildContent is null ) return;
 
-      if (height > ContentHeight.GetValueOrDefault(0f))
-      {
-        ContentHeight = height;
-        ContentPanel.Style.MaxHeight = Length.Pixels(height);
-        OnValueChanged(Value);
-      }
-    }
-  }
+		var height = ContentPanel.Box.RectInner.Size.y * ScaleFromScreen * 1.5f;
+
+		if ( height > ContentHeight.GetValueOrDefault( 0f ) )
+		{
+			ContentHeight = height;
+			ContentPanel.Style.MaxHeight = Length.Pixels( height );
+			OnValueChanged( Value );
+		}
+	}
+
 }

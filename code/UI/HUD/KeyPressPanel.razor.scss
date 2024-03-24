@@ -1,42 +1,42 @@
 @import "/UI/Styles/Theme.scss";
 
 KeyPressPanel {
-  width: 100%;
-  height: 100%;
-  position: absolute;
+	width: 100%;
+	height: 100%;
+	position: absolute;
 
-  p {
-    font-size: 50px;
-    font-family: $main-font;
-    color: white;
-    font-weight: bold;
-  }
+	p {
+		font-size: 50px;
+		font-family: $main-font;
+		color: white;
+		font-weight: bold;
+	}
 
-  .keys-container {
-    flex-direction: column;
-    align-items: center;
-    position: absolute;
-    bottom: 100px;
-    left: 100px;
-  }
+	.keys-container {
+		flex-direction: column;
+		align-items: center;
+		position: absolute;
+		bottom: 100px;
+		left: 100px;
+	}
 
-  .key-row {
-    height: 100%;
-  }
+	.key-row {
+		height: 100%;
+	}
 
-  .key {
-    width: 100px;
-    height: 100px;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+	.key {
+		width: 100px;
+		height: 100px;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
 
-    &.highlighted {
-      background-color: $main-color-primary;
-    }
+		&.highlighted {
+			background-color: $main-color-primary;
+		}
 
-    &.double {
-      width: 200px;
-    }
-  }
+		&.double {
+			width: 200px;
+		}
+	}
 }

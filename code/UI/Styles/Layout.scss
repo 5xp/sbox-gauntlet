@@ -3,39 +3,39 @@ $layout-extra-padding: 16px;
 $layout-insane-padding: 64px;
 
 .pk .layout {
-  &.padding {
-    padding: $layout-standard-padding;
-  }
+	&.padding {
+		padding: $layout-standard-padding;
+	}
 
-  &.padding-extra {
-    padding: $layout-extra-padding;
-  }
+	&.padding-extra {
+		padding: $layout-extra-padding;
+	}
 
-  &.padding-insane {
-    padding: $layout-insane-padding;
-  }
+	&.padding-insane {
+		padding: $layout-insane-padding;
+	}
 
-  &.gap {
-    gap: 8px;
-  }
+	&.gap {
+		gap: 8px;
+	}
 
-  &.gap-extra {
-    gap: 16px;
-  }
+	&.gap-extra {
+		gap: 16px;
+	}
 
-  &.flex-grow {
-    flex-grow: 1;
-  }
+	&.flex-grow {
+		flex-grow: 1;
+	}
 
-  &.row {
-    flex-direction: row;
-  }
+	&.row {
+		flex-direction: row;
+	}
 
-  &.column {
-    flex-direction: column;
-  }
+	&.column {
+		flex-direction: column;
+	}
 
-  &.pointer-events {
-    pointer-events: all;
-  }
+	&.pointer-events {
+		pointer-events: all;
+	}
 }

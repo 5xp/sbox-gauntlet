@@ -1,33 +1,41 @@
-namespace Gauntlet;
+using Gauntlet.Player.Animation;
+using Gauntlet.Player.Mechanics;
+using Gauntlet.Utils;
+
+namespace Gauntlet.Player;
 
 public partial class PlayerController : Component
 {
 	/// <summary>
 	/// A reference to the player's body (the GameObject)
 	/// </summary>
-	[Property] public GameObject Body { get; set; }
+	[Property]
+	public GameObject Body { get; set; }
 
 	/// <summary>
 	/// A reference to the animation helper (normally on the Body GameObject)
 	/// </summary>
-	[Property] public AnimationHelper AnimationHelper { get; set; }
+	[Property]
+	public AnimationHelper AnimationHelper { get; set; }
 
 	/// <summary>
 	/// The current camera controller for this player.
 	/// </summary>
-	[Property] public CameraController CameraController { get; set; }
+	[Property]
+	public CameraController CameraController { get; set; }
 
 	/// <summary>
 	/// A reference to the player's hull collider, used for colliding with triggers.
 	/// </summary>
-	[Property] public HullCollider HullCollider { get; set; }
+	[Property]
+	public HullCollider HullCollider { get; set; }
 
 	private SoundHandle LandSoundHandle { get; set; }
 
 	/// <summary>
 	/// Get a quick reference to the real Camera GameObject.
 	/// </summary>
-	public GameObject CameraGameObject => CameraController.Camera.GameObject;
+	private GameObject CameraGameObject => CameraController.Camera.GameObject;
 
 	/// <summary>
 	/// Mechanics can add to this positional camera offset. Resets to zero after every frame.
@@ -44,20 +52,20 @@ public partial class PlayerController : Component
 	/// This offset gets added to the eye position
 	/// This slowly goes back to 0
 	/// </summary>
-	public Vector3 StepSmoothingOffset { get; set; }
+	private Vector3 StepSmoothingOffset { get; set; }
 
-	public GameObject LastGroundObject { get; set; }
-	public GameObject GroundObject { get; set; }
+	private GameObject LastGroundObject { get; set; }
+	private GameObject GroundObject { get; set; }
 	[Property, ReadOnly] public bool IsGrounded => GroundObject is not null;
 	public TimeSince TimeSinceLastOnGround { get; set; }
 	public TimeSince TimeSinceLastLanding { get; set; }
 
-	public Vector3 GroundNormal { get; set; }
-	public float CurrentEyeHeight { get; set; }
-	public float CurrentHullHeight { get; set; }
+	public Vector3 GroundNormal { get; private set; }
+	private float CurrentEyeHeight { get; set; }
+	private float CurrentHullHeight { get; set; }
 	public float DuckFraction { get; set; }
 	public Vector3 LastVelocity { get; set; }
-	public float FallSpeed { get; set; }
+	private float FallSpeed { get; set; }
 	public float FallHeight => FallSpeed * FallSpeed / (2 * PlayerSettings.Gravity) / 12f * MathF.Sign( -FallSpeed );
 
 	/// <summary>
@@ -84,7 +92,8 @@ public partial class PlayerController : Component
 	/// <summary>
 	/// The current holdtype for the player.
 	/// </summary>
-	[Property] AnimationHelper.HoldTypes CurrentHoldType { get; set; } = AnimationHelper.HoldTypes.None;
+	[Property]
+	AnimationHelper.HoldTypes CurrentHoldType { get; set; } = AnimationHelper.HoldTypes.None;
 
 	/// <summary>
 	/// Called when the player jumps.
@@ -104,7 +113,7 @@ public partial class PlayerController : Component
 			float height = CurrentHullHeight;
 
 			Vector3 mins = new Vector3( -radius, -radius, 0 );
-			Vector3 maxs = new( radius, radius, height );
+			Vector3 maxs = new(radius, radius, height);
 
 			return new BBox( mins, maxs );
 		}
@@ -117,7 +126,8 @@ public partial class PlayerController : Component
 		if ( HullCollider is not null )
 		{
 			HullCollider.Center = Vector3.Up * PlayerSettings.HullHeightStanding * 0.5f;
-			HullCollider.BoxSize = new Vector3( PlayerSettings.HullRadius * 2, PlayerSettings.HullRadius * 2, PlayerSettings.HullHeightStanding );
+			HullCollider.BoxSize = new Vector3( PlayerSettings.HullRadius * 2, PlayerSettings.HullRadius * 2,
+				PlayerSettings.HullHeightStanding );
 		}
 
 		if ( DebugConVars.DebugWallrunSettings )
@@ -161,7 +171,6 @@ public partial class PlayerController : Component
 			cam.Transform.Rotation = lookDir * CurrentCameraRotationOffset;
 			EyeAngles.roll = 0;
 			CurrentCameraRotationOffset = Rotation.Identity;
-
 		}
 
 		float rotateDifference = 0;
@@ -198,7 +207,7 @@ public partial class PlayerController : Component
 		}
 	}
 
-	public void Restart()
+	private void Restart()
 	{
 		GameManager gameManager = Scene.Components.Get<GameManager>( FindMode.InChildren );
 
@@ -208,21 +217,17 @@ public partial class PlayerController : Component
 		}
 	}
 
-	public void SimulateEyes()
+	private void SimulateEyes()
 	{
 		float targetDuckFraction = Common.DuckDown() ? 1f : 0f;
-		float targetHullHeight = PlayerSettings.HullHeightStanding.LerpTo( PlayerSettings.HullHeightCrouching, targetDuckFraction );
+		float targetHullHeight =
+			PlayerSettings.HullHeightStanding.LerpTo( PlayerSettings.HullHeightCrouching, targetDuckFraction );
 		// Unducking
 		if ( DuckFraction > targetDuckFraction )
 		{
-			if ( GetMechanic<CrouchMechanic>().ForceDuck )
-			{
-				DuckFraction = 1f;
-			}
-			else
-			{
-				DuckFraction = DuckFraction.Approach( 0f, PlayerSettings.UnduckSpeed * Time.Delta );
-			}
+			DuckFraction = GetMechanic<CrouchMechanic>().ForceDuck
+				? 1f
+				: DuckFraction.Approach( 0f, PlayerSettings.UnduckSpeed * Time.Delta );
 		}
 		// Ducking
 		else if ( DuckFraction < targetDuckFraction )
@@ -242,10 +247,12 @@ public partial class PlayerController : Component
 			CurrentHullHeight = PlayerSettings.HullHeightCrouching;
 		}
 
-		StepSmoothingOffset = StepSmoothingOffset.Approach( 0f, PlayerSettings.StepSmoothingOffsetCorrectSpeed * Time.Delta );
+		StepSmoothingOffset =
+			StepSmoothingOffset.Approach( 0f, PlayerSettings.StepSmoothingOffsetCorrectSpeed * Time.Delta );
 		float duckTime = MathUtils.SmoothStep( DuckFraction );
 		CurrentEyeHeight = PlayerSettings.ViewHeightStanding.LerpTo( PlayerSettings.ViewHeightCrouching, duckTime );
-		CameraGameObject.Transform.LocalPosition = Vector3.Up * CurrentEyeHeight + CurrentCameraOffset + StepSmoothingOffset;
+		CameraGameObject.Transform.LocalPosition =
+			Vector3.Up * CurrentEyeHeight + CurrentCameraOffset + StepSmoothingOffset;
 	}
 
 	public bool CanUnduck()
@@ -255,12 +262,12 @@ public partial class PlayerController : Component
 		return !tr.Hit;
 	}
 
-	public float StepMove( float groundAngle, float stepSize, Vector3 up )
+	private float StepMove( float groundAngle, float stepSize, Vector3 up )
 	{
-		MoveHelper mover = new( Position, Velocity )
+		MoveHelper mover = new(Position, Velocity)
 		{
 			Trace = Scene.Trace.Size( Hull )
-			.WithoutTags( "player" ),
+				.WithoutTags( "player" ),
 			MaxStandableAngle = groundAngle
 		};
 
@@ -278,10 +285,10 @@ public partial class PlayerController : Component
 
 	public void Move( float groundAngle = 46f )
 	{
-		MoveHelper mover = new( Position, Velocity )
+		MoveHelper mover = new(Position, Velocity)
 		{
 			Trace = Scene.Trace.Size( Hull )
-			.WithoutTags( "player" ),
+				.WithoutTags( "player" ),
 			MaxStandableAngle = groundAngle
 		};
 
@@ -292,12 +299,14 @@ public partial class PlayerController : Component
 		Position = mover.Position;
 		Velocity = mover.Velocity;
 
-		if ( mover.HitWall && mover.HitNormal.HasValue )
+		if ( !mover.HitWall || !mover.HitNormal.HasValue )
 		{
-			FallSpeed = beforeZ;
-			PreWallTouchSpeed = beforeSpeed;
-			GetMechanic<WallrunMechanic>().OnWallTouch( mover.HitNormal.Value );
+			return;
 		}
+
+		FallSpeed = beforeZ;
+		PreWallTouchSpeed = beforeSpeed;
+		GetMechanic<WallrunMechanic>().OnWallTouch( mover.HitNormal.Value );
 	}
 
 	public void AddStepOffset( Vector3 stepOffset )
@@ -330,7 +339,8 @@ public partial class PlayerController : Component
 		OnJump?.Invoke( jumpType );
 	}
 
-	public SceneTraceResult TraceBBox( Vector3 start, Vector3 end, Vector3 mins, Vector3 maxs, float liftFeet = 0.0f, float liftHead = 0.0f )
+	public SceneTraceResult TraceBBox( Vector3 start, Vector3 end, Vector3 mins, Vector3 maxs, float liftFeet = 0.0f,
+		float liftHead = 0.0f )
 	{
 		if ( liftFeet > 0 )
 		{
@@ -369,7 +379,7 @@ public partial class PlayerController : Component
 		return TraceBBox( start, end, Hull.Mins, Hull.Maxs, liftFeet, liftHead );
 	}
 
-	public static bool IsFloor( Vector3 up, Vector3 normal, float maxAngle )
+	private static bool IsFloor( Vector3 up, Vector3 normal, float maxAngle )
 	{
 		return Vector3.GetAngle( up, normal ) <= maxAngle;
 	}
@@ -386,14 +396,12 @@ public partial class PlayerController : Component
 
 	public float GetWishSpeed()
 	{
-		if ( CurrentSpeedOverride is not null ) return CurrentSpeedOverride.Value;
-
-		return PlayerSettings.WalkSpeed;
+		return CurrentSpeedOverride ?? PlayerSettings.WalkSpeed;
 	}
 
 	public Vector3 WishMove;
 
-	public void BuildWishInput()
+	private void BuildWishInput()
 	{
 		WishMove = 0;
 
@@ -470,13 +478,13 @@ public partial class PlayerController : Component
 		}
 	}
 
-	public void UpdateGroundObject( SceneTraceResult tr )
+	private void UpdateGroundObject( SceneTraceResult tr )
 	{
 		GroundNormal = tr.Normal;
 		SetGroundObject( tr.GameObject );
 	}
 
-	public void SetGroundObject( GameObject groundObject )
+	private void SetGroundObject( GameObject groundObject )
 	{
 		LastGroundObject = GroundObject;
 		GroundObject = groundObject;
@@ -487,21 +495,16 @@ public partial class PlayerController : Component
 			TimeSinceLastOnGround = 0;
 		}
 
-		if ( LastGroundObject is null && groundObject is not null )
+		if ( LastGroundObject is not null || groundObject is null )
 		{
-			FallSpeed = LastVelocity.z;
-
-			if ( FallHeight >= PlayerSettings.HardFallDist )
-			{
-				LandSoundHandle = Sound.Play( HardLandSound );
-			}
-			else
-			{
-				LandSoundHandle = Sound.Play( LandSound );
-			}
-			TimeSinceLastLanding = 0;
-			OnLanded?.Invoke();
+			return;
 		}
+
+		FallSpeed = LastVelocity.z;
+
+		LandSoundHandle = Sound.Play( FallHeight >= PlayerSettings.HardFallDist ? HardLandSound : LandSound );
+		TimeSinceLastLanding = 0;
+		OnLanded?.Invoke();
 	}
 
 	/// <summary>
@@ -531,28 +534,36 @@ public partial class PlayerController : Component
 
 		Gizmo.Draw.LineBBox( Hull );
 
-		Vector2 basePos = new( 25, 25 );
-		Vector2 offset = new( 0, 20 );
+		Vector2 basePos = new(25, 25);
+		Vector2 offset = new(0, 20);
 		int offsetIndex = 0;
 
 		CameraComponent cam = CameraController.Camera;
 		Angles camAngles = cam.Transform.Rotation.Angles();
 
-		float fontSize = 16;
+		const float fontSize = 16;
 
-		Gizmo.Draw.ScreenText( $"Velocity: {Velocity.Length:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
-		Gizmo.Draw.ScreenText( $"Horz vel: {HorzVelocity.Length:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
-		Gizmo.Draw.ScreenText( $"Vert vel: {Velocity.z:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
-		Gizmo.Draw.ScreenText( $"Fall speed: {FallSpeed:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
-		Gizmo.Draw.ScreenText( $"CamAngle: {camAngles.pitch:F2}, {camAngles.yaw:F2}, {camAngles.roll:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
-		Gizmo.Draw.ScreenText( $"CamPos: {cam.Transform.Position.x:F2}, {cam.Transform.Position.y:F2}, {cam.Transform.Position.z:F2}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
+		Gizmo.Draw.ScreenText( $"Velocity: {Velocity.Length:F2}", basePos + offset * offsetIndex++, size: fontSize,
+			flags: TextFlag.Left );
+		Gizmo.Draw.ScreenText( $"Horz vel: {HorzVelocity.Length:F2}", basePos + offset * offsetIndex++, size: fontSize,
+			flags: TextFlag.Left );
+		Gizmo.Draw.ScreenText( $"Vert vel: {Velocity.z:F2}", basePos + offset * offsetIndex++, size: fontSize,
+			flags: TextFlag.Left );
+		Gizmo.Draw.ScreenText( $"Fall speed: {FallSpeed:F2}", basePos + offset * offsetIndex++, size: fontSize,
+			flags: TextFlag.Left );
+		Gizmo.Draw.ScreenText( $"CamAngle: {camAngles.pitch:F2}, {camAngles.yaw:F2}, {camAngles.roll:F2}",
+			basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
+		Gizmo.Draw.ScreenText(
+			$"CamPos: {cam.Transform.Position.x:F2}, {cam.Transform.Position.y:F2}, {cam.Transform.Position.z:F2}",
+			basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
 
 		offsetIndex++;
 
 		var sortedMechanics = Mechanics;
 		foreach ( var mechanic in sortedMechanics )
 		{
-			Gizmo.Draw.ScreenText( $"{mechanic.GetType().Name} {(mechanic.IsActive ? "Active" : "Inactive")}", basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
+			Gizmo.Draw.ScreenText( $"{mechanic.GetType().Name} {(mechanic.IsActive ? "Active" : "Inactive")}",
+				basePos + offset * offsetIndex++, size: fontSize, flags: TextFlag.Left );
 		}
 	}
 }

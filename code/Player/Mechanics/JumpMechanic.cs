@@ -1,11 +1,13 @@
-﻿namespace Gauntlet;
+﻿using Gauntlet.Utils;
+
+namespace Gauntlet.Player.Mechanics;
 
 /// <summary>
 /// A jumping mechanic.
 /// </summary>
-public partial class JumpMechanic : BasePlayerControllerMechanic
+public class JumpMechanic : BasePlayerControllerMechanic
 {
-	public int AirJumpsRemaining { get; set; }
+	private int AirJumpsRemaining { get; set; }
 
 	private TimeSince TimeSinceGroundJump { get; set; }
 	private TimeSince TimeSinceAirJump { get; set; }
@@ -248,7 +250,8 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 
 			if ( horzVelocity.LengthSquared > PlayerSettings.SkipSpeedRetain * PlayerSettings.SkipSpeedRetain )
 			{
-				float newSpeed = MathF.Max( horzVelocity.Length - PlayerSettings.SkipSpeedReduce, PlayerSettings.SkipSpeedRetain );
+				float newSpeed = MathF.Max( horzVelocity.Length - PlayerSettings.SkipSpeedReduce,
+					PlayerSettings.SkipSpeedRetain );
 				horzVelocity = horzVelocity.Normal * newSpeed;
 			}
 		}
@@ -268,7 +271,8 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 	/// <param name="max">The maximum allowed velocity change</param>
 	/// <param name="strength">Fraction of change towards the input direction</param>
 	/// <param name="speedOverride"></param>
-	private void RedirectVelocity( Vector3 inputDir, Vector3 velocity, float max, float strength, float? speedOverride = null )
+	private void RedirectVelocity( Vector3 inputDir, Vector3 velocity, float max, float strength,
+		float? speedOverride = null )
 	{
 		float speed = speedOverride ?? velocity.Length;
 
@@ -336,7 +340,8 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 
 	private static bool DidPressMovementKey()
 	{
-		return Input.Pressed( "Forward" ) || Input.Pressed( "Backward" ) || Input.Pressed( "Left" ) || Input.Pressed( "Right" );
+		return Input.Pressed( "Forward" ) || Input.Pressed( "Backward" ) || Input.Pressed( "Left" ) ||
+		       Input.Pressed( "Right" );
 	}
 
 	/// <summary>
@@ -346,7 +351,8 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 	/// <returns></returns>
 	private bool RecentlyLeftGround()
 	{
-		return Controller.TimeSinceLastOnGround <= PlayerSettings.JumpGracePeriod && TimeSinceLastStart > Controller.TimeSinceLastOnGround;
+		return Controller.TimeSinceLastOnGround <= PlayerSettings.JumpGracePeriod &&
+		       TimeSinceLastStart > Controller.TimeSinceLastOnGround;
 	}
 
 	/// <summary>
@@ -358,19 +364,15 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 	{
 		WallrunMechanic wallrun = Controller.GetMechanic<WallrunMechanic>();
 
-		return wallrun.TimeSinceFellAwayFromWall <= PlayerSettings.JumpGracePeriod && TimeSinceLastStart > wallrun.TimeSinceFellAwayFromWall;
+		return wallrun.TimeSinceFellAwayFromWall <= PlayerSettings.JumpGracePeriod &&
+		       TimeSinceLastStart > wallrun.TimeSinceFellAwayFromWall;
 	}
 
 	private bool PredictGroundTouch( float timeStep )
 	{
 		SceneTraceResult tr = Controller.TraceWithVelocity( timeStep );
 
-		if ( !tr.Hit )
-		{
-			return false;
-		}
-
-		return Controller.IsFloor( tr.Normal );
+		return tr.Hit && Controller.IsFloor( tr.Normal );
 	}
 
 	private void OnLanded()
@@ -390,14 +392,7 @@ public partial class JumpMechanic : BasePlayerControllerMechanic
 
 	private void PlayJumpSound( JumpType jumpType )
 	{
-		if ( jumpType == JumpType.Air )
-		{
-			JumpSoundHandle = Sound.Play( Controller.AirJumpSound );
-		}
-		else
-		{
-			JumpSoundHandle = Sound.Play( Controller.JumpSound );
-		}
+		JumpSoundHandle = Sound.Play( jumpType == JumpType.Air ? Controller.AirJumpSound : Controller.JumpSound );
 	}
 
 	public void RefreshAirJumps()

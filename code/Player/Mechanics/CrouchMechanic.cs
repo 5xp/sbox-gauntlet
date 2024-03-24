@@ -1,8 +1,10 @@
-namespace Gauntlet;
+using Gauntlet.Utils;
 
-public partial class CrouchMechanic : BasePlayerControllerMechanic
+namespace Gauntlet.Player.Mechanics;
+
+public class CrouchMechanic : BasePlayerControllerMechanic
 {
-	public bool ForceDuck { get; set; } = false;
+	public bool ForceDuck { get; private set; } = false;
 
 	public override int Priority => 10;
 

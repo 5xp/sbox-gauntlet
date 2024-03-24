@@ -1,69 +1,71 @@
 @namespace Gauntlet.UI
+@using System.Diagnostics
 @inherits Panel
 
 <root class="layout column settings-category">
-  <div class="settings settings-control category__title text backdrop @(Collapsed ? "collapsed" : "expanded")"
-    @ref=CategoryPanel onclick=@ToggleCollapsed>
-    <div class="bg"></div>
-    <div class="bg"></div>
-    @Title
-  </div>
-  <div class="layout column category__content @(Collapsed ? "collapsed" : "expanded")" @ref=ContentPanel>
-    @ChildContent
-  </div>
+	<div class="settings settings-control category__title text backdrop @( Collapsed ? "collapsed" : "expanded" )"
+	     @ref=" CategoryPanel" onclick="@ToggleCollapsed">
+		<div class="bg"></div>
+		<div class="bg"></div>
+		@Title
+	</div>
+	<div class="layout column category__content @( Collapsed ? "collapsed" : "expanded" )" @ref=" ContentPanel">
+		@ChildContent
+	</div>
 </root>
 
 @code {
-  public string Title { get; set; }
-  private bool Collapsed { get; set; } = false;
-  private Panel CategoryPanel { get; set; }
-  private Panel ContentPanel { get; set; }
-  private float ScrollSpeedFraction { get; set; }
-  private float? ContentHeight { get; set; }
+	public string Title { get; set; }
+	private bool Collapsed { get; set; } = false;
+	private Panel CategoryPanel { get; set; }
+	private Panel ContentPanel { get; set; }
+	private float ScrollSpeedFraction { get; set; }
+	private float? ContentHeight { get; set; }
 
-  private void ToggleCollapsed()
-  {
-    Collapsed = !Collapsed;
+	private void ToggleCollapsed()
+	{
+		Collapsed = !Collapsed;
 
-    if (Collapsed)
-    {
-      ContentPanel.Style.MaxHeight = Length.Pixels(0f);
-    }
-    else
-    {
-      ContentPanel.Style.MaxHeight = Length.Pixels(ContentHeight.Value);
-    }
-  }
+		if ( Collapsed )
+		{
+			ContentPanel.Style.MaxHeight = Length.Pixels( 0f );
+		}
+		else if ( ContentHeight.HasValue )
+		{
+			ContentPanel.Style.MaxHeight = Length.Pixels( ContentHeight.Value );
+		}
+	}
 
-  public override void Tick()
-  {
-    ScrollSpeedFraction = ScrollSpeedFraction.Approach(Collapsed ? 0f : 1f, 3f * Time.Delta);
+	public override void Tick()
+	{
+		ScrollSpeedFraction = ScrollSpeedFraction.Approach( Collapsed ? 0f : 1f, 3f * Time.Delta );
 
-    if (CategoryPanel is null)
-    {
-      return;
-    }
+		if ( CategoryPanel is null )
+		{
+			return;
+		}
 
-    if (ContentHeight is null && !Collapsed)
-    {
-      var height = ContentPanel.Box.RectInner.Size.y * ScaleFromScreen;
+		if ( ContentHeight is null && !Collapsed )
+		{
+			var height = ContentPanel.Box.RectInner.Size.y * ScaleFromScreen;
 
-      if (height > 0f)
-      {
-        ContentHeight = height;
+			if ( height > 0f )
+			{
+				ContentHeight = height;
 
-        ContentPanel.Style.MaxHeight = Length.Pixels(height);
-      }
-    }
+				ContentPanel.Style.MaxHeight = Length.Pixels( height );
+			}
+		}
 
-    var backgroundPanels = CategoryPanel.Children.Where(c => c.HasClass("bg")).ToList();
+		var backgroundPanels = CategoryPanel.Children.Where( c => c.HasClass( "bg" ) ).ToList();
 
-    foreach (var panel in backgroundPanels)
-    {
-      Length? pos = panel.Style.BackgroundPositionX ?? Length.Percent(0f);
-      pos = Length.Percent(pos.Value.Value + Time.Delta * ScrollSpeedFraction);
-      panel.Style.BackgroundPositionX = pos;
-      panel.Style.BackgroundPositionY = pos;
-    }
-  }
+		foreach ( var panel in backgroundPanels )
+		{
+			Length? pos = panel.Style.BackgroundPositionX ?? Length.Percent( 0f );
+			pos = Length.Percent( pos.Value.Value + Time.Delta * ScrollSpeedFraction );
+			panel.Style.BackgroundPositionX = pos;
+			panel.Style.BackgroundPositionY = pos;
+		}
+	}
+
 }

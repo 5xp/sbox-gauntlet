@@ -1,19 +1,20 @@
 @namespace Gauntlet.UI
+@using Gauntlet.Timer
+@using Gauntlet.Utils
 @inherits Panel
 
 <root class="pk">
-  <article class="data-row">
-    <div class="data-cell">
-      <header class="data-label">@(Timer.InStartZone ? "Last" : "Current") Run </header>
-      <div class="data-label-small">@Timer.LastOrCurrentLoop.ToOrdinal() Loop</div>
-    </div>
-    <div class="vl"></div>
-    <aside class="icon small">@(Timer.InStartZone ? "sports_score" : "hourglass_top")</aside>
-  </article>
+	<article class="data-row">
+		<div class="data-cell">
+			<header class="data-label">@( Timer.InStartZone ? "Last" : "Current" ) Run </header>
+			<div class="data-label-small">@Timer.LastOrCurrentLoop.ToOrdinal() Loop</div>
+		</div>
+		<div class="vl"></div>
+		<aside class="icon small">@( Timer.InStartZone ? "sports_score" : "hourglass_top" )</aside>
+	</article>
 </root>
 
 @code {
-  public Timer Timer { get; set; }
-  public int Loop { get; set; }
-  protected override int BuildHash() => System.HashCode.Combine(Timer.InStartZone, Timer.LastOrCurrentLoop);
+	public Timer Timer { get; set; }
+	protected override int BuildHash() => System.HashCode.Combine( Timer.InStartZone, Timer.LastOrCurrentLoop );
 }

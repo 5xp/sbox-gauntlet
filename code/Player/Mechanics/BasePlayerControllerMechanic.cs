@@ -1,11 +1,11 @@
-namespace Gauntlet;
+namespace Gauntlet.Player.Mechanics;
 
 /// <summary>
 /// A base for a player controller mechanic.
 /// </summary>
-public abstract partial class BasePlayerControllerMechanic : Component
+public abstract class BasePlayerControllerMechanic : Component
 {
-	[Property, Category( "Base" )] public PlayerController Controller { get; set; }
+	[Property, Category( "Base" )] protected PlayerController Controller { get; set; }
 
 	/// <summary>
 	/// A priority for the controller mechanic.
@@ -15,7 +15,8 @@ public abstract partial class BasePlayerControllerMechanic : Component
 	/// <summary>
 	/// How long since <see cref="IsActive"/> changed.
 	/// </summary>
-	[Property, Category( "Base" ), ReadOnly] public TimeSince TimeSinceActiveChanged { get; protected set; }
+	[Property, Category( "Base" ), ReadOnly]
+	protected TimeSince TimeSinceActiveChanged { get; set; }
 
 	/// <summary>
 	/// How long since <see cref="IsActive"/> was set to true
@@ -33,29 +34,29 @@ public abstract partial class BasePlayerControllerMechanic : Component
 	public TimeSince TimeSinceStop { get; protected set; }
 
 
-	public Vector3 Position
+	protected Vector3 Position
 	{
 		get => Controller.Position;
 		set => Controller.Position = value;
 	}
 
-	public Vector3 Velocity
+	protected Vector3 Velocity
 	{
 		get => Controller.Velocity;
 		set => Controller.Velocity = value;
 	}
 
-	public Vector3 HorzVelocity
+	protected Vector3 HorzVelocity
 	{
 		get => Controller.HorzVelocity;
 	}
 
-	public PlayerSettings PlayerSettings
+	protected PlayerSettings PlayerSettings
 	{
 		get => Controller.PlayerSettings;
 	}
 
-	private bool isActive;
+	private bool _isActive;
 
 	/// <summary>
 	/// Is this mechanic active?
@@ -63,20 +64,30 @@ public abstract partial class BasePlayerControllerMechanic : Component
 	[Property, Category( "Base" ), ReadOnly]
 	public bool IsActive
 	{
-		get => isActive;
+		get => _isActive;
 		set
 		{
-			var before = isActive;
-			isActive = value;
+			var before = _isActive;
+			_isActive = value;
 
-			if ( isActive != before )
+			if ( _isActive == before )
 			{
-				TimeSinceActiveChanged = 0;
-				if ( isActive ) TimeSinceStart = 0;
-				if ( !isActive ) TimeSinceStop = 0;
-				OnActiveChanged( before, isActive );
-				if ( isActive ) TimeSinceLastStart = 0;
+				return;
 			}
+
+			TimeSinceActiveChanged = 0;
+			switch (_isActive)
+			{
+				case true:
+					TimeSinceStart = 0;
+					break;
+				case false:
+					TimeSinceStop = 0;
+					break;
+			}
+
+			OnActiveChanged( before, _isActive );
+			if ( _isActive ) TimeSinceLastStart = 0;
 		}
 	}
 
@@ -103,7 +114,7 @@ public abstract partial class BasePlayerControllerMechanic : Component
 	/// </summary>
 	/// <param name="tag"></param>
 	/// <returns></returns>
-	public bool HasTag( string tag ) => Controller.HasTag( tag );
+	protected bool HasTag( string tag ) => Controller.HasTag( tag );
 
 	/// <summary>
 	/// An accessor to see if the player controller has all matched tags.
@@ -117,7 +128,7 @@ public abstract partial class BasePlayerControllerMechanic : Component
 	/// </summary>
 	/// <param name="tags"></param>
 	/// <returns></returns>
-	public bool HasAnyTag( params string[] tags ) => Controller.HasAnyTag( tags );
+	protected bool HasAnyTag( params string[] tags ) => Controller.HasAnyTag( tags );
 
 	/// <summary>
 	/// Called when <see cref="IsActive"/> changes.

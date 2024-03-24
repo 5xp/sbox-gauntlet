@@ -1,18 +1,19 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using Gauntlet.Utils;
 using Sandbox.Services;
 namespace Gauntlet;
 
 public struct GauntletLeaderboardEntry
 {
-	public string DisplayName { get; set; }
-	public long SteamId { get; set; }
-	public int TimeTicks { get; set; }
+	public string DisplayName { get; init; }
+	public long SteamId { get; init; }
+	public int TimeTicks { get; init; }
 	public int Rank { get; set; }
 	public bool Me { get; set; }
 }
 
-class TimeComparer : IComparer<GauntletLeaderboardEntry>
+internal class TimeComparer : IComparer<GauntletLeaderboardEntry>
 {
 	public int Compare( GauntletLeaderboardEntry x, GauntletLeaderboardEntry y )
 	{
@@ -49,12 +50,12 @@ public sealed class LeaderboardManager
 	/// <summary>
 	/// A dictionary of cached leaderboard entries, indexed by the leaderboard identifier.
 	/// </summary>
-	private readonly Dictionary<string, SortedSet<GauntletLeaderboardEntry>> LeaderboardCache = new();
+	private readonly Dictionary<string, SortedSet<GauntletLeaderboardEntry>> _leaderboardCache = new();
 
 	/// <summary>
 	/// A dictionary of ongoing fetches, indexed by the leaderboard identifier.
 	/// </summary>
-	private readonly ConcurrentDictionary<string, Task<SortedSet<GauntletLeaderboardEntry>>> OngoingFetches = new();
+	private readonly ConcurrentDictionary<string, Task<SortedSet<GauntletLeaderboardEntry>>> _ongoingFetches = new();
 
 	/// <summary>
 	/// A dictionary of the player's leaderboard entries, indexed by the leaderboard identifier.
@@ -75,13 +76,13 @@ public sealed class LeaderboardManager
 	{
 		try
 		{
-			if ( !force && LeaderboardCache.TryGetValue( ident, out var entries ) )
+			if ( !force && _leaderboardCache.TryGetValue( ident, out var entries ) )
 			{
 				return entries;
 			}
 
 			// If a fetch is already in progress for this key, wait for it to complete and return its result.
-			if ( OngoingFetches.TryGetValue( ident, out var ongoingFetch ) )
+			if ( _ongoingFetches.TryGetValue( ident, out var ongoingFetch ) )
 			{
 				return await ongoingFetch;
 			}
@@ -90,19 +91,19 @@ public sealed class LeaderboardManager
 			var fetchTask = FetchFromLeaderboard( ident );
 
 			// Store the task in the dictionary so other callers can await it.
-			OngoingFetches[ident] = fetchTask;
+			_ongoingFetches[ident] = fetchTask;
 
 			var result = await fetchTask;
 
 			// Once the fetch is complete, remove it from the dictionary.
-			OngoingFetches.TryRemove( ident, out _ );
+			_ongoingFetches.TryRemove( ident, out _ );
 
 			return result;
 		}
 		catch ( Exception e )
 		{
 			Log.Error( e );
-			return new();
+			return new SortedSet<GauntletLeaderboardEntry>();
 		}
 	}
 
@@ -114,9 +115,10 @@ public sealed class LeaderboardManager
 		await board.Refresh();
 		var entries = board.Entries;
 
-		if ( !LeaderboardCache.ContainsKey( key ) )
+		if ( !_leaderboardCache.TryGetValue( key, out SortedSet<GauntletLeaderboardEntry> value ) )
 		{
-			LeaderboardCache[key] = new( new TimeComparer() );
+			value = new SortedSet<GauntletLeaderboardEntry>( new TimeComparer() );
+			_leaderboardCache[key] = value;
 		}
 
 		foreach ( var entry in entries )
@@ -126,7 +128,7 @@ public sealed class LeaderboardManager
 
 		OnLeaderboardRefresh?.Invoke();
 
-		return LeaderboardCache[key];
+		return value;
 
 	}
 
@@ -150,7 +152,7 @@ public sealed class LeaderboardManager
 
 		if ( playerEntry.Equals( default( GauntletLeaderboardEntry ) ) )
 		{
-			return new();
+			return new List<GauntletLeaderboardEntry>();
 		}
 
 		var playerIndex = entries.ToList().IndexOf( playerEntry );
@@ -167,7 +169,7 @@ public sealed class LeaderboardManager
 	/// <summary>
 	/// When we enter the start zone, we start polling the leaderboard entries for the current level.
 	/// </summary>
-	public void StartPolling( Timer timer )
+	public void StartPolling( Timer.Timer timer )
 	{
 		if ( ShouldPoll )
 		{
@@ -211,7 +213,7 @@ public sealed class LeaderboardManager
 
 	private static GauntletLeaderboardEntry ConvertEntry( Leaderboards.Entry entry )
 	{
-		return new()
+		return new GauntletLeaderboardEntry
 		{
 			DisplayName = entry.DisplayName,
 			SteamId = entry.SteamId,
@@ -246,7 +248,7 @@ public sealed class LeaderboardManager
 			MyEntryCache[ident] = entry;
 		}
 
-		var entries = LeaderboardCache[ident];
+		var entries = _leaderboardCache[ident];
 
 		entries.RemoveWhere( e => e.SteamId == entry.SteamId );
 		entries.Add( entry );

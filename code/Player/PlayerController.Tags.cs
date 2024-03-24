@@ -1,10 +1,10 @@
 using System.Collections.Immutable;
 
-namespace Gauntlet;
+namespace Gauntlet.Player;
 
 public partial class PlayerController
 {
-	private ImmutableArray<string> tags = ImmutableArray.Create<string>();
+	private ImmutableArray<string> _tags = ImmutableArray.Create<string>();
 
 	/// <summary>
 	/// Do we have a tag?
@@ -13,7 +13,7 @@ public partial class PlayerController
 	/// <returns></returns>
 	public bool HasTag( string tag )
 	{
-		return tags.Contains( tag );
+		return _tags.Contains( tag );
 	}
 
 	/// <summary>
@@ -23,13 +23,7 @@ public partial class PlayerController
 	/// <returns></returns>
 	public bool HasAnyTag( params string[] tags )
 	{
-		foreach ( var tag in tags )
-		{
-			if ( HasTag( tag ) )
-				return true;
-		}
-
-		return false;
+		return tags.Any( HasTag );
 	}
 
 	/// <summary>
@@ -39,12 +33,6 @@ public partial class PlayerController
 	/// <returns></returns>
 	public bool HasAllTags( params string[] tags )
 	{
-		foreach ( var tag in tags )
-		{
-			if ( !HasTag( tag ) )
-				return false;
-		}
-
-		return true;
+		return tags.All( HasTag );
 	}
 }
