@@ -4,7 +4,7 @@ namespace Gauntlet.Utils;
 
 public static class Common
 {
-	public static float HUPSToKPH( float hups ) => hups * 0.09f;
+	public static float HupsToKph( float hups ) => hups * 0.09f;
 
 	public static string ToOrdinal( this int num )
 	{

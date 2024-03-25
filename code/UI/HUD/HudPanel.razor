@@ -5,13 +5,19 @@
 @using Gauntlet.Utils
 @inherits PanelComponent
 
-<root class="pk"
-      style="transform: translateX(@( Position.x / 16 )%) translateY(@( Position.y / 9 )%) rotate(@( Position.z )deg) scale(@( GetScale() ));">
-	@if ( PlayerPreferences.Instance.KeyPressHudEnabled )
+@*
+This component contains all of the HUD panels that should be affected by the player's view sway.
+*@
+<root class="pk">
+	@if ( PlayerPreferences.Instance.KeyPressHudEnabled && !PlayerPreferences.Instance.KeyPressHudCompactEnabled )
 	{
-		<KeyPressPanel/>
+		<KeyPressPanel Compact="@false"/>
 	}
-	<SpeedometerPanel Controller="@Controller"/>
+
+	@if ( PlayerPreferences.Instance.SpeedometerHudEnabled && !PlayerPreferences.Instance.SpeedometerHudCompactEnabled )
+	{
+		<SpeedometerPanel Compact="@false" Controller="@Controller"/>
+	}
 </root>
 
 @code
@@ -29,13 +35,6 @@
 	private Vector4 WishSwayContribution { get; set; }
 	private Vector4 SwayContribution { get; set; }
 	private DampedSpring ViewPunchSpring { get; set; }
-
-	protected override int BuildHash()
-	{
-		HashCode hash = new();
-		hash.Add( Position );
-		return hash.ToHashCode();
-	}
 
 	protected override void OnStart()
 	{
@@ -59,6 +58,7 @@
 	protected override void OnUpdate()
 	{
 		UpdatePosition();
+		UpdateTransform();
 	}
 
 	private void UpdatePosition()
@@ -77,6 +77,16 @@
 		SwayContribution = SwayContribution.LerpTo( WishSwayContribution, Time.Delta );
 
 		Position = viewPunchContribution + SwayContribution;
+	}
+
+	private void UpdateTransform()
+	{
+		PanelTransform panelTransform = new PanelTransform();
+		panelTransform.AddTranslate( Length.Percent( Position.x / 16f ), Length.Percent( Position.y / 9f ) );
+		panelTransform.AddRotation( 0, 0, Position.z );
+		panelTransform.AddScale( GetScale() );
+
+		Panel.Style.Transform = panelTransform;
 	}
 
 	private Vector4 GetViewPunchContribution()
@@ -107,13 +117,13 @@
 	private Vector4 GetSwayMoveContribution()
 	{
 		Vector3 velocity = Controller.Velocity;
-		Vector3 projVel = Vector3.VectorPlaneProject( velocity, Controller.EyeAngles.Forward );
-		Vector3 rightEye = Controller.EyeAngles.Forward.Cross( Vector3.Up ).Normal;
-		Vector3 upEye = rightEye.Cross( Controller.EyeAngles.Forward ).Normal;
+		Vector3 projVel = Vector3.VectorPlaneProject( velocity, Controller.InputAngles.Forward );
+		Vector3 rightEye = Controller.InputAngles.Forward.Cross( Vector3.Up ).Normal;
+		Vector3 upEye = rightEye.Cross( Controller.InputAngles.Forward ).Normal;
 
 		float relativeHorzVelocity = projVel.Dot( rightEye );
 		float relativeVertVelocity = projVel.Dot( upEye );
-		float relativeForwardVelocity = velocity.Dot( Controller.EyeAngles.Forward );
+		float relativeForwardVelocity = velocity.Dot( Controller.InputAngles.Forward );
 
 		float relativeHorzVelocityFrac = MathF.Abs( relativeHorzVelocity ).LerpInverse( 0f, Controller.PlayerSettings.SprintSpeed
 		) * MathF.Sign( relativeHorzVelocity );

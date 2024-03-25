@@ -132,7 +132,7 @@ public sealed class GameManager : Component, Component.INetworkListener
 		player.Transform.World = transform;
 
 		var controller = player.Components.GetInChildrenOrSelf<PlayerController>();
-		controller.EyeAngles = angles;
+		controller.InputAngles = angles;
 		controller.Velocity = 0;
 	}
 

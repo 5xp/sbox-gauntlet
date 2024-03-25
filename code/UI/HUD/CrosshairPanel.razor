@@ -1,0 +1,59 @@
+@namespace Gauntlet.UI
+@using Gauntlet.Player
+@inherits PanelComponent
+
+@* 
+This component contains all of the panels that should be parented to the crosshair.
+*@
+<root class="pk">
+	@if ( PlayerPreferences.Instance.CrosshairHudEnabled )
+	{
+		<div class="crosshair-dot"></div>
+	}
+
+	@if ( PlayerPreferences.Instance.KeyPressHudEnabled && PlayerPreferences.Instance.KeyPressHudCompactEnabled )
+	{
+		<KeyPressPanel Compact="@true"/>
+	}
+
+	@if ( PlayerPreferences.Instance.SpeedometerHudEnabled && PlayerPreferences.Instance.SpeedometerHudCompactEnabled )
+	{
+		<SpeedometerPanel Controller="@Controller" Compact="@true"/>
+	}
+</root>
+
+@code
+{
+	[Property] private PlayerController Controller { get; set; }
+
+	protected override void OnEnabled()
+	{
+		PlayerPreferences.OnPreferencesSavedOrLoaded += StateHasChanged;
+	}
+
+	protected override void OnDisabled()
+	{
+		PlayerPreferences.OnPreferencesSavedOrLoaded -= StateHasChanged;
+	}
+
+	protected override void OnUpdate()
+	{
+		var cam = Controller.CameraController.Camera;
+		Vector3 eyePos = cam.Transform.Position;
+		Vector3 forward = Controller.AimAngles.Forward;
+		Vector3 endPos = eyePos + forward;
+
+		Vector2 screenPos = cam.PointToScreenPixels( endPos );
+		screenPos.x -= Screen.Width / 2;
+		screenPos.y -= Screen.Height / 2;
+
+
+		PanelTransform panelTransform = new PanelTransform();
+		panelTransform.AddTranslate( Length.Fraction( screenPos.x / Screen.Width ), Length.Fraction( screenPos.y / Screen.Height ) );
+
+		Panel.Style.Transform = panelTransform;
+
+		// Panel.Style.Left = Length.Fraction( screenPos.x / Screen.Width );
+		// Panel.Style.Top = Length.Fraction( screenPos.y / Screen.Height );
+	}
+}

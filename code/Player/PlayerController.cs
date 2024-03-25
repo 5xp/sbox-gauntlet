@@ -74,9 +74,14 @@ public partial class PlayerController : Component
 	public SkinnedModelRenderer BodyRenderer => Body.Components.Get<SkinnedModelRenderer>();
 
 	/// <summary>
-	/// An accessor to get the camera controller's aim ray.
+	/// The player's base input angles.
 	/// </summary>
-	public Ray AimRay => CameraController.AimRay;
+	public Angles InputAngles;
+
+	/// <summary>
+	/// The player's base input angles + viewpunch angles.
+	/// </summary>
+	public Angles AimAngles;
 
 	public Vector3 Position
 	{
@@ -119,7 +124,6 @@ public partial class PlayerController : Component
 		}
 	}
 
-	public Angles EyeAngles;
 
 	protected override void OnStart()
 	{
@@ -155,22 +159,8 @@ public partial class PlayerController : Component
 		// Eye input
 		if ( !IsProxy )
 		{
-			SimulateEyes();
-			CurrentCameraOffset = Vector3.Zero;
-
-			EyeAngles.pitch += GetInputDelta().pitch;
-			EyeAngles.yaw += GetInputDelta().yaw;
-			EyeAngles.pitch = EyeAngles.pitch.Clamp( -PlayerSettings.PitchMaxUp, PlayerSettings.PitchMaxDown );
-
-			var cam = CameraController.Camera;
-
-			ViewPunchMechanic viewPunch = GetMechanic<ViewPunchMechanic>();
-
-			var lookDir = EyeAngles.ToRotation() * viewPunch.Spring.ToRotation();
-
-			cam.Transform.Rotation = lookDir * CurrentCameraRotationOffset;
-			EyeAngles.roll = 0;
-			CurrentCameraRotationOffset = Rotation.Identity;
+			UpdateDuck();
+			UpdateCamera();
 		}
 
 		float rotateDifference = 0;
@@ -178,7 +168,7 @@ public partial class PlayerController : Component
 		// rotate body to look angles
 		if ( Body is not null )
 		{
-			var targetAngle = new Angles( 0, EyeAngles.yaw, 0 ).ToRotation();
+			var targetAngle = new Angles( 0, InputAngles.yaw, 0 ).ToRotation();
 
 			rotateDifference = Body.Transform.Rotation.Distance( targetAngle );
 
@@ -194,7 +184,7 @@ public partial class PlayerController : Component
 			AnimationHelper.WithWishVelocity( BuildWishDir() * GetWishSpeed() );
 			AnimationHelper.IsGrounded = IsGrounded;
 			AnimationHelper.FootShuffle = rotateDifference;
-			AnimationHelper.WithLook( EyeAngles.Forward, 1, 1, 1.0f );
+			AnimationHelper.WithLook( InputAngles.Forward, 1, 1, 1.0f );
 			AnimationHelper.MoveStyle = AnimationHelper.MoveStyles.Auto;
 			AnimationHelper.DuckLevel = HasTag( "slide" ) ? 0 : DuckFraction;
 			AnimationHelper.HoldType = CurrentHoldType;
@@ -217,11 +207,12 @@ public partial class PlayerController : Component
 		}
 	}
 
-	private void SimulateEyes()
+	private void UpdateDuck()
 	{
 		float targetDuckFraction = Common.DuckDown() ? 1f : 0f;
 		float targetHullHeight =
 			PlayerSettings.HullHeightStanding.LerpTo( PlayerSettings.HullHeightCrouching, targetDuckFraction );
+
 		// Unducking
 		if ( DuckFraction > targetDuckFraction )
 		{
@@ -253,6 +244,25 @@ public partial class PlayerController : Component
 		CurrentEyeHeight = PlayerSettings.ViewHeightStanding.LerpTo( PlayerSettings.ViewHeightCrouching, duckTime );
 		CameraGameObject.Transform.LocalPosition =
 			Vector3.Up * CurrentEyeHeight + CurrentCameraOffset + StepSmoothingOffset;
+		CurrentCameraOffset = Vector3.Zero;
+	}
+
+	private void UpdateCamera()
+	{
+		InputAngles.pitch += GetInputDelta().pitch;
+		InputAngles.yaw += GetInputDelta().yaw;
+		InputAngles.pitch = InputAngles.pitch.Clamp( -PlayerSettings.PitchMaxUp, PlayerSettings.PitchMaxDown );
+
+		ViewPunchMechanic viewPunch = GetMechanic<ViewPunchMechanic>();
+		AimAngles = InputAngles + viewPunch.Spring.ToAngles();
+
+		var cam = CameraController.Camera;
+
+		var lookDir = AimAngles.ToRotation();
+		cam.Transform.Rotation = lookDir * CurrentCameraRotationOffset;
+
+		InputAngles.roll = 0;
+		CurrentCameraRotationOffset = Rotation.Identity;
 	}
 
 	public bool CanUnduck()
@@ -420,7 +430,7 @@ public partial class PlayerController : Component
 
 	public Vector3 BuildWishDir( bool zeroPitch = true )
 	{
-		Angles angles = EyeAngles.WithRoll( 0f );
+		Angles angles = InputAngles.WithRoll( 0f );
 
 		if ( zeroPitch )
 		{
@@ -520,12 +530,12 @@ public partial class PlayerController : Component
 
 	public void Write( ref ByteStream stream )
 	{
-		stream.Write( EyeAngles );
+		stream.Write( InputAngles );
 	}
 
 	public void Read( ByteStream stream )
 	{
-		EyeAngles = stream.Read<Angles>();
+		InputAngles = stream.Read<Angles>();
 	}
 
 	protected override void DrawGizmos()

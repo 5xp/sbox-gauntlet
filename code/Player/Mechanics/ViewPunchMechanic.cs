@@ -98,7 +98,7 @@ public class ViewPunchMechanic : BasePlayerControllerMechanic
 	{
 		WallrunMechanic wallrun = Controller.GetMechanic<WallrunMechanic>();
 		Vector3 wallHorizontal = wallrun.LastWallNormal.Cross( Vector3.Up );
-		float forwardFraction = -1f * Controller.EyeAngles.WithPitch( 0f ).Forward.Dot( wallHorizontal );
+		float forwardFraction = -1f * Controller.InputAngles.WithPitch( 0f ).Forward.Dot( wallHorizontal );
 
 		var (min, max) = GetViewPunchWallrunStartVectors( forwardFraction );
 		Spring.AddRandomVelocity( min, max );

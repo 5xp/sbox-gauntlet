@@ -59,7 +59,9 @@ public class SprintMechanic : BasePlayerControllerMechanic
 		{
 			bool startedFast = Controller.TimeSinceLastLanding - TimeSinceStart <= Time.Delta;
 
-			float duration = startedFast ? PlayerSettings.SprintOffsetStartFastDuration : PlayerSettings.SprintOffsetStartDuration;
+			float duration = startedFast
+				? PlayerSettings.SprintOffsetStartFastDuration
+				: PlayerSettings.SprintOffsetStartDuration;
 
 			if ( !startedFast && TimeSinceStart <= PlayerSettings.SprintOffsetStartDelay )
 			{
@@ -70,7 +72,8 @@ public class SprintMechanic : BasePlayerControllerMechanic
 		}
 		else
 		{
-			SprintViewOffsetFraction = SprintViewOffsetFraction.Approach( 0f, 1f / PlayerSettings.SprintOffsetEndDuration * Time.Delta );
+			SprintViewOffsetFraction =
+				SprintViewOffsetFraction.Approach( 0f, 1f / PlayerSettings.SprintOffsetEndDuration * Time.Delta );
 		}
 	}
 
@@ -101,9 +104,10 @@ public class SprintMechanic : BasePlayerControllerMechanic
 
 		SprintTiltFraction = SprintTiltFraction.Approach( turnRateFrac, MathF.Abs( SprintTiltVelocity * Time.Delta ) );
 		SprintTiltVelocity += Math.Sign( deltaFrac ) * PlayerSettings.SprintTiltAccel * Time.Delta;
-		SprintTiltVelocity = SprintTiltVelocity.Clamp( -PlayerSettings.SprintTiltMaxVel, PlayerSettings.SprintTiltMaxVel );
+		SprintTiltVelocity =
+			SprintTiltVelocity.Clamp( -PlayerSettings.SprintTiltMaxVel, PlayerSettings.SprintTiltMaxVel );
 
-		Controller.EyeAngles += new Angles( 0f, 0f, SprintTiltFraction * PlayerSettings.SprintTiltMaxRoll );
+		Controller.InputAngles += new Angles( 0f, 0f, SprintTiltFraction * PlayerSettings.SprintTiltMaxRoll );
 	}
 
 	/// <summary>
@@ -119,7 +123,8 @@ public class SprintMechanic : BasePlayerControllerMechanic
 		float reductionFactor = MathX.LerpTo( 1f, PlayerSettings.SprintBobSmoothingReductionFactor, smoothingFrac );
 		float sprintFrac = MathX.LerpInverse( Velocity.Length, 0f, PlayerSettings.SprintSpeed );
 
-		Vector3 bob = new Vector3( GetPitchBob(), GetYawBob(), GetRollBob() ) * reductionFactor * sprintFrac * SprintBobFraction;
+		Vector3 bob = new Vector3( GetPitchBob(), GetYawBob(), GetRollBob() ) * reductionFactor * sprintFrac *
+		              SprintBobFraction;
 		bob *= PlayerPreferences.Instance.SprintBobScale;
 
 		Controller.CurrentCameraRotationOffset *= Rotation.From( bob.x, bob.y, bob.z );
@@ -156,7 +161,8 @@ public class SprintMechanic : BasePlayerControllerMechanic
 	/// </summary>
 	private void CheckSprintToggled()
 	{
-		bool movingForward = Vector3.Dot( Controller.WishMove, Vector3.Forward ) >= 0f && !Controller.WishMove.AlmostEqual( 0f );
+		bool movingForward = Vector3.Dot( Controller.WishMove, Vector3.Forward ) >= 0f &&
+		                     !Controller.WishMove.AlmostEqual( 0f );
 
 		if ( SprintToggled && movingForward )
 		{

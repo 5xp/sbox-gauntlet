@@ -4,22 +4,23 @@
 @using Gauntlet.Utils
 @inherits Panel
 
-<root class="pk">
-	<div class="speedometer-container backdrop">
-		<p class="mono">@Common.HUPSToKPH( Controller.HorzVelocity.Length ).ToString( "F1" )</p>
+<root class="pk @( Compact ? "compact" : "regular" )">
+	<div class="speedometer-container @( Compact ? "" : "backdrop" )">
+		<p class="mono">@Common.HupsToKph( Controller.HorzVelocity.Length ).ToString( "F1" )</p>
 		<div class="spacer"></div>
-		<p>kph</p>
+		<p class="unit">kph</p>
+		<div class="walljump-container" @ref=" WallJumpContainerPanel"></div>
 	</div>
-	<div class="walljump-container" @ref=" WallJumpContainerPanel"></div>
 </root>
 
 @code
 {
 	public PlayerController Controller { get; set; }
 	private Panel WallJumpContainerPanel { get; set; }
+	public bool Compact { get; set; }
 
 	protected override int BuildHash() =>
-		System.HashCode.Combine( Common.HUPSToKPH( Controller.HorzVelocity.Length ).ToString( "F1" ) );
+		System.HashCode.Combine( Common.HupsToKph( Controller.HorzVelocity.Length ).ToString( "F1" ) );
 
 	protected override void OnAfterTreeRender( bool firstTime )
 	{
@@ -29,6 +30,14 @@
 		}
 
 		Controller.OnFastWallJump += OnFastWallJump;
+		PlayerPreferences.OnPreferencesSavedOrLoaded += OnPreferencesSavedOrLoaded;
+		OnPreferencesSavedOrLoaded();
+	}
+
+	public override void OnDeleted()
+	{
+		Controller.OnFastWallJump -= OnFastWallJump;
+		PlayerPreferences.OnPreferencesSavedOrLoaded -= OnPreferencesSavedOrLoaded;
 	}
 
 	private void OnFastWallJump( float speedDiff, float time )
@@ -39,10 +48,11 @@
 		}
 
 		WallJumpPanel wallJumpPanel = new WallJumpPanel();
+		wallJumpPanel.Compact = Compact;
 		wallJumpPanel.SpeedDiff = speedDiff;
 
 		// There will always be at least 1 tick between touching the wall and being able to jump
-		wallJumpPanel.IsPerfect = time / Controller.Scene.FixedDelta == 1;
+		wallJumpPanel.IsPerfect = Convert.ToInt32( time / Controller.Scene.FixedDelta ) == 1;
 
 		CrouchMechanic crouch = Controller.GetMechanic<CrouchMechanic>();
 		wallJumpPanel.IsCrouchKick = crouch.TimeSinceStart == 0;
@@ -56,5 +66,21 @@
 	{
 		await Task.Delay( time );
 		panel.Delete();
+	}
+
+	private void OnPreferencesSavedOrLoaded()
+	{
+		if ( PlayerPreferences.Instance.SpeedometerHudCompactEnabled )
+		{
+			Style.Left = Length.Fraction( PlayerPreferences.Instance.SpeedometerHudCompactPositionX );
+			Style.Top = Length.Fraction( PlayerPreferences.Instance.SpeedometerHudCompactPositionY );
+		}
+		else
+		{
+			Style.Left = null;
+			Style.Top = null;
+		}
+
+		StateHasChanged();
 	}
 }

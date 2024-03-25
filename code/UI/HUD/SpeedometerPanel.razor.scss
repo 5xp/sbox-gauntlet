@@ -1,7 +1,7 @@
 @import "/UI/Styles/Theme.scss";
-@import "/UI/HUD/WallJumpPanel.razor.scss";
+@import "WallJumpPanel.razor.scss";
 
-SpeedometerPanel {
+SpeedometerPanel.regular {
 	width: 100%;
 	height: 100%;
 	position: absolute;
@@ -32,13 +32,40 @@ SpeedometerPanel {
 	}
 
 	.walljump-container {
-		flex-direction: column;
-		padding-bottom: 20px;
 		position: absolute;
-		left: 500px;
-		bottom: 100px;
-		width: 290px;
-		height: 300px;
-		justify-content: flex-end;
+		width: 100%;
+		height: 100%;
+		align-items: center;
+		top: 0;
+		left: 0;
+	}
+}
+
+SpeedometerPanel.compact {
+	position: absolute;
+
+	p {
+		font-size: 23px;
+		font-weight: bolder;
+		font-family: $main-font;
+		color: white;
+	}
+
+	.spacer, .unit {
+		display: none;
+	}
+
+	.speedometer-container {
+		width: 100px;
+		flex-direction: column;
+		position: absolute;
+
+		left: -12px;
+		top: -12px;
+	}
+
+	.walljump-container {
+		position: absolute;
+		font-size: 23px;
 	}
 }

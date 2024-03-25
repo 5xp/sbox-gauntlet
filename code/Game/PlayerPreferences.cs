@@ -24,6 +24,14 @@ public sealed class PlayerPreferences
 	public bool HudSwayEnabled { get; set; } = true;
 	public bool KeyPressHudEnabled { get; set; } = true;
 	public bool KeyPressShowJumpAndCrouch { get; set; } = false;
+	public bool KeyPressHudCompactEnabled { get; set; } = false;
+	public float KeyPressHudCompactPositionX { get; set; } = 0.5f;
+	public float KeyPressHudCompactPositionY { get; set; } = 0.5f;
+	public bool CrosshairHudEnabled { get; set; } = true;
+	public bool SpeedometerHudEnabled { get; set; } = true;
+	public bool SpeedometerHudCompactEnabled { get; set; } = false;
+	public float SpeedometerHudCompactPositionX { get; set; } = 0.54f;
+	public float SpeedometerHudCompactPositionY { get; set; } = 0.5f;
 	public bool WallKickHudEnabled { get; set; } = true;
 	public float SprintBobScale { get; set; } = 1f;
 	public bool AutoSprintEnabled { get; set; } = false;

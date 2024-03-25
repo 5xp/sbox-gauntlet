@@ -443,7 +443,7 @@ public class WallrunMechanic : BasePlayerControllerMechanic
 	/// <returns>The normalized input direction on the plane of the wall normal </returns>
 	private Vector3 BuildWishDirection( Vector3 wallNormal )
 	{
-		Angles angles = Controller.EyeAngles;
+		Angles angles = Controller.InputAngles;
 		Vector3 wishDir;
 
 		float lookingNormalAmount = angles.WithPitch( 0f ).Forward.Dot( wallNormal );
@@ -488,8 +488,8 @@ public class WallrunMechanic : BasePlayerControllerMechanic
 
 	private void CorrectView()
 	{
-		Angles horzEyeAngles = Controller.EyeAngles.WithPitch( 0f ).Normal;
-		Angles vertEyeAngles = Controller.EyeAngles.WithYaw( 0f );
+		Angles horzEyeAngles = Controller.InputAngles.WithPitch( 0f ).Normal;
+		Angles vertEyeAngles = Controller.InputAngles.WithYaw( 0f );
 
 		float speedFraction = HorzVelocity.Length.LerpInverse( 0f, 100f );
 
@@ -527,7 +527,7 @@ public class WallrunMechanic : BasePlayerControllerMechanic
 		RelativeAnglesOffset = RelativeAnglesOffset.WithYaw( RelativeAnglesOffset.yaw.Approach( 0f, approachSpeed ) );
 		horzEyeAngles = horzEyeAngles.WithYaw( horzEyeAngles.yaw.Approach( horzEyeAngles.yaw + yaw, approachSpeed ) );
 
-		Controller.EyeAngles = Controller.EyeAngles.WithYaw( horzEyeAngles.yaw );
+		Controller.InputAngles = Controller.InputAngles.WithYaw( horzEyeAngles.yaw );
 	}
 
 	/// <summary>
@@ -556,7 +556,7 @@ public class WallrunMechanic : BasePlayerControllerMechanic
 		Angles newAngle = horzEyeAngles.LerpTo( closerAngle, t ).Normal;
 		Vector3 newAnglesVec = newAngle.Forward;
 		anglesVec = anglesVec.RotateTowards( newAnglesVec, (85f * Time.Delta).DegreeToRadian() );
-		Controller.EyeAngles = Controller.EyeAngles.WithYaw( anglesVec.EulerAngles.yaw );
+		Controller.InputAngles = Controller.InputAngles.WithYaw( anglesVec.EulerAngles.yaw );
 	}
 
 	/// <summary>
@@ -583,7 +583,7 @@ public class WallrunMechanic : BasePlayerControllerMechanic
 
 		vertEyeAngles.pitch =
 			vertEyeAngles.pitch.Approach( closerAngle.pitch, speedFraction * correctSpeed * Time.Delta );
-		Controller.EyeAngles = Controller.EyeAngles.WithPitch( vertEyeAngles.pitch );
+		Controller.InputAngles = Controller.InputAngles.WithPitch( vertEyeAngles.pitch );
 	}
 
 	private void OnJump( JumpMechanic.JumpType _ )
@@ -619,10 +619,10 @@ public class WallrunMechanic : BasePlayerControllerMechanic
 		float t = MathUtils.EaseOutSine( TiltVector.Length );
 		float tilt = MathX.Lerp( 0f, PlayerSettings.WallrunTiltMaxRoll, t, false );
 
-		float angleFraction = Controller.EyeAngles.Forward.Cross( TiltVector.Normal ).z;
+		float angleFraction = Controller.InputAngles.Forward.Cross( TiltVector.Normal ).z;
 		float totalRoll = -tilt * angleFraction;
 
-		Controller.EyeAngles += new Angles( 0f, 0f, totalRoll );
+		Controller.InputAngles += new Angles( 0f, 0f, totalRoll );
 	}
 
 	/// <summary>
@@ -885,7 +885,7 @@ public class WallrunMechanic : BasePlayerControllerMechanic
 		Vector3 horzWishDir = wishDir.WithZ( 0f );
 		Vector3 vertWishDir = Vector3.Up * wishDir.z;
 
-		float wishDirEyeDot = Controller.EyeAngles.WithPitch( 0f ).Forward.Dot( wishDir );
+		float wishDirEyeDot = Controller.InputAngles.WithPitch( 0f ).Forward.Dot( wishDir );
 		bool movingBackwards = wishDirEyeDot < -0.65f;
 
 		float horzMaxSpeed, vertMaxSpeed;

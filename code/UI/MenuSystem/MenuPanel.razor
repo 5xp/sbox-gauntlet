@@ -52,11 +52,31 @@
 								<SettingsToggle Title="Enable HUD Sway" Value:bind="@PlayerPreferences.Instance.HudSwayEnabled"/>
 								<SettingsToggle Title="Enable Keypress HUD" Value:bind="@PlayerPreferences.Instance.KeyPressHudEnabled">
 									<ChildContent>
+										<SettingsToggle Title="Compact Mode" Value:bind="@PlayerPreferences.Instance.KeyPressHudCompactEnabled">
+											<ChildContent>
+												<SettingsSlider Title="Position X" Min=@( 0f ) Max=@( 1f ) Step=@( 0.01f )
+												                Value:bind="@PlayerPreferences.Instance.KeyPressHudCompactPositionX"/>
+												<SettingsSlider Title="Position Y" Min=@( 0f ) Max=@( 1f ) Step=@( 0.01f )
+												                Value:bind="@PlayerPreferences.Instance.KeyPressHudCompactPositionY"/>
+											</ChildContent>
+										</SettingsToggle>
 										<SettingsToggle Title="Show Jump and Crouch"
 										                Value:bind="@PlayerPreferences.Instance.KeyPressShowJumpAndCrouch"/>
 									</ChildContent>
 								</SettingsToggle>
-								<SettingsToggle Title="Enable Wallkick HUD" Value:bind="@PlayerPreferences.Instance.WallKickHudEnabled"/>
+								<SettingsToggle Title="Enable Speedometer" Value:bind="@PlayerPreferences.Instance.SpeedometerHudEnabled">
+									<ChildContent>
+										<SettingsToggle Title="Compact Mode" Value:bind="@PlayerPreferences.Instance.SpeedometerHudCompactEnabled">
+											<ChildContent>
+												<SettingsSlider Title="Position X" Min=@( 0f ) Max=@( 1f ) Step=@( 0.01f )
+												                Value:bind="@PlayerPreferences.Instance.SpeedometerHudCompactPositionX"/>
+												<SettingsSlider Title="Position Y" Min=@( 0f ) Max=@( 1f ) Step=@( 0.01f )
+												                Value:bind="@PlayerPreferences.Instance.SpeedometerHudCompactPositionY"/>
+											</ChildContent>
+										</SettingsToggle>
+										<SettingsToggle Title="Enable Wallkick HUD" Value:bind="@PlayerPreferences.Instance.WallKickHudEnabled"/>
+									</ChildContent>
+								</SettingsToggle>
 							</ChildContent>
 						</SettingsCategory>
 
@@ -152,7 +172,7 @@
 
 	static void Quit()
 	{
-		Game.Disconnect();
+		Game.Close();
 	}
 
 	private bool IsInGame()

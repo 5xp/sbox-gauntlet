@@ -1,7 +1,7 @@
 @import "/UI/Styles/Theme.scss";
-@import "/UI/HUD/KeyPressPanel.razor.scss";
-@import "/UI/HUD/SpeedometerPanel.razor.scss";
-@import "/UI/HUD/TimerPanel.razor.scss";
+@import "KeyPressPanel.razor.scss";
+@import "SpeedometerPanel.razor.scss";
+@import "TimerPanel.razor.scss";
 
 HudPanel {
 	width: 100%;

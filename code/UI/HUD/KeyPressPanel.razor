@@ -2,41 +2,88 @@
 @using Gauntlet.Utils
 @inherits Panel
 
-<root class="pk">
-	<div class="keys-container">
-		<div class="key-row">
-			<div class="key backdrop @GetKeyHighlighted( "Forward" )">
-				<p>@GetKeyCode( "Forward" )</p>
-			</div>
-		</div>
-		<div class="key-row">
-			<div class="key backdrop @GetKeyHighlighted( "Left" )">
-				<p>@GetKeyCode( "Left" )</p>
-			</div>
-			<div class="key backdrop @GetKeyHighlighted( "Backward" )">
-				<p>@GetKeyCode( "Backward" )</p>
-			</div>
-			<div class="key backdrop @GetKeyHighlighted( "Right" )">
-				<p>@GetKeyCode( "Right" )</p>
-			</div>
-		</div>
-
-		@if ( PlayerPreferences.Instance.KeyPressShowJumpAndCrouch )
-		{
+<root class="pk @( Compact ? "compact" : "regular" )">
+	@if ( !Compact )
+	{
+		<div class="keys-container">
 			<div class="key-row">
-				<div class="key backdrop @GetKeyHighlighted( "Duck" ) @GetKeyHighlighted( "Duck2" )">
-					<p>C</p>
-				</div>
-				<div class="key double backdrop @GetKeyHighlighted( "Jump" )">
-					<p>J</p>
+				<div class="key backdrop @GetKeyHighlighted( "Forward" )">
+					<p class="key">@GetKeyCode( "Forward" )</p>
 				</div>
 			</div>
-		}
-	</div>
+
+			<div class="key-row">
+				<div class="key backdrop @GetKeyHighlighted( "Left" )">
+					<p>@GetKeyCode( "Left" )</p>
+				</div>
+				<div class="key backdrop @GetKeyHighlighted( "Backward" )">
+					<p>@GetKeyCode( "Backward" )</p>
+				</div>
+				<div class="key backdrop @GetKeyHighlighted( "Right" )">
+					<p>@GetKeyCode( "Right" )</p>
+				</div>
+			</div>
+
+			@if ( PlayerPreferences.Instance.KeyPressShowJumpAndCrouch )
+			{
+				<div class="key-row">
+					<div class="key backdrop @GetKeyHighlighted( "Duck" ) @GetKeyHighlighted( "Duck2" )">
+						<p>C</p>
+					</div>
+					<div class="key double backdrop @GetKeyHighlighted( "Jump" )">
+						<p>J</p>
+					</div>
+				</div>
+			}
+		</div>
+	}
+	else
+	{
+		<div class="keys-container">
+			<div class="key-row">
+				<div class="key @GetKeyHighlighted( "Duck" ) @GetKeyHighlighted( "Duck2" )">
+					@if ( PlayerPreferences.Instance.KeyPressShowJumpAndCrouch )
+					{
+						<p>C</p>
+					}
+				</div>
+				<div class="key @GetKeyHighlighted( "Forward" )">
+					<p>▲</p>
+				</div>
+				<div class="key @GetKeyHighlighted( "Jump" )">
+					@if ( PlayerPreferences.Instance.KeyPressShowJumpAndCrouch )
+					{
+						<p>J</p>
+					}
+				</div>
+			</div>
+
+			<div class="key-row">
+				<div class="key @GetKeyHighlighted( "Left" )">
+					<p>◀</p>
+				</div>
+				<div class="key"></div>
+				<div class="key @GetKeyHighlighted( "Right" )">
+					<p>▶</p>
+				</div>
+			</div>
+
+			<div class="key-row">
+				<div class="key"></div>
+				<div class="key @GetKeyHighlighted( "Backward" )">
+					<p>▼</p>
+				</div>
+				<div class="key"></div>
+
+			</div>
+		</div>
+	}
 </root>
 
 @code
 {
+	public bool Compact { get; set; }
+
 	protected override int BuildHash()
 	{
 		HashCode hash = new();
@@ -49,7 +96,39 @@
 		return hash.ToHashCode();
 	}
 
+	protected override void OnAfterTreeRender( bool firstTime )
+	{
+		if ( !firstTime )
+		{
+			return;
+		}
+
+		PlayerPreferences.OnPreferencesSavedOrLoaded += OnPreferencesSavedOrLoaded;
+		OnPreferencesSavedOrLoaded();
+	}
+
+	public override void OnDeleted()
+	{
+		PlayerPreferences.OnPreferencesSavedOrLoaded -= OnPreferencesSavedOrLoaded;
+	}
+
 	private static string GetKeyCode( string key ) => Input.GetButtonOrigin( key, true );
 
 	private static string GetKeyHighlighted( string key ) => Input.Down( key ) ? "highlighted" : "";
+
+	private void OnPreferencesSavedOrLoaded()
+	{
+		if ( PlayerPreferences.Instance.KeyPressHudCompactEnabled )
+		{
+			Style.Left = Length.Fraction( PlayerPreferences.Instance.KeyPressHudCompactPositionX );
+			Style.Top = Length.Fraction( PlayerPreferences.Instance.KeyPressHudCompactPositionY );
+		}
+		else
+		{
+			Style.Left = null;
+			Style.Top = null;
+		}
+
+		StateHasChanged();
+	}
 }

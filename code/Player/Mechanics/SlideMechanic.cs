@@ -55,7 +55,8 @@ public class SlideMechanic : BasePlayerControllerMechanic
 
 		bool startedFromAir = Controller.TimeSinceLastLanding <= Time.Delta;
 
-		if ( !IsActive && !startedFromAir && Controller.BuildWishDir().Dot( Velocity.Normal ) < PlayerSettings.SlideMaxAngleDot ) return false;
+		if ( !IsActive && !startedFromAir &&
+		     Controller.BuildWishDir().Dot( Velocity.Normal ) < PlayerSettings.SlideMaxAngleDot ) return false;
 
 		return true;
 	}
@@ -204,7 +205,6 @@ public class SlideMechanic : BasePlayerControllerMechanic
 	/// </summary>
 	private void Decelerate( Vector3 wishDir, float wishSpeed, float deceleration )
 	{
-
 		float currentSpeed = Velocity.Dot( wishDir );
 		float addSpeed = wishSpeed - currentSpeed;
 
@@ -239,23 +239,26 @@ public class SlideMechanic : BasePlayerControllerMechanic
 		// If got a boost, lerp the tilt axis
 		if ( IsActive && TimeSinceActiveChanged.Equals( TimeSinceUsedBoost ) )
 		{
-			SlideTiltAxis = SlideTiltAxis.ApproachVector( HorzVelocity.Normal, PlayerSettings.SlideTiltIncreaseSpeed * Time.Delta );
+			SlideTiltAxis = SlideTiltAxis.ApproachVector( HorzVelocity.Normal,
+				PlayerSettings.SlideTiltIncreaseSpeed * Time.Delta );
 		}
 
-		Angles left = Controller.EyeAngles.WithPitch( 0f );
+		Angles left = Controller.InputAngles.WithPitch( 0f );
 		left.yaw += 90f;
 
 		float angleFraction = SlideTiltAxis.Normal.Dot( left.Forward );
 
 		float approachTowards = IsActive ? speedFraction : 0f;
 
-		float approachSpeed = IsActive && SlideTiltFrac < speedFraction ? PlayerSettings.SlideTiltIncreaseSpeed : PlayerSettings.SlideTiltDecreaseSpeed;
+		float approachSpeed = IsActive && SlideTiltFrac < speedFraction
+			? PlayerSettings.SlideTiltIncreaseSpeed
+			: PlayerSettings.SlideTiltDecreaseSpeed;
 
 		SlideTiltFrac = SlideTiltFrac.Approach( approachTowards, approachSpeed * Time.Delta );
 
 		float totalRoll = SlideTiltFrac * angleFraction * PlayerSettings.SlideTiltMaxRoll;
 
-		Controller.EyeAngles += new Angles( 0f, 0f, totalRoll );
+		Controller.InputAngles += new Angles( 0f, 0f, totalRoll );
 	}
 
 	/// <summary>
@@ -265,7 +268,9 @@ public class SlideMechanic : BasePlayerControllerMechanic
 	{
 		float baseFov = Controller.CameraController.BaseFieldOfView;
 
-		float lerpTime = FovScaleTargetFraction == 0f ? PlayerSettings.SlideFovLerpOutTime : PlayerSettings.SlideFovLerpInTime;
+		float lerpTime = FovScaleTargetFraction == 0f
+			? PlayerSettings.SlideFovLerpOutTime
+			: PlayerSettings.SlideFovLerpInTime;
 		FovScaleFraction = FovScaleFraction.Approach( FovScaleTargetFraction, 1f / lerpTime * Time.Delta );
 
 		CameraComponent cam = Controller.CameraController.Camera;

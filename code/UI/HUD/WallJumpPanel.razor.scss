@@ -1,6 +1,6 @@
-WallJumpPanel {
-	font-size: 50px;
+WallJumpPanel.regular {
 	font-family: $main-font;
+	font-size: 50px;
 	color: white;
 	font-weight: bold;
 	position: absolute;
@@ -31,12 +31,9 @@ WallJumpPanel {
 	.crouch-kick {
 		color: linear-gradient(90deg, #e51fff, #ff68f2);
 		text-shadow: 0 0 3px #9c00b177;
-		font-size: 30px;
-		padding-left: 8px;
-		padding-bottom: 5px;
 	}
 
-	.time {
+	.small {
 		font-size: 30px;
 		padding-left: 8px;
 		padding-bottom: 5px;
@@ -51,11 +48,75 @@ WallJumpPanel {
 	}
 }
 
+WallJumpPanel.compact {
+	z-index: 2;
+	margin-left: -12px;
+	font-size: 23px;
+	font-family: $main-font;
+	font-weight: bolder;
+	color: white;
+	position: absolute;
+	align-content: center;
+
+	text-align: center;
+	transition: opacity 0.5s ease-out;
+	opacity: 1;
+	animation: slideUpCompact 1.5s ease-out;
+
+	.text-container {
+		align-items: flex-end;
+	}
+
+	.gain {
+		text-shadow: 0 0 1.5px rgba(25, 113, 140, 0.73);
+		color: #4bd2ff;
+	}
+
+	.loss {
+		text-shadow: 0 0 1.5px rgba(114, 6, 15, 0.8);
+		color: #ff7171;
+	}
+
+	.perfect {
+		text-shadow: 0 0 3px #a19200;
+		color: #ffd700;
+	}
+
+	.crouch-kick {
+		text-shadow: 0 0 3px #9c00b177;
+		color: #e51fff;
+	}
+
+	.small {
+		font-weight: bold;
+		font-size: 16px;
+		padding-left: 2px;
+		padding-bottom: 2%;
+	}
+
+	&:intro {
+		opacity: 0;
+	}
+
+	&:outro {
+		opacity: 0;
+	}
+}
+
 @keyframes slideUp {
 	0% {
-		transform: translateY(-20%);
+		transform: translateY(0%);
 	}
 	100% {
-		transform: translateY(-200%);
+		transform: translateY(-150%);
+	}
+}
+
+@keyframes slideUpCompact {
+	0% {
+		transform: translateY(0%);
+	}
+	100% {
+		transform: translateY(-100%);
 	}
 }

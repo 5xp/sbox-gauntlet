@@ -2,7 +2,7 @@
 @using Gauntlet.Utils
 @inherits Panel
 
-<root class="pk">
+<root class="pk @( Compact ? "compact" : "regular" )">
 	<div class="text-container @GetSpeedDiffClass()">
 		@if ( ShowSpeedDiff )
 		{
@@ -11,17 +11,18 @@
 
 		@if ( ShowTime )
 		{
-			<span class="time @GetSpeedDiffClass( true )">@( (Time * 1000).ToString( "F0" ) )ms</span>
+			<span class="time small @GetSpeedDiffClass( true )">@( (Time * 1000).ToString( "F0" ) )ms</span>
 		}
 
 		@if ( ShowCrouchKicks && IsCrouchKick )
 		{
-			<span class="crouch-kick">CK</span>
+			<span class="crouch-kick small">CK</span>
 		}
 	</div>
 </root>
 
 @code {
+	public bool Compact { get; set; }
 	public float SpeedDiff { get; set; }
 	public bool IsPerfect { get; set; }
 	public bool IsCrouchKick { get; set; }
@@ -61,7 +62,7 @@
 			speedDiffString += "+";
 		}
 
-		speedDiffString += Common.HUPSToKPH( SpeedDiff ).ToString( "F1" );
+		speedDiffString += Common.HupsToKph( SpeedDiff ).ToString( "F1" );
 
 		return speedDiffString;
 	}

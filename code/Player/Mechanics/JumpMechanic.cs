@@ -165,7 +165,7 @@ public class JumpMechanic : BasePlayerControllerMechanic
 		Vector3 wallNormal = wallrun.LastWallNormal;
 		Vector3 wishDir = Controller.BuildWishDir();
 
-		float lookingNormalAmount = Controller.EyeAngles.WithPitch( 0f ).Forward.Dot( wallNormal );
+		float lookingNormalAmount = Controller.InputAngles.WithPitch( 0f ).Forward.Dot( wallNormal );
 		bool tryingToClimbInwards = lookingNormalAmount < -0.71f && Controller.WishMove.x > 0f;
 
 		if ( wishDir.Dot( wallNormal ) < 0f )

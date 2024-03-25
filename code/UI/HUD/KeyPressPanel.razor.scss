@@ -1,6 +1,6 @@
 @import "/UI/Styles/Theme.scss";
 
-KeyPressPanel {
+KeyPressPanel.regular {
 	width: 100%;
 	height: 100%;
 	position: absolute;
@@ -37,6 +37,37 @@ KeyPressPanel {
 
 		&.double {
 			width: 200px;
+		}
+	}
+}
+
+KeyPressPanel.compact {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+
+	p {
+		font-size: 23px;
+		font-weight: bold;
+		font-family: "Poppins";
+		color: white;
+	}
+
+	.keys-container {
+		flex-direction: column;
+	}
+
+	.key {
+		justify-content: center;
+		align-items: center;
+		opacity: 0;
+
+		width: 24px;
+		height: 24px;
+
+		&.highlighted {
+			opacity: 1;
 		}
 	}
 }
