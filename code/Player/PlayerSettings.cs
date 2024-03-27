@@ -16,6 +16,7 @@ public sealed class PlayerSettings
 		{
 			return new PlayerSettings
 			{
+				IsDebug = true,
 				WallrunTimeLimit = 9999f,
 				WallrunGravityRampUpTime = 9999f,
 				WallrunSlipStartTime = 9999f,
@@ -34,6 +35,7 @@ public sealed class PlayerSettings
 			return new PlayerSettings();
 		}
 	}
+
 	public static PlayerSettings Faster
 	{
 		get
@@ -61,6 +63,7 @@ public sealed class PlayerSettings
 		};
 	}
 
+	public bool IsDebug { get; private set; }
 	public float HullRadius { get; private set; } = 16f;
 	public float HullHeightStanding { get; private set; } = 72f;
 	public float HullHeightCrouching { get; private set; } = 47f;

@@ -32,6 +32,7 @@ public sealed partial class Timer : Component
 	/// be the same as CurrentLoop.
 	/// </summary>
 	public int LastOrCurrentLoop { get; private set; } = 1;
+
 	public bool InStartZone { get; private set; }
 	private bool BlockNextReset { get; set; }
 
@@ -57,7 +58,7 @@ public sealed partial class Timer : Component
 
 	protected override void OnFixedUpdate()
 	{
-		if ( DebugConVars.AnyCheatEnabled )
+		if ( DebugConVars.AnyCheatEnabled || Player.PlayerSettings.IsDebug )
 		{
 			IsDisqualified = true;
 		}
