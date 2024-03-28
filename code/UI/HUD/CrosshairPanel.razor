@@ -26,6 +26,7 @@ This component contains all of the panels that should be parented to the crossha
 		<SpeedometerPanel Controller="@Controller" Compact="@true"/>
 	}
 
+	<AirStrafePanel Controller="@Controller" @ref=" AirStrafePanel"/>
 </root>
 
 @code
@@ -46,6 +47,7 @@ This component contains all of the panels that should be parented to the crossha
 			StateHasChanged();
 		}
 	}
+	private AirStrafePanel AirStrafePanel { get; set; }
 
 	protected override void OnEnabled()
 	{
@@ -77,5 +79,10 @@ This component contains all of the panels that should be parented to the crossha
 
 		// Panel.Style.Left = Length.Fraction( screenPos.x / Screen.Width );
 		// Panel.Style.Top = Length.Fraction( screenPos.y / Screen.Height );
+	}
+
+	protected override void OnFixedUpdate()
+	{
+		AirStrafePanel?.OnFixedUpdate();
 	}
 }

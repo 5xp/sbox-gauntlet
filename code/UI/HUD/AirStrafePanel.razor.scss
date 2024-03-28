@@ -1,0 +1,20 @@
+AirStrafePanel {
+	position: absolute;
+	justify-content: center;
+	align-items: center;
+	width: 200px;
+
+	font-size: 36px;
+	color: white;
+
+	transition: opacity 0.1s linear;
+
+	&.hidden {
+		opacity: 0;
+	}
+
+	.arrow {
+		position: absolute;
+		transform: translate(-50%, 0);
+	}
+}

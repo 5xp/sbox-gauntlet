@@ -1,0 +1,95 @@
+@namespace Gauntlet.UI
+@using Gauntlet.Player
+@inherits Panel
+
+<root class="pk">
+	<i class="arrow left" @ref=" LeftArrow">chevron_left</i>
+	<i class="arrow right" @ref=" RightArrow">chevron_right</i>
+</root>
+
+@code {
+	public PlayerController Controller { get; set; }
+	private Panel LeftArrow { get; set; }
+	private Panel RightArrow { get; set; }
+
+	private const int BufferCapacity = 10;
+
+	private readonly Queue<float> _angleRatioBuffer = new Queue<float>( BufferCapacity );
+
+	public void OnFixedUpdate()
+	{
+		if ( Controller is null || LeftArrow is null || RightArrow is null )
+		{
+			AddClass( "hidden" );
+			return;
+		}
+
+		if ( Controller.IsGrounded )
+		{
+			AddClass( "hidden" );
+			return;
+		}
+
+		RemoveClass( "hidden" );
+
+		float angleDelta = PlayerController.GetInputDelta().yaw;
+		float optimalDelta = OptimalDelta( Controller.HorzVelocity.LengthSquared );
+		float angleRatio = float.IsFinite( optimalDelta ) ? angleDelta / optimalDelta.RadianToDegree() : 0f;
+
+		AddToQueue( angleRatio );
+
+		float averageAngleRatio = MathF.Abs( _angleRatioBuffer.Average() );
+		UpdateArrowPositions( averageAngleRatio );
+	}
+
+	protected override void OnAfterTreeRender( bool firstTime )
+	{
+		if ( !firstTime )
+		{
+			return;
+		}
+
+		float initialYaw = Controller.AimAngles.yaw;
+
+		_angleRatioBuffer.Clear();
+
+		for ( int i = 0; i < BufferCapacity; i++ )
+		{
+			_angleRatioBuffer.Enqueue( initialYaw );
+		}
+	}
+
+	private void AddToQueue( float delta )
+	{
+		_angleRatioBuffer.Dequeue();
+		_angleRatioBuffer.Enqueue( delta );
+	}
+
+	private void UpdateArrowPositions( float angleRatio )
+	{
+		angleRatio = angleRatio.Clamp( 0f, 2f );
+		float fraction = 0.5f * angleRatio;
+		LeftArrow.Style.Left = Length.Fraction( 1f - fraction );
+		RightArrow.Style.Left = Length.Fraction( fraction );
+	}
+
+	/// <summary>
+	/// Finds the optimal yaw delta in radians for the player's current speed.
+	/// This only makes sense while in the air.
+	/// </summary>
+	/// <param name="speedSquared">The player's current horizontal speed squared.</param>
+	/// <returns>The optimal yaw delta in radians.</returns>
+	private float OptimalDelta( float speedSquared )
+	{
+		float acceleration = Controller.PlayerSettings.AirAcceleration;
+		float maxSpeed = Controller.PlayerSettings.AirSpeed;
+
+		float maxAccel = MathF.Min( maxSpeed, acceleration * Time.Delta );
+
+		float y = maxAccel * MathF.Sqrt( speedSquared - MathF.Pow( maxSpeed - maxAccel, 2 ) );
+		float x = speedSquared + maxAccel * (maxSpeed - maxAccel);
+
+		return MathF.Atan2( y, x );
+	}
+
+}
