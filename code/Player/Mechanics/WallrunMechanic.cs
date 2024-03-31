@@ -555,7 +555,8 @@ public class WallrunMechanic : BasePlayerControllerMechanic
 		Vector3 anglesVec = horzEyeAngles.Forward;
 		Angles newAngle = horzEyeAngles.LerpTo( closerAngle, t ).Normal;
 		Vector3 newAnglesVec = newAngle.Forward;
-		anglesVec = anglesVec.RotateTowards( newAnglesVec, (85f * Time.Delta).DegreeToRadian() );
+		anglesVec = anglesVec.RotateTowards( newAnglesVec,
+			(PlayerSettings.WallrunViewYawCorrectSpeed * Time.Delta).DegreeToRadian() );
 		Controller.InputAngles = Controller.InputAngles.WithYaw( anglesVec.EulerAngles.yaw );
 	}
 
