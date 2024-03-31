@@ -541,9 +541,15 @@ public partial class PlayerController : Component
 
 	protected override void DrawGizmos()
 	{
-		if ( !DebugConVars.DebugControllerGizmos ) return;
+		if ( DebugConVars.DebugControllerGizmos )
+		{
+			Gizmo.Draw.LineBBox( Hull );
+		}
 
-		Gizmo.Draw.LineBBox( Hull );
+		if ( !DebugConVars.DebugControllerMechanics )
+		{
+			return;
+		}
 
 		Vector2 basePos = new(25, 25);
 		Vector2 offset = new(0, 20);

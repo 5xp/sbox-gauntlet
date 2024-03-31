@@ -9,7 +9,7 @@ WallJumpPanel.regular {
 	text-align: center;
 	transition: opacity 0.5s ease-out;
 	opacity: 1;
-	animation: slideUp 1.5s ease-out;
+	animation: slideUp 1.5s forwards ease-out;
 
 	.text-container {
 		align-items: flex-end;
@@ -61,7 +61,7 @@ WallJumpPanel.compact {
 	text-align: center;
 	transition: opacity 0.5s ease-out;
 	opacity: 1;
-	animation: slideUpCompact 1.5s ease-out;
+	animation: slideUpCompact 1.5s forwards ease-out;
 
 	.text-container {
 		align-items: flex-end;

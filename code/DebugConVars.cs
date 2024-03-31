@@ -5,8 +5,10 @@ public static class DebugConVars
 	[ConVar( "gauntlet_debug_controller" )]
 	public static bool DebugControllerGizmos { get; set; } = false;
 
-	[ConVar( "gauntlet_debug_viewPunch" )] 
-	public static bool DebugViewPunch { get; set; } = false;
+	[ConVar( "gauntlet_debug_controller_mechanics" )]
+	public static bool DebugControllerMechanics { get; set; } = false;
+
+	[ConVar( "gauntlet_debug_viewPunch" )] public static bool DebugViewPunch { get; set; } = false;
 
 	[ConVar( "gauntlet_debug_wallrun_gizmos" )]
 	public static bool DebugWallrunGizmos { get; set; } = false;
