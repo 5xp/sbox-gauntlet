@@ -156,6 +156,7 @@ public partial class PlayerController : Component
 
 		BuildWishInput();
 		OnUpdateMechanics();
+		OnUpdateAbilities();
 
 		if ( Input.Pressed( "Restart" ) )
 		{
@@ -203,6 +204,11 @@ public partial class PlayerController : Component
 		foreach ( var mechanic in Mechanics )
 		{
 			mechanic.FrameSimulate();
+		}
+
+		foreach ( var ability in Abilities )
+		{
+			ability.FrameSimulate();
 		}
 	}
 

@@ -7,14 +7,15 @@ public class GrappleAbility : BaseAbility
 	/// <summary>
 	/// Our current state of the grapple.
 	/// </summary>
+	[Property, ReadOnly]
 	private GrappleState State { get; set; } = GrappleState.Idle;
 
 	/// <summary>
 	/// Contains the positions of the grapple points.
-	/// The first point is the grapple hook, the last point is the only point that is in view of the player.
-	/// It is also the point we accelerate towards.
+	/// The first point is the grapple hook.t
+	/// The last point is the only point that is in view of the player. It is also the point we accelerate towards.
 	/// </summary>
-	private List<Vector3> _grapplePoints;
+	[Property, ReadOnly] private List<Vector3> _grapplePoints;
 
 	/// <summary>
 	/// Where the grapple hook wants to go. If we're shooting, this is the player's target.
@@ -22,7 +23,27 @@ public class GrappleAbility : BaseAbility
 	/// If there is no next point in the list, this is null (which represents the player's eye position).
 	/// If we're not shooting or retracting, this is null.
 	/// </summary>
-	private Vector3? WishHookPoint { get; set; }
+	private Vector3 _wishHookPoint;
+
+	private Vector3? WishHookPoint
+	{
+		get
+		{
+			return State switch
+			{
+				GrappleState.Shooting => _wishHookPoint,
+				GrappleState.Idle or GrappleState.Attached => null,
+				_ => _grapplePoints.Count > 1 ? _grapplePoints[1] : Controller.CameraPosition
+			};
+		}
+		set
+		{
+			if ( State is GrappleState.Shooting && value.HasValue )
+			{
+				_wishHookPoint = value.Value;
+			}
+		}
+	}
 
 	protected override void OnAwake()
 	{
@@ -37,12 +58,7 @@ public class GrappleAbility : BaseAbility
 	/// <returns></returns>
 	public override bool ShouldBecomeActive()
 	{
-		if ( !Input.Down( "Ability" ) )
-		{
-			return false;
-		}
-
-		if ( !IsActive )
+		if ( !IsActive && Input.Pressed( "Ability" ) )
 		{
 			return true;
 		}
@@ -69,15 +85,46 @@ public class GrappleAbility : BaseAbility
 		Ray aimRay = Controller.AimRay;
 
 		WishHookPoint = aimRay.Position + aimRay.Forward * PlayerSettings.GrappleLength;
+
+		_grapplePoints.Add( Controller.CameraPosition );
 	}
 
 	public override void OnActiveUpdate()
 	{
+		TraceToGrapplePoint();
+		CheckLinesOfSight();
 		UpdateHookPoint();
+	}
 
-		if ( State is not GrappleState.Idle )
+	public override void FrameSimulate()
+	{
+		DrawGizmos();
+	}
+
+	private new void DrawGizmos()
+	{
+		using ( Gizmo.Scope( "grapple" ) )
 		{
-			TraceToGrapplePoint();
+			Gizmo.Transform = global::Transform.Zero;
+
+			for ( int i = 0; i < _grapplePoints.Count - 1; i++ )
+			{
+				Gizmo.Draw.Color = Color.White;
+				Gizmo.Draw.Line( _grapplePoints[i], _grapplePoints[i + 1] );
+
+				Gizmo.Draw.Color = Color.Blue;
+				Gizmo.Draw.SolidSphere( _grapplePoints[i], 5f );
+				Gizmo.Draw.SolidSphere( _grapplePoints[i + 1], 5f );
+			}
+
+			if ( _grapplePoints.Count == 0 )
+			{
+				return;
+			}
+
+			Gizmo.Draw.Color = Color.White;
+
+			Gizmo.Draw.Line( Controller.CameraPosition + Vector3.Down * 5, _grapplePoints.Last() );
 		}
 	}
 
@@ -121,13 +168,23 @@ public class GrappleAbility : BaseAbility
 	/// </exception>
 	private void OnHookPointReached()
 	{
+		Log.Info( "Hook point reached." );
 		switch ( State )
 		{
 			case GrappleState.Shooting:
 				State = GrappleState.Retracting;
-				WishHookPoint = null;
 				break;
 			case GrappleState.Retracting:
+				if ( _grapplePoints.Count == 1 )
+				{
+					OnGrappleFinishedRetracting();
+				}
+				else
+				{
+					State = GrappleState.Attached;
+				}
+
+				break;
 			case GrappleState.ForcedRetracting:
 				// This was our only grapple point, so it was moving to the player.
 				if ( _grapplePoints.Count == 1 )
@@ -137,7 +194,6 @@ public class GrappleAbility : BaseAbility
 				else
 				{
 					_grapplePoints.RemoveAt( 0 );
-					WishHookPoint = _grapplePoints.First();
 				}
 
 				break;
@@ -156,14 +212,11 @@ public class GrappleAbility : BaseAbility
 		}
 
 		State = GrappleState.ForcedRetracting;
-
-		WishHookPoint = _grapplePoints.Count > 0 ? _grapplePoints.First() : null;
 	}
 
 	private void OnGrappleFinishedRetracting()
 	{
 		State = GrappleState.Idle;
-		WishHookPoint = null;
 	}
 
 	/// <summary>
@@ -172,17 +225,12 @@ public class GrappleAbility : BaseAbility
 	private void TraceToGrapplePoint()
 	{
 		SceneTraceResult tr = Scene.Trace.Ray( Controller.CameraPosition, _grapplePoints.Last() )
-			.IgnoreGameObject( GameObject )
+			.IgnoreGameObjectHierarchy( GameObject )
 			.Run();
 
 		if ( !tr.Hit )
 		{
 			return;
-		}
-
-		if ( State is GrappleState.Retracting && _grapplePoints.Count == 1 )
-		{
-			WishHookPoint = tr.EndPosition;
 		}
 
 		_grapplePoints.Add( tr.EndPosition );
@@ -207,25 +255,42 @@ public class GrappleAbility : BaseAbility
 	/// For each point (starting with the player's eye position), we check if we can see the grapple point two points ahead.
 	/// For example, if we have points 1, 2, 3, 4, check if 4 can see 2 and 3 can see 1.
 	/// If 4 can see 2, we can remove 3 and 2. If 3 can see 1, we can remove 2.
+	/// TODO: Is this even necessary? Maybe I just need to check from the camera to the 2nd to last point.
 	/// </summary>
 	private void CheckLinesOfSight()
 	{
-		List<Vector3> points = _grapplePoints.ToList();
-		points.Add( Controller.CameraPosition );
+		// List<Vector3> points = _grapplePoints.ToList();
+		// points.Add( Controller.CameraPosition );
+		//
+		// for ( int i = points.Count - 1; i >= 2; i-- )
+		// {
+		// 	SceneTraceResult tr = Scene.Trace.Ray( points[i], points[i - 2] )
+		// 		.IgnoreGameObject( GameObject )
+		// 		.Run();
+		//
+		// 	if ( tr.Hit )
+		// 	{
+		// 		continue;
+		// 	}
+		//
+		// 	_grapplePoints.RemoveRange( i - 1, 1 );
+		// }
 
-		for ( int i = points.Count - 1; i >= 2; i-- )
+		if ( _grapplePoints.Count < 2 )
 		{
-			SceneTraceResult tr = Scene.Trace.Ray( points[i], points[i - 2] )
-				.IgnoreGameObject( GameObject )
-				.Run();
-
-			if ( tr.Hit )
-			{
-				continue;
-			}
-
-			_grapplePoints.RemoveRange( i - 1, 1 );
+			return;
 		}
+
+		SceneTraceResult tr = Scene.Trace.Ray( Controller.CameraPosition, _grapplePoints[^2] )
+			.IgnoreGameObjectHierarchy( GameObject )
+			.Run();
+
+		if ( tr.Hit )
+		{
+			return;
+		}
+
+		_grapplePoints.RemoveAt( _grapplePoints.Count - 1 );
 	}
 
 	private float GetHookSpeed()
