@@ -83,6 +83,16 @@ public partial class PlayerController : Component
 	/// </summary>
 	public Angles AimAngles;
 
+	/// <summary>
+	/// An accessor for the player's camera position.
+	/// </summary>
+	public Vector3 CameraPosition => CameraController.Camera.Transform.Position;
+
+	/// <summary>
+	/// An accessor for the player's aim ray.
+	/// </summary>
+	public Ray AimRay => new(CameraPosition, AimAngles.Forward);
+
 	public Vector3 Position
 	{
 		get => GameObject.Transform.Position;
@@ -123,7 +133,6 @@ public partial class PlayerController : Component
 			return new BBox( mins, maxs );
 		}
 	}
-
 
 	protected override void OnStart()
 	{

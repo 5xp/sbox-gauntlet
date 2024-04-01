@@ -96,6 +96,12 @@
           "KeyboardCode": "V",
           "GamepadCode": "None",
           "GroupName": "Movement"
+        },
+        {
+          "Name": "Ability",
+          "KeyboardCode": "Q",
+          "GamepadCode": "SwitchLeftBumper",
+          "GroupName": "Other"
         }
       ],
       "__guid": "38aed561-932a-47ce-b7f4-27e0de299259"
