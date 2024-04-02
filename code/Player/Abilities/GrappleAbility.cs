@@ -391,18 +391,19 @@ public class GrappleAbility : BaseAbility
 		// Player wants to detach
 		if ( Input.Pressed( "Ability" ) && TimeSinceStart >= PlayerSettings.GrappleDetachOnGrappleDebounceTime )
 		{
-			Log.Info( "Player pressed detach" );
 			return true;
 		}
 
 		float grappleLength = GetGrappleLength();
 
+		if ( State is not GrappleState.Attached )
+		{
+			return false;
+		}
 
 		// Grapple length is too long or too short
-		if ( State is GrappleState.Attached &&
-		     (grappleLength > DetachLength || grappleLength < PlayerSettings.GrappleDetachLengthMin) )
+		if ( grappleLength > DetachLength || grappleLength < PlayerSettings.GrappleDetachLengthMin )
 		{
-			Log.Info( "Grapple length is too long or too short" );
 			return true;
 		}
 
@@ -412,14 +413,21 @@ public class GrappleAbility : BaseAbility
 
 		if ( movingAwaySpeed < -PlayerSettings.GrappleDetachAwaySpeed )
 		{
-			Log.Info( "Moving away too fast" );
 			return true;
 		}
 
 		// We're moving too slow for too long
-		if ( State is GrappleState.Attached && LowSpeedTime > PlayerSettings.GrappleDetachLowSpeedTime )
+		if ( LowSpeedTime > PlayerSettings.GrappleDetachLowSpeedTime )
 		{
-			Log.Info( "Moving too slow for too long" );
+			return true;
+		}
+
+		// We looked more than 90 degrees away from the grapple point
+		Angles eyeAngles = Controller.AimAngles;
+		Angles toGrapplePoint = (_grapplePoints.Last() - Controller.CameraPosition).Normal.EulerAngles;
+		Angles diff = eyeAngles - toGrapplePoint;
+		if ( MathF.Abs( diff.Normal.yaw ) > 90 )
+		{
 			return true;
 		}
 
