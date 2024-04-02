@@ -5,17 +5,17 @@ namespace Gauntlet.Player.Abilities;
 public class GrappleAbility : BaseAbility
 {
 	/// <summary>
-	/// Our current state of the grapple.
+	/// Generally, we can only attach when we're shooting or retracting, but in some cases we can attach when we're force
+	/// retracting.
 	/// </summary>
-	[Property, ReadOnly]
-	private GrappleState State { get; set; } = GrappleState.Idle;
+	private bool _canAttach;
 
 	/// <summary>
 	/// Contains the positions of the grapple points.
 	/// The first point is the grapple hook.t
 	/// The last point is the only point that is in view of the player. It is also the point we accelerate towards.
 	/// </summary>
-	[Property, ReadOnly] private List<Vector3> _grapplePoints;
+	[Property] [ReadOnly] private List<Vector3> _grapplePoints;
 
 	/// <summary>
 	/// Where the grapple hook wants to go. If we're shooting, this is the player's target.
@@ -25,17 +25,35 @@ public class GrappleAbility : BaseAbility
 	/// </summary>
 	private Vector3 _wishHookPoint;
 
+	/// <summary>
+	/// Our current state of the grapple.
+	/// </summary>
+	[Property]
+	[ReadOnly]
+	private GrappleState State { get; set; } = GrappleState.Idle;
+
+	private bool CanAttach
+	{
+		get =>
+			State switch
+			{
+				GrappleState.Shooting or GrappleState.Retracting => true,
+				GrappleState.ForcedRetracting => _canAttach,
+				_ => false
+			};
+
+		set => _canAttach = value;
+	}
+
 	private Vector3? WishHookPoint
 	{
-		get
-		{
-			return State switch
+		get =>
+			State switch
 			{
 				GrappleState.Shooting => _wishHookPoint,
 				GrappleState.Idle or GrappleState.Attached => null,
 				_ => _grapplePoints.Count > 1 ? _grapplePoints[1] : Controller.CameraPosition
 			};
-		}
 		set
 		{
 			if ( State is GrappleState.Shooting && value.HasValue )
@@ -81,6 +99,7 @@ public class GrappleAbility : BaseAbility
 		}
 
 		State = GrappleState.Shooting;
+		CanAttach = true;
 
 		Ray aimRay = Controller.AimRay;
 
@@ -94,6 +113,11 @@ public class GrappleAbility : BaseAbility
 		TraceToGrapplePoint();
 		CheckLinesOfSight();
 		UpdateHookPoint();
+
+		if ( TimeSinceStart >= PlayerSettings.GrappleDetachOnGrappleDebounceTime && Input.Pressed( "Ability" ) )
+		{
+			ForceRetractGrapple();
+		}
 	}
 
 	public override void FrameSimulate()
@@ -110,11 +134,14 @@ public class GrappleAbility : BaseAbility
 			for ( int i = 0; i < _grapplePoints.Count - 1; i++ )
 			{
 				Gizmo.Draw.Color = Color.White;
-				Gizmo.Draw.Line( _grapplePoints[i], _grapplePoints[i + 1] );
+				Gizmo.Draw.SolidCapsule( _grapplePoints[i], _grapplePoints[i + 1], 0.5f, 5, 5 );
+			}
 
+
+			for ( int i = 1; i < _grapplePoints.Count; i++ )
+			{
 				Gizmo.Draw.Color = Color.Blue;
-				Gizmo.Draw.SolidSphere( _grapplePoints[i], 5f );
-				Gizmo.Draw.SolidSphere( _grapplePoints[i + 1], 5f );
+				// Gizmo.Draw.SolidSphere( _grapplePoints[i], 5f );
 			}
 
 			if ( _grapplePoints.Count == 0 )
@@ -122,9 +149,12 @@ public class GrappleAbility : BaseAbility
 				return;
 			}
 
+			Gizmo.Draw.Color = Color.Red;
+			Gizmo.Draw.SolidSphere( _grapplePoints.First(), 5f );
+
 			Gizmo.Draw.Color = Color.White;
 
-			Gizmo.Draw.Line( Controller.CameraPosition + Vector3.Down * 5, _grapplePoints.Last() );
+			Gizmo.Draw.SolidCapsule( Controller.CameraPosition + Vector3.Down * 6, _grapplePoints.Last(), 0.5f, 5, 5 );
 		}
 	}
 
@@ -140,18 +170,40 @@ public class GrappleAbility : BaseAbility
 
 		Vector3 hookPoint = _grapplePoints.FirstOrDefault();
 
+		if ( State is GrappleState.Retracting && _grapplePoints.Count > 1 )
+		{
+			State = GrappleState.ForcedRetracting;
+		}
+
 		float speed = GetHookSpeed();
+
+		if ( speed.AlmostEqual( 0f ) )
+		{
+			return;
+		}
 
 		if ( State is GrappleState.Retracting )
 		{
 			hookPoint += Vector3.Down * PlayerSettings.GrappleRetractFallSpeed * Time.Delta;
 		}
 
-		hookPoint = hookPoint.ApproachVector( WishHookPoint.Value, speed * Time.Delta );
+		Vector3 nextPosition = hookPoint.ApproachVector( WishHookPoint.Value, speed * Time.Delta );
 
-		_grapplePoints[0] = hookPoint;
+		SceneTraceResult tr = Scene.Trace.Ray( hookPoint, nextPosition )
+			.IgnoreGameObjectHierarchy( GameObject )
+			.Run();
 
-		if ( hookPoint.AlmostEqual( WishHookPoint.Value ) )
+		if ( tr.Hit && State is GrappleState.Shooting )
+		{
+			nextPosition = tr.HitPosition;
+			State = GrappleState.Attached;
+			_grapplePoints[0] = nextPosition;
+			return;
+		}
+
+		_grapplePoints[0] = nextPosition;
+
+		if ( nextPosition.AlmostEqual( WishHookPoint.Value ) )
 		{
 			OnHookPointReached();
 		}
@@ -162,7 +214,6 @@ public class GrappleAbility : BaseAbility
 	/// If it's shooting, begin retracting.
 	/// If it's retracting, remove the first point. If there are no points left, it was moving to the player.
 	/// </summary>
-	/// 
 	/// <exception cref="ArgumentOutOfRangeException">
 	/// Thrown when the state is not shooting or retracting. This should never happen.
 	/// </exception>
@@ -179,10 +230,6 @@ public class GrappleAbility : BaseAbility
 				{
 					OnGrappleFinishedRetracting();
 				}
-				else
-				{
-					State = GrappleState.Attached;
-				}
 
 				break;
 			case GrappleState.ForcedRetracting:
@@ -194,6 +241,11 @@ public class GrappleAbility : BaseAbility
 				else
 				{
 					_grapplePoints.RemoveAt( 0 );
+
+					if ( CanAttach )
+					{
+						State = GrappleState.Attached;
+					}
 				}
 
 				break;
@@ -212,6 +264,7 @@ public class GrappleAbility : BaseAbility
 		}
 
 		State = GrappleState.ForcedRetracting;
+		CanAttach = false;
 	}
 
 	private void OnGrappleFinishedRetracting()
@@ -224,9 +277,10 @@ public class GrappleAbility : BaseAbility
 	/// </summary>
 	private void TraceToGrapplePoint()
 	{
-		SceneTraceResult tr = Scene.Trace.Ray( Controller.CameraPosition, _grapplePoints.Last() )
-			.IgnoreGameObjectHierarchy( GameObject )
-			.Run();
+		// SceneTraceResult tr = Scene.Trace.Ray( Controller.CameraPosition, _grapplePoints.Last() )
+		// 	.IgnoreGameObjectHierarchy( GameObject )
+		// 	.Run();
+		SceneTraceResult tr = TraceWithBackoff( Controller.CameraPosition, _grapplePoints.Last() );
 
 		if ( !tr.Hit )
 		{
@@ -240,14 +294,26 @@ public class GrappleAbility : BaseAbility
 			return;
 		}
 
-		if ( State is GrappleState.Retracting )
+		if ( State is GrappleState.ForcedRetracting )
 		{
 			_grapplePoints.RemoveAt( 0 );
 		}
 		else
 		{
-			State = GrappleState.Retracting;
+			State = GrappleState.ForcedRetracting;
 		}
+	}
+
+	private SceneTraceResult TraceWithBackoff( Vector3 start, Vector3 end )
+	{
+		Vector3 dir = (end - start).Normal;
+		end -= dir * 0.1f;
+
+		SceneTraceResult tr = Scene.Trace.Ray( start, end )
+			.IgnoreGameObjectHierarchy( GameObject )
+			.Run();
+
+		return tr;
 	}
 
 	/// <summary>
@@ -310,6 +376,6 @@ public class GrappleAbility : BaseAbility
 		Shooting,
 		Attached,
 		Retracting,
-		ForcedRetracting,
+		ForcedRetracting
 	}
 }
