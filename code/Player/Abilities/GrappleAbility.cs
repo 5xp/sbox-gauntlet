@@ -10,30 +10,6 @@ public class GrappleAbility : BaseAbility
 	/// </summary>
 	private bool _canAttach;
 
-	/// <summary>
-	/// Contains the positions of the grapple points.
-	/// The first point is the grapple hook.t
-	/// The last point is the only point that is in view of the player. It is also the point we accelerate towards.
-	/// </summary>
-	[Property] [ReadOnly] private List<Vector3> _grapplePoints;
-
-	/// <summary>
-	/// Where the grapple hook wants to go. If we're shooting, this is the player's target.
-	/// If we're retracting, this is the next point in the list.
-	/// If there is no next point in the list, this is null (which represents the player's eye position).
-	/// If we're not shooting or retracting, this is null.
-	/// </summary>
-	private Vector3 _wishHookPoint;
-
-	/// <summary>
-	/// Our current state of the grapple.
-	/// </summary>
-	[Property]
-	[ReadOnly]
-	private GrappleState State { get; set; } = GrappleState.Idle;
-
-	private SceneTraceResult? LastSafeTraceResult { get; set; }
-
 	private bool CanAttach
 	{
 		get =>
@@ -46,6 +22,21 @@ public class GrappleAbility : BaseAbility
 
 		set => _canAttach = value;
 	}
+
+	/// <summary>
+	/// Contains the positions of the grapple points.
+	/// The first point is the grapple hook.
+	/// The last point is the only point that is in view of the player. It is also the point we accelerate towards.
+	/// </summary>
+	[Property] [ReadOnly] private List<Vector3> _grapplePoints;
+
+	/// <summary>
+	/// Where the grapple hook wants to go. If we're shooting, this is the player's target.
+	/// If we're retracting, this is the next point in the list.
+	/// If there is no next point in the list, this is null (which represents the player's eye position).
+	/// If we're not shooting or retracting, this is null.
+	/// </summary>
+	private Vector3 _wishHookPoint;
 
 	private Vector3? WishHookPoint
 	{
@@ -64,6 +55,26 @@ public class GrappleAbility : BaseAbility
 			}
 		}
 	}
+
+	/// <summary>
+	/// Once we're attached, detach if our grapple length exceeds this value.
+	/// </summary>
+	private float DetachLength => PlayerSettings.GrappleLength + PlayerSettings.GrappleExtraDetachLength;
+
+	/// <summary>
+	/// Tracks how long we've been moving under <see cref="PlayerSettings.GrappleDetachLowSpeedThreshold" />.
+	/// If this exceeds <see cref="PlayerSettings.GrappleDetachLowSpeedTime"/>, then we detach.
+	/// </summary>
+	private TimeSince LowSpeedTime { get; set; }
+
+	/// <summary>
+	/// Our current state of the grapple.
+	/// </summary>
+	[Property]
+	[ReadOnly]
+	private GrappleState State { get; set; } = GrappleState.Idle;
+
+	private SceneTraceResult? LastSafeTraceResult { get; set; }
 
 	protected override void OnAwake()
 	{
@@ -117,7 +128,18 @@ public class GrappleAbility : BaseAbility
 		CheckLinesOfSight();
 		UpdateHookPoint();
 
-		if ( TimeSinceStart >= PlayerSettings.GrappleDetachOnGrappleDebounceTime && Input.Pressed( "Ability" ) )
+		if ( State is GrappleState.Idle )
+		{
+			return;
+		}
+
+		if ( Controller.Velocity.LengthSquared >= PlayerSettings.GrappleDetachLowSpeedThreshold *
+		    PlayerSettings.GrappleDetachLowSpeedThreshold )
+		{
+			LowSpeedTime = 0;
+		}
+
+		if ( State is not GrappleState.ForcedRetracting && ShouldDetach() )
 		{
 			ForceRetractGrapple();
 		}
@@ -147,11 +169,6 @@ public class GrappleAbility : BaseAbility
 
 		float speed = GetHookSpeed();
 
-		if ( speed.AlmostEqual( 0f ) )
-		{
-			return;
-		}
-
 		if ( State is GrappleState.Retracting )
 		{
 			hookPoint += Vector3.Down * PlayerSettings.GrappleRetractFallSpeed * Time.Delta;
@@ -166,7 +183,7 @@ public class GrappleAbility : BaseAbility
 		if ( tr.Hit && State is GrappleState.Shooting )
 		{
 			nextPosition = tr.HitPosition;
-			State = GrappleState.Attached;
+			SetAttached();
 			_grapplePoints[0] = nextPosition;
 			return;
 		}
@@ -209,7 +226,7 @@ public class GrappleAbility : BaseAbility
 					// If we're force retracting before the grapple has finished or been canceled
 					if ( CanAttach )
 					{
-						State = GrappleState.Attached;
+						SetAttached();
 					}
 				}
 
@@ -219,6 +236,12 @@ public class GrappleAbility : BaseAbility
 			default:
 				throw new ArgumentOutOfRangeException();
 		}
+	}
+
+	private void SetAttached()
+	{
+		State = GrappleState.Attached;
+		LowSpeedTime = 0;
 	}
 
 	private void ForceRetractGrapple()
@@ -361,6 +384,60 @@ public class GrappleAbility : BaseAbility
 			GrappleState.ForcedRetracting => PlayerSettings.GrappleForcedRetractVel,
 			_ => 0
 		};
+	}
+
+	private bool ShouldDetach()
+	{
+		// Player wants to detach
+		if ( Input.Pressed( "Ability" ) && TimeSinceStart >= PlayerSettings.GrappleDetachOnGrappleDebounceTime )
+		{
+			Log.Info( "Player pressed detach" );
+			return true;
+		}
+
+		float grappleLength = GetGrappleLength();
+
+
+		// Grapple length is too long or too short
+		if ( State is GrappleState.Attached &&
+		     (grappleLength > DetachLength || grappleLength < PlayerSettings.GrappleDetachLengthMin) )
+		{
+			Log.Info( "Grapple length is too long or too short" );
+			return true;
+		}
+
+		// We're moving away from the grapple point too fast
+		float movingAwaySpeed = Vector3.Dot( Controller.Velocity,
+			(_grapplePoints.Last() - Controller.CameraPosition).Normal );
+
+		if ( movingAwaySpeed < -PlayerSettings.GrappleDetachAwaySpeed )
+		{
+			Log.Info( "Moving away too fast" );
+			return true;
+		}
+
+		// We're moving too slow for too long
+		if ( State is GrappleState.Attached && LowSpeedTime > PlayerSettings.GrappleDetachLowSpeedTime )
+		{
+			Log.Info( "Moving too slow for too long" );
+			return true;
+		}
+
+		return false;
+	}
+
+	/// <summary>
+	/// Sums the distances between each grapple point and the last point to the player's eye position.
+	/// </summary>
+	/// <returns>The summed current grapple length.</returns>
+	private float GetGrappleLength()
+	{
+		float grappleDistance = _grapplePoints
+			.Zip( _grapplePoints.Skip( 1 ), ( a, b ) => Vector3.DistanceBetween( a, b ) ).Sum();
+
+		grappleDistance += _grapplePoints.Last().Distance( Controller.CameraPosition );
+
+		return grappleDistance;
 	}
 
 	private enum GrappleState
