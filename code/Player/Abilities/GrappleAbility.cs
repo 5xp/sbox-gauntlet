@@ -74,6 +74,11 @@ public class GrappleAbility : BaseAbility
 	[ReadOnly]
 	private GrappleState State { get; set; } = GrappleState.Idle;
 
+	/// <summary>
+	/// Our current tilt fraction. Our view tilts while we are attached.
+	/// </summary>
+	private float TiltFraction { get; set; }
+
 	private SceneTraceResult? LastSafeTraceResult { get; set; }
 
 	protected override void OnAwake()
@@ -147,6 +152,7 @@ public class GrappleAbility : BaseAbility
 
 	public override void FrameSimulate()
 	{
+		ApplyTilt();
 		DrawGizmos();
 	}
 
@@ -324,7 +330,10 @@ public class GrappleAbility : BaseAbility
 		}
 	}
 
-	private SceneTraceResult TraceWithBackoff( Vector3 start, Vector3 end, float backoff = 0.1f )
+	/// <summary>
+	/// This is used for line of sight checks but with a backoff so we don't hit the wall.
+	/// </summary>
+	private SceneTraceResult TraceWithBackoff( Vector3 start, Vector3 end, float backoff = 0.01f )
 	{
 		Vector3 dir = (end - start).Normal;
 		end -= dir * backoff;
@@ -432,6 +441,39 @@ public class GrappleAbility : BaseAbility
 		}
 
 		return false;
+	}
+
+	/// <summary>
+	/// Applies view tilt based on the angle between the player's view and the hook point.
+	/// </summary>
+	private void ApplyTilt()
+	{
+		float tiltFrac = 0f;
+
+		if ( State is not GrappleState.Idle )
+		{
+			Angles eyeAngles = Controller.AimAngles;
+			Angles toHookPoint = (_grapplePoints.First() - Controller.CameraPosition).Normal.EulerAngles;
+			Angles diff = eyeAngles - toHookPoint;
+			float yawDiff = diff.Normal.yaw;
+
+			float angleFrac =
+				MathF.Abs( yawDiff ).LerpInverse( PlayerSettings.GrappleRollViewAngleMin,
+					PlayerSettings.GrappleRollViewAngleMax ) * MathF.Sign( yawDiff );
+
+			float distanceToHook = Vector3.DistanceBetween( Controller.CameraPosition, _grapplePoints.First() );
+
+			float distanceFrac = distanceToHook.LerpInverse( PlayerSettings.GrappleRollDistanceMin,
+				PlayerSettings.GrappleRollDistanceMax );
+
+			tiltFrac = angleFrac * distanceFrac;
+		}
+
+		float tiltAmount = TiltFraction.LerpTo( tiltFrac, 3.5f * Time.Delta );
+
+		TiltFraction = TiltFraction.Approach( tiltAmount, 85f * Time.Delta );
+
+		Controller.InputAngles += new Angles( 0f, 0f, TiltFraction * PlayerSettings.GrappleMaxRoll );
 	}
 
 	/// <summary>
