@@ -128,39 +128,6 @@ public class GrappleAbility : BaseAbility
 		DrawGizmos();
 	}
 
-	private new void DrawGizmos()
-	{
-		using ( Gizmo.Scope( "grapple" ) )
-		{
-			Gizmo.Transform = global::Transform.Zero;
-
-			for ( int i = 0; i < _grapplePoints.Count - 1; i++ )
-			{
-				Gizmo.Draw.Color = Color.White;
-				Gizmo.Draw.SolidCapsule( _grapplePoints[i], _grapplePoints[i + 1], 0.5f, 5, 5 );
-			}
-
-
-			for ( int i = 1; i < _grapplePoints.Count; i++ )
-			{
-				Gizmo.Draw.Color = Color.Blue;
-				// Gizmo.Draw.SolidSphere( _grapplePoints[i], 5f );
-			}
-
-			if ( _grapplePoints.Count == 0 )
-			{
-				return;
-			}
-
-			Gizmo.Draw.Color = Color.Red;
-			Gizmo.Draw.SolidSphere( _grapplePoints.First(), 5f );
-
-			Gizmo.Draw.Color = Color.White;
-
-			Gizmo.Draw.SolidCapsule( Controller.CameraPosition + Vector3.Down * 6, _grapplePoints.Last(), 0.5f, 5, 5 );
-		}
-	}
-
 	/// <summary>
 	/// Move the hook point towards the wish hook point.
 	/// </summary>
@@ -403,5 +370,38 @@ public class GrappleAbility : BaseAbility
 		Attached,
 		Retracting,
 		ForcedRetracting
+	}
+
+	private new void DrawGizmos()
+	{
+		using ( Gizmo.Scope( "grapple" ) )
+		{
+			Gizmo.Transform = global::Transform.Zero;
+
+			for ( int i = 0; i < _grapplePoints.Count - 1; i++ )
+			{
+				Gizmo.Draw.Color = Color.White;
+				Gizmo.Draw.SolidCapsule( _grapplePoints[i], _grapplePoints[i + 1], 0.5f, 5, 5 );
+			}
+
+
+			for ( int i = 1; i < _grapplePoints.Count; i++ )
+			{
+				Gizmo.Draw.Color = Color.Blue;
+				// Gizmo.Draw.SolidSphere( _grapplePoints[i], 5f );
+			}
+
+			if ( _grapplePoints.Count == 0 )
+			{
+				return;
+			}
+
+			Gizmo.Draw.Color = Color.Red;
+			Gizmo.Draw.SolidSphere( _grapplePoints.First(), 5f );
+
+			Gizmo.Draw.Color = Color.White;
+
+			Gizmo.Draw.SolidCapsule( Controller.CameraPosition + Vector3.Down * 6, _grapplePoints.Last(), 0.5f, 5, 5 );
+		}
 	}
 }
