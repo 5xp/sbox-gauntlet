@@ -222,7 +222,6 @@ public class GrappleAbility : BaseAbility
 	/// </exception>
 	private void OnHookPointReached()
 	{
-		Log.Info( "Hook point reached." );
 		switch ( State )
 		{
 			case GrappleState.Shooting:
@@ -284,14 +283,15 @@ public class GrappleAbility : BaseAbility
 			return;
 		}
 
+		var endpos = tr.EndPosition;
+
 		if ( LastSafeTraceResult.HasValue )
 		{
-			Vector3 midpoint = LastSafeTraceResult.Value.StartPosition +
-			                   (tr.StartPosition - LastSafeTraceResult.Value.StartPosition) / 2;
-			tr = TraceWithBackoff( midpoint, _grapplePoints.Last() );
+			endpos = SearchForEdge( LastSafeTraceResult.Value.StartPosition, tr.StartPosition,
+				_grapplePoints.Last() );
 		}
 
-		_grapplePoints.Add( tr.EndPosition );
+		_grapplePoints.Add( endpos );
 
 		if ( _grapplePoints.Count <= PlayerSettings.GrappleMaxGrapplePoints )
 		{
@@ -305,6 +305,32 @@ public class GrappleAbility : BaseAbility
 		else
 		{
 			State = GrappleState.ForcedRetracting;
+		}
+	}
+
+	private Vector3 SearchForEdge( Vector3 safePosition, Vector3 unsafePosition, Vector3 target, int depth = 3 )
+	{
+		SceneTraceResult lastUnsafeTraceResult = TraceWithBackoff( unsafePosition, target );
+
+		while ( true )
+		{
+			Vector3 midpoint = safePosition + (unsafePosition - safePosition) / 2;
+			SceneTraceResult tr = TraceWithBackoff( midpoint, target );
+
+			if ( tr.Hit )
+			{
+				unsafePosition = midpoint;
+				lastUnsafeTraceResult = tr;
+			}
+			else
+			{
+				safePosition = midpoint;
+			}
+
+			if ( depth-- <= 0 )
+			{
+				return lastUnsafeTraceResult.EndPosition;
+			}
 		}
 	}
 
