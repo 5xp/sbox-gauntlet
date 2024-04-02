@@ -32,6 +32,8 @@ public class GrappleAbility : BaseAbility
 	[ReadOnly]
 	private GrappleState State { get; set; } = GrappleState.Idle;
 
+	private SceneTraceResult? LastSafeTraceResult { get; set; }
+
 	private bool CanAttach
 	{
 		get =>
@@ -92,6 +94,7 @@ public class GrappleAbility : BaseAbility
 	protected override void OnActiveChanged( bool before, bool after )
 	{
 		_grapplePoints.Clear();
+		LastSafeTraceResult = null;
 
 		if ( !after )
 		{
@@ -226,22 +229,18 @@ public class GrappleAbility : BaseAbility
 				State = GrappleState.Retracting;
 				break;
 			case GrappleState.Retracting:
-				if ( _grapplePoints.Count == 1 )
-				{
-					OnGrappleFinishedRetracting();
-				}
-
-				break;
 			case GrappleState.ForcedRetracting:
 				// This was our only grapple point, so it was moving to the player.
 				if ( _grapplePoints.Count == 1 )
 				{
 					OnGrappleFinishedRetracting();
 				}
-				else
+				// The hook retracted to the next point.
+				else if ( State is GrappleState.ForcedRetracting )
 				{
 					_grapplePoints.RemoveAt( 0 );
 
+					// If we're force retracting before the grapple has finished or been canceled
 					if ( CanAttach )
 					{
 						State = GrappleState.Attached;
@@ -277,14 +276,19 @@ public class GrappleAbility : BaseAbility
 	/// </summary>
 	private void TraceToGrapplePoint()
 	{
-		// SceneTraceResult tr = Scene.Trace.Ray( Controller.CameraPosition, _grapplePoints.Last() )
-		// 	.IgnoreGameObjectHierarchy( GameObject )
-		// 	.Run();
 		SceneTraceResult tr = TraceWithBackoff( Controller.CameraPosition, _grapplePoints.Last() );
 
 		if ( !tr.Hit )
 		{
+			LastSafeTraceResult = tr;
 			return;
+		}
+
+		if ( LastSafeTraceResult.HasValue )
+		{
+			Vector3 midpoint = LastSafeTraceResult.Value.StartPosition +
+			                   (tr.StartPosition - LastSafeTraceResult.Value.StartPosition) / 2;
+			tr = TraceWithBackoff( midpoint, _grapplePoints.Last() );
 		}
 
 		_grapplePoints.Add( tr.EndPosition );
@@ -304,16 +308,14 @@ public class GrappleAbility : BaseAbility
 		}
 	}
 
-	private SceneTraceResult TraceWithBackoff( Vector3 start, Vector3 end )
+	private SceneTraceResult TraceWithBackoff( Vector3 start, Vector3 end, float backoff = 0.1f )
 	{
 		Vector3 dir = (end - start).Normal;
-		end -= dir * 0.1f;
+		end -= dir * backoff;
 
-		SceneTraceResult tr = Scene.Trace.Ray( start, end )
+		return Scene.Trace.Ray( start, end )
 			.IgnoreGameObjectHierarchy( GameObject )
 			.Run();
-
-		return tr;
 	}
 
 	/// <summary>
@@ -347,9 +349,7 @@ public class GrappleAbility : BaseAbility
 			return;
 		}
 
-		SceneTraceResult tr = Scene.Trace.Ray( Controller.CameraPosition, _grapplePoints[^2] )
-			.IgnoreGameObjectHierarchy( GameObject )
-			.Run();
+		SceneTraceResult tr = TraceWithBackoff( Controller.CameraPosition, _grapplePoints[^2] );
 
 		if ( tr.Hit )
 		{
