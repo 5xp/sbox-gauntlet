@@ -1,6 +1,6 @@
 {
   "RootObject": {
-    "__guid": "1d328f69-c73e-451d-a652-4940ec2ac687",
+    "__guid": "dd51e7b1-3303-4704-882b-ea9da5a69e3a",
     "Name": "player",
     "Tags": "player",
     "Enabled": true,
@@ -8,23 +8,17 @@
     "Components": [
       {
         "__type": "PlayerController",
-        "__guid": "ba18e027-7b31-43fe-ae5e-cbe506b4feb8",
+        "__guid": "d063ea22-14d8-48a9-84bb-b1d10e8a84a8",
         "AirJumpSound": "assets/sounds/airjump.sound",
         "AnimationHelper": {
           "_type": "component",
-          "component_id": "4c5330bb-cab1-479f-a202-9399fa8485f2",
-          "go": "627fc29d-858d-4db5-ab7f-40917d1e616b",
+          "component_id": "41e678b6-eef9-4519-a3c1-f25d8aa39aaf",
+          "go": "5e89e028-b7ce-4bfe-8c05-9bebec04b8b7",
           "component_type": "AnimationHelper"
         },
         "Body": {
           "_type": "gameobject",
-          "go": "627fc29d-858d-4db5-ab7f-40917d1e616b"
-        },
-        "CameraController": {
-          "_type": "component",
-          "component_id": "2644ef01-6520-4088-ba18-567e37c60677",
-          "go": "1d328f69-c73e-451d-a652-4940ec2ac687",
-          "component_type": "CameraController"
+          "go": "5e89e028-b7ce-4bfe-8c05-9bebec04b8b7"
         },
         "CurrentHoldType": "None",
         "FootStepSoundRun": "assets/sounds/footstep_generic_run.sound",
@@ -33,13 +27,153 @@
         "HardLandSound": "assets/sounds/hardlanding.sound",
         "HullCollider": {
           "_type": "component",
-          "component_id": "3fbdd86d-4f42-4f4c-8702-950682952fe7",
-          "go": "1d328f69-c73e-451d-a652-4940ec2ac687",
+          "component_id": "37d233f9-3b74-4a30-a44c-3715b21b0769",
+          "go": "dd51e7b1-3303-4704-882b-ea9da5a69e3a",
           "component_type": "HullCollider"
         },
         "IsGrounded": false,
         "JumpSound": "assets/sounds/jump.sound",
         "LandSound": "assets/sounds/landing.sound",
+        "PlayerSettings": {
+          "HullRadius": 16,
+          "HullHeightStanding": 72,
+          "HullHeightCrouching": 47,
+          "ViewHeightStanding": 60,
+          "ViewHeightCrouching": 38,
+          "Gravity": 750,
+          "GravityScale": 0.75,
+          "StepHeightMax": 18,
+          "StepHeightMin": 4,
+          "GroundAngle": 46,
+          "MaxNonJumpVelocity": 140,
+          "Acceleration": 2500,
+          "WalkSpeed": 162.5,
+          "CrouchSpeed": 80,
+          "SprintSpeed": 243,
+          "AirSpeed": 60,
+          "AirAcceleration": 500,
+          "ExtraAirAcceleration": 2,
+          "PitchMaxUp": 85,
+          "PitchMaxDown": 89,
+          "DuckSpeed": 2,
+          "UnduckSpeed": 5,
+          "CanJumpWhileUnducking": true,
+          "JumpHeight": 60,
+          "JumpGracePeriod": 0.2,
+          "JumpBufferTime": 0.0078125,
+          "JumpKeyboardGracePeriodMin": 0.2,
+          "JumpKeyboardGracePeriodMax": 0.5,
+          "JumpKeyboardGraceMax": 0.7,
+          "JumpKeyboardGraceStrength": 0.7,
+          "AirJumpHeight": 60,
+          "AirJumpHorizontalSpeed": 180,
+          "AirJumpMinHeightFraction": 0.25,
+          "AirJumpMaxJumps": 1,
+          "SprintMaxAngleDot": 0.6,
+          "SprintTiltAccel": 35,
+          "SprintTiltMaxVel": 2,
+          "SprintTiltTurnRange": 120,
+          "SprintTiltMaxRoll": 2,
+          "SprintOffsetStartDelay": 0.2,
+          "SprintOffsetStartDuration": 0.8,
+          "SprintOffsetStartFastDuration": 0.2,
+          "SprintOffsetEndDuration": 0.15,
+          "SprintViewOffset": -6,
+          "SprintBobSmoothingReductionFactor": 0.2,
+          "SprintBobSmoothingTime": 3,
+          "SprintBobCycleTime": 0.55,
+          "SlideBoostCooldown": 2,
+          "SlideStepVelocityReduction": 10,
+          "SlideDecel": 50,
+          "SlideVelocityDecay": 0.7,
+          "SlideSpeedBoost": 150,
+          "SlideSpeedBoostCap": 400,
+          "SlideMaxAngleDot": 0.6,
+          "SlideRequiredStartSpeed": 200,
+          "SlideJumpHeight": 50,
+          "SlideForceSlideSpeed": 350,
+          "SlideForceSlideUnduckDecel": 350,
+          "SlideEndSpeed": 125,
+          "SlideFovLerpInTime": 0.25,
+          "SlideFovLerpOutTime": 0.25,
+          "SlideFovScale": 1.1,
+          "SlideTiltPlayerSpeed": 400,
+          "SlideTiltIncreaseSpeed": 5,
+          "SlideTiltDecreaseSpeed": 2.5,
+          "SlideTiltMaxRoll": 15,
+          "SkipTime": 0.1,
+          "SkipSpeedRetain": 450,
+          "SkipSpeedReduce": 12,
+          "SkipJumpHeightFraction": 0.75,
+          "ViewPunchSpringConstant": 65,
+          "ViewPunchSpringDamping": 9,
+          "ViewPunchJumpPitchMin": 2.2,
+          "ViewPunchJumpPitchMax": 3.4,
+          "ViewPunchJumpYawMin": -0.7,
+          "ViewPunchJumpYawMax": 0.7,
+          "ViewPunchJumpRollMin": 0.85,
+          "ViewPunchJumpRollMax": 1.5,
+          "ViewPunchAirJumpPitchMin": 5.58,
+          "ViewPunchAirJumpPitchMax": 6.88,
+          "ViewPunchAirJumpYawMin": -0.7,
+          "ViewPunchAirJumpYawMax": 0.7,
+          "ViewPunchAirJumpRollMin": -1.2,
+          "ViewPunchAirJumpRollMax": 0.9,
+          "ViewPunchFallPitchMin": 2.2,
+          "ViewPunchFallPitchMax": 3.4,
+          "ViewPunchFallRollMin": -0.62,
+          "ViewPunchFallRollMax": 0.62,
+          "ViewPunchFallDistMin": 10,
+          "ViewPunchFallDistMax": 70,
+          "ViewPunchFallDistMaxScale": 12,
+          "ViewPunchWallrunStartPitchMin": -1.93,
+          "ViewPunchWallrunStartPitchMax": -2.42,
+          "ViewPunchWallrunStartYawMin": -0.33,
+          "ViewPunchWallrunStartYawMax": 0.33,
+          "ViewPunchWallrunStartRollMin": 6.2,
+          "ViewPunchWallrunStartRollMax": 6.67,
+          "StepSmoothingOffsetCorrectSpeed": 80,
+          "WallrunEnable": true,
+          "WallrunTimeLimit": 1.75,
+          "WallrunGravityRampUpTime": 1,
+          "WallrunUpWallBoost": 250,
+          "WallrunJumpOutwardSpeed": 205,
+          "WallrunJumpUpSpeed": 230,
+          "WallrunJumpInputDirSpeed": 75,
+          "WallrunFallAwaySpeed": 70,
+          "WallrunMaxSpeedHorizontal": 340,
+          "WallrunMaxSpeedBackwards": 50,
+          "WallrunMaxSpeedVertical": 225,
+          "WallrunAccelerationHorizontal": 1400,
+          "WallrunAccelerationVertical": 360,
+          "WallrunAvoidTopWallDecel": 3000,
+          "WallrunFriction": 4,
+          "WallrunSlipStartTime": 2,
+          "WallrunSlipDuration": 1,
+          "WallrunNoInputSlipFrac": 0.7,
+          "WallrunPushAwayFallOffTime": 0.05,
+          "WallrunUpwardAutoPush": 0.65,
+          "WallrunSameWallDot": 0.9,
+          "WallrunAllowedWallDist": 13,
+          "WallrunAngleChangeMinCos": 0.8,
+          "WallrunRotateMaxRate": 3,
+          "WallrunTiltSpeed": 4,
+          "WallrunTiltEndSpeed": 1.33,
+          "WallrunTiltPredictTime": 0.25,
+          "WallrunTiltMaxRoll": 15,
+          "WallrunViewYawOffset": 80,
+          "WallrunViewPitchOffsetMin": 30,
+          "WallrunViewPitchOffsetMax": 50,
+          "WallrunViewPitchOffsetCorrectSpeed": 35,
+          "FootStepWalkInterval": 0.4,
+          "FootStepSprintInterval": 0.3,
+          "FootStepDuckIntervalAdd": 0.1,
+          "FootStepDuckWalkSpeed": 80,
+          "FootStepDuckRunSpeed": 120,
+          "FootStepNormalWalkSpeed": 30,
+          "FootStepNormalRunSpeed": 220,
+          "HardFallDist": 20
+        },
         "SlideBoostSound": "assets/sounds/slide_boost.sound",
         "SlideEndSound": "assets/sounds/slide_end.sound",
         "SlideSound": "assets/sounds/slide_start.sound",
@@ -48,25 +182,19 @@
       },
       {
         "__type": "CameraController",
-        "__guid": "2644ef01-6520-4088-ba18-567e37c60677",
+        "__guid": "ba543df8-bb67-4ac5-b62e-5168b2610b9d",
         "BaseFieldOfView": 90,
         "Camera": {
           "_type": "component",
-          "component_id": "e4724978-4bd5-4ab0-8d3b-29dc4fbeab1e",
-          "go": "6c4f6990-fd63-45da-bb8a-1dc47a7351fb",
+          "component_id": "2b6ce0dd-bcf9-4927-becf-acf880c0eec2",
+          "go": "2d422936-73f0-470e-a6b2-5bf5a7f75287",
           "component_type": "CameraComponent"
         },
-        "HideBody": true,
-        "PlayerController": {
-          "_type": "component",
-          "component_id": "ba18e027-7b31-43fe-ae5e-cbe506b4feb8",
-          "go": "1d328f69-c73e-451d-a652-4940ec2ac687",
-          "component_type": "PlayerController"
-        }
+        "HideBody": true
       },
       {
         "__type": "HullCollider",
-        "__guid": "3fbdd86d-4f42-4f4c-8702-950682952fe7",
+        "__guid": "37d233f9-3b74-4a30-a44c-3715b21b0769",
         "BoxSize": "0,0,0",
         "Center": "0,0,0",
         "Height": 72,
@@ -79,28 +207,22 @@
       },
       {
         "__type": "Timer",
-        "__guid": "5ca40429-6198-4afe-9fc0-d45d807f88f0",
+        "__guid": "baf2bd0b-17d1-4195-9251-83ec7be54c39",
         "EndSound": "assets/sounds/timer_complete.sound",
         "NewBestTimeSound": "assets/sounds/timer_pb.sound",
-        "Player": {
-          "_type": "component",
-          "component_id": "ba18e027-7b31-43fe-ae5e-cbe506b4feb8",
-          "go": "1d328f69-c73e-451d-a652-4940ec2ac687",
-          "component_type": "PlayerController"
-        },
         "StartSound": "assets/sounds/timer_start.sound",
         "Time": 0
       }
     ],
     "Children": [
       {
-        "__guid": "627fc29d-858d-4db5-ab7f-40917d1e616b",
+        "__guid": "5e89e028-b7ce-4bfe-8c05-9bebec04b8b7",
         "Name": "Body",
         "NetworkMode": 2,
         "Components": [
           {
             "__type": "SkinnedModelRenderer",
-            "__guid": "8d395ed0-84dd-4d45-8c76-7ea34879b4c4",
+            "__guid": "34497f3b-150a-40d2-906f-e28c437feae2",
             "BodyGroups": 18446744073709551274,
             "CreateBoneObjects": false,
             "MaterialGroup": "default",
@@ -110,157 +232,157 @@
           },
           {
             "__type": "ModelHitboxes",
-            "__guid": "446aac4f-000d-4f27-a68a-9da07fc4a65a",
+            "__guid": "e7616c1d-9942-488c-9024-ac361104799f",
             "Renderer": {
               "_type": "component",
-              "component_id": "8d395ed0-84dd-4d45-8c76-7ea34879b4c4",
-              "go": "627fc29d-858d-4db5-ab7f-40917d1e616b",
+              "component_id": "34497f3b-150a-40d2-906f-e28c437feae2",
+              "go": "5e89e028-b7ce-4bfe-8c05-9bebec04b8b7",
               "component_type": "SkinnedModelRenderer"
             },
             "Target": {
               "_type": "gameobject",
-              "go": "627fc29d-858d-4db5-ab7f-40917d1e616b"
+              "go": "5e89e028-b7ce-4bfe-8c05-9bebec04b8b7"
             }
           },
           {
             "__type": "AnimationHelper",
-            "__guid": "4c5330bb-cab1-479f-a202-9399fa8485f2",
+            "__guid": "41e678b6-eef9-4519-a3c1-f25d8aa39aaf",
             "EyeSource": {
               "_type": "gameobject",
-              "go": "6c4f6990-fd63-45da-bb8a-1dc47a7351fb"
+              "go": "2d422936-73f0-470e-a6b2-5bf5a7f75287"
             },
             "Height": 1,
             "LookAtObject": {
               "_type": "gameobject",
-              "go": "6c4f6990-fd63-45da-bb8a-1dc47a7351fb"
+              "go": "2d422936-73f0-470e-a6b2-5bf5a7f75287"
             },
             "Target": {
               "_type": "component",
-              "component_id": "8d395ed0-84dd-4d45-8c76-7ea34879b4c4",
-              "go": "627fc29d-858d-4db5-ab7f-40917d1e616b",
+              "component_id": "34497f3b-150a-40d2-906f-e28c437feae2",
+              "go": "5e89e028-b7ce-4bfe-8c05-9bebec04b8b7",
               "component_type": "SkinnedModelRenderer"
             }
           }
         ]
       },
       {
-        "__guid": "a91c0ccf-9abd-42e8-894d-15828efb3b48",
+        "__guid": "b137e45c-1804-4603-8cdf-3c488bc0b035",
         "Name": "Mechanics",
         "Enabled": true,
         "NetworkMode": 2,
         "Components": [
           {
             "__type": "CrouchMechanic",
-            "__guid": "8e66e51e-bf71-4708-a5cc-a6ff38894908",
+            "__guid": "5545204a-0ec9-4326-bb33-a8584128cd52",
             "Controller": {
               "_type": "component",
-              "component_id": "ba18e027-7b31-43fe-ae5e-cbe506b4feb8",
-              "go": "1d328f69-c73e-451d-a652-4940ec2ac687",
+              "component_id": "d063ea22-14d8-48a9-84bb-b1d10e8a84a8",
+              "go": "dd51e7b1-3303-4704-882b-ea9da5a69e3a",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 1739.728
+              "Relative": 3226.2483
             }
           },
           {
             "__type": "SprintMechanic",
-            "__guid": "64cb447f-8bd7-4760-bfae-94b99f068dea",
+            "__guid": "492f5e43-8691-4eec-8feb-d6aa58748149",
             "Controller": {
               "_type": "component",
-              "component_id": "ba18e027-7b31-43fe-ae5e-cbe506b4feb8",
-              "go": "1d328f69-c73e-451d-a652-4940ec2ac687",
+              "component_id": "d063ea22-14d8-48a9-84bb-b1d10e8a84a8",
+              "go": "dd51e7b1-3303-4704-882b-ea9da5a69e3a",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 1739.728
+              "Relative": 3226.2483
             }
           },
           {
             "__type": "WalkMechanic",
-            "__guid": "04c2824d-f993-41d3-8bbf-3391b2e2491b",
+            "__guid": "495dea92-84da-4b95-a0f3-e54daf2308a2",
             "Controller": {
               "_type": "component",
-              "component_id": "ba18e027-7b31-43fe-ae5e-cbe506b4feb8",
-              "go": "1d328f69-c73e-451d-a652-4940ec2ac687",
+              "component_id": "d063ea22-14d8-48a9-84bb-b1d10e8a84a8",
+              "go": "dd51e7b1-3303-4704-882b-ea9da5a69e3a",
               "component_type": "PlayerController"
             },
             "IsActive": true,
             "TimeSinceActiveChanged": {
-              "Relative": 1739.728
+              "Relative": 3226.2483
             }
           },
           {
             "__type": "AirMoveMechanic",
-            "__guid": "c1171b85-4f12-4e80-9710-8558d0647fa3",
+            "__guid": "a22a5c21-d20e-47d1-ad40-e62295633488",
             "Controller": {
               "_type": "component",
-              "component_id": "ba18e027-7b31-43fe-ae5e-cbe506b4feb8",
-              "go": "1d328f69-c73e-451d-a652-4940ec2ac687",
+              "component_id": "d063ea22-14d8-48a9-84bb-b1d10e8a84a8",
+              "go": "dd51e7b1-3303-4704-882b-ea9da5a69e3a",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 1739.728
+              "Relative": 3226.2483
             }
           },
           {
             "__type": "JumpMechanic",
-            "__guid": "480736d9-0b36-4415-96ac-d54c8ff76ee6",
+            "__guid": "dda60c60-69a8-4d12-b1b9-3871d59c4ca1",
             "Controller": {
               "_type": "component",
-              "component_id": "ba18e027-7b31-43fe-ae5e-cbe506b4feb8",
-              "go": "1d328f69-c73e-451d-a652-4940ec2ac687",
+              "component_id": "d063ea22-14d8-48a9-84bb-b1d10e8a84a8",
+              "go": "dd51e7b1-3303-4704-882b-ea9da5a69e3a",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 1739.728
+              "Relative": 3226.2483
             }
           },
           {
             "__type": "SlideMechanic",
-            "__guid": "360728fe-ce53-4856-b622-f7a547e264f4",
+            "__guid": "32fed8e5-4d8e-4c65-a236-e111ef4fa9f4",
             "Controller": {
               "_type": "component",
-              "component_id": "ba18e027-7b31-43fe-ae5e-cbe506b4feb8",
-              "go": "1d328f69-c73e-451d-a652-4940ec2ac687",
+              "component_id": "d063ea22-14d8-48a9-84bb-b1d10e8a84a8",
+              "go": "dd51e7b1-3303-4704-882b-ea9da5a69e3a",
               "component_type": "PlayerController"
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 1739.728
+              "Relative": 3226.2483
             }
           },
           {
             "__type": "ViewPunchMechanic",
-            "__guid": "1d7211a3-36f4-4614-bdaa-4a8ed3364387",
+            "__guid": "258266d3-e5ae-4653-a008-b3a3c5a5d18a",
             "IsActive": true,
             "TimeSinceActiveChanged": {
-              "Relative": 1739.728
+              "Relative": 3226.2483
             }
           },
           {
             "__type": "WallrunMechanic",
-            "__guid": "d012c402-e7f9-42f4-b681-6a49ebfea394",
+            "__guid": "a89b958b-1768-4c4f-a33c-2bbdaf438c35",
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 1739.728
+              "Relative": 3226.2483
             }
           },
           {
             "__type": "MoveMechanic",
-            "__guid": "94887a38-7688-4510-80d9-90a39df7cfd5",
+            "__guid": "661f15fc-3b62-4882-8b88-7364ac1e602d",
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 1739.728
+              "Relative": 3226.2483
             }
           }
         ]
       },
       {
-        "__guid": "6c4f6990-fd63-45da-bb8a-1dc47a7351fb",
+        "__guid": "2d422936-73f0-470e-a6b2-5bf5a7f75287",
         "Name": "Player Camera",
         "Position": "0,0,60",
         "Enabled": true,
@@ -268,7 +390,7 @@
         "Components": [
           {
             "__type": "CameraComponent",
-            "__guid": "e4724978-4bd5-4ab0-8d3b-29dc4fbeab1e",
+            "__guid": "2b6ce0dd-bcf9-4927-becf-acf880c0eec2",
             "BackgroundColor": "0.75478,0.83828,0.87624,1",
             "ClearFlags": "All",
             "FieldOfView": 90,
@@ -285,26 +407,26 @@
           },
           {
             "__type": "AudioListener",
-            "__guid": "f041aaf8-72c5-4be0-979c-81ec1f62d4d8",
+            "__guid": "e02ae9b3-efca-4969-9971-59251d6ea520",
             "UseCameraDirection": true
           }
         ]
       },
       {
-        "__guid": "001be53d-08ad-46cb-b4e9-81f99817a2f3",
+        "__guid": "bc50f241-229d-404e-904e-62eca9022639",
         "Name": "UI",
         "Enabled": true,
         "NetworkMode": 2,
         "Children": [
           {
-            "__guid": "1c1a2bfc-8b6d-4fa0-a35f-2ffcb9490884",
+            "__guid": "cf047cd1-11ed-4e81-a69e-23869a67a8e8",
             "Name": "HUD",
             "Enabled": true,
             "NetworkMode": 2,
             "Components": [
               {
                 "__type": "ScreenPanel",
-                "__guid": "cf8584b9-6e6e-4ed7-bfc9-4845f487fc13",
+                "__guid": "e946952c-bbaa-4959-a414-f4702b0ab653",
                 "AutoScreenScale": true,
                 "Opacity": 1,
                 "Scale": 1,
@@ -312,45 +434,45 @@
               },
               {
                 "__type": "HudPanel",
-                "__guid": "154b294e-d1b5-45c2-b5da-f0f302bb0da8",
+                "__guid": "1311456f-a791-421e-bc0f-890c8c21e811",
                 "Controller": {
                   "_type": "component",
-                  "component_id": "ba18e027-7b31-43fe-ae5e-cbe506b4feb8",
-                  "go": "1d328f69-c73e-451d-a652-4940ec2ac687",
+                  "component_id": "d063ea22-14d8-48a9-84bb-b1d10e8a84a8",
+                  "go": "dd51e7b1-3303-4704-882b-ea9da5a69e3a",
                   "component_type": "PlayerController"
                 },
                 "Timer": {
                   "_type": "component",
-                  "component_id": "5ca40429-6198-4afe-9fc0-d45d807f88f0",
-                  "go": "1d328f69-c73e-451d-a652-4940ec2ac687",
+                  "component_id": "baf2bd0b-17d1-4195-9251-83ec7be54c39",
+                  "go": "dd51e7b1-3303-4704-882b-ea9da5a69e3a",
                   "component_type": "Timer"
                 }
               },
               {
                 "__type": "CrosshairPanel",
-                "__guid": "537cec44-79cf-4841-8895-36a382cf09db",
+                "__guid": "5dc0e5e3-74fa-440a-bcb9-2b086ad4a543",
                 "Controller": {
                   "_type": "component",
-                  "component_id": "ba18e027-7b31-43fe-ae5e-cbe506b4feb8",
-                  "go": "1d328f69-c73e-451d-a652-4940ec2ac687",
+                  "component_id": "d063ea22-14d8-48a9-84bb-b1d10e8a84a8",
+                  "go": "dd51e7b1-3303-4704-882b-ea9da5a69e3a",
                   "component_type": "PlayerController"
                 }
               }
             ]
           },
           {
-            "__guid": "f18fd6c9-9fec-49ef-9f75-482ae4b04da4",
+            "__guid": "840339b2-280a-45ba-b867-155b7fb5c934",
             "Name": "Menu",
             "Enabled": true,
             "NetworkMode": 2,
             "Components": [
               {
                 "__type": "ScreenPanel",
-                "__guid": "24dee027-b7ab-49d1-8e67-e4d10004a577",
+                "__guid": "1e513e79-4038-4f5b-abf1-1e27c997a2d4",
                 "AutoScreenScale": true,
                 "OnComponentUpdate": {
                   "__version": 5,
-                  "__guid": "89be71a7-fa1c-414e-a94c-18aa0fcd6a44",
+                  "__guid": "e38f1457-3965-40dc-a4fa-238f3ff8bd7d",
                   "UserData": {
                     "Title": "Enable/Disable Menu Panel",
                     "ReferencedComponentTypes": [
@@ -375,8 +497,8 @@
                       "Id": 6,
                       "Type": "property.set",
                       "Properties": {
-                        "_type": "Sandbox.Game/Sandbox.Component",
-                        "_name": "Enabled"
+                        "_name": "Enabled",
+                        "_type": "Sandbox.Game/Sandbox.Component"
                       },
                       "UserData": {
                         "Position": "928,96"
@@ -393,8 +515,8 @@
                       "Id": 18,
                       "Type": "property.get",
                       "Properties": {
-                        "_type": "Sandbox.Game/Sandbox.Component",
-                        "_name": "Enabled"
+                        "_name": "Enabled",
+                        "_type": "Sandbox.Game/Sandbox.Component"
                       },
                       "UserData": {
                         "Position": "512,304"
@@ -414,8 +536,8 @@
                       "Id": 20,
                       "Type": "property.get",
                       "Properties": {
-                        "_type": "package.cflo.gauntlet/Gauntlet.Utils.Common",
-                        "_name": "EscapePressed"
+                        "_name": "EscapePressed",
+                        "_type": "package.cflo.gauntlet/Gauntlet.Utils.Common"
                       },
                       "UserData": {
                         "Position": "16,64"
@@ -479,7 +601,7 @@
               },
               {
                 "__type": "MenuPanel",
-                "__guid": "994b3f32-dc1a-402f-a9a7-9b335d31ef26",
+                "__guid": "a3c8ecee-bf1b-44e9-949b-aedb26048804",
                 "__enabled": false
               }
             ]

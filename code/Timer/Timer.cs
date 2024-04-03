@@ -6,7 +6,7 @@ namespace Gauntlet.Timer;
 [Icon( "timer" )]
 public sealed partial class Timer : Component
 {
-	[Property] public PlayerController Player { get; set; }
+	[RequireComponent] public PlayerController Player { get; set; }
 	[Property, ReadOnly] private float Time { get; set; }
 	[Property] public SoundEvent StartSound { get; set; }
 	[Property] public SoundEvent EndSound { get; set; }
