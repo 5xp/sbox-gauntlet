@@ -17,7 +17,7 @@ public class WallrunMechanic : BasePlayerControllerMechanic
 	/// </summary>
 	public Vector3? WallNormal
 	{
-		get => !PlayerSettings.WallrunEnable ? null : _wallNormal;
+		get => !PlayerSettings.Wallrun ? null : _wallNormal;
 		private set
 		{
 			if ( value.HasValue )
@@ -36,7 +36,7 @@ public class WallrunMechanic : BasePlayerControllerMechanic
 	{
 		get
 		{
-			if ( !PlayerSettings.WallrunEnable )
+			if ( !PlayerSettings.Wallrun )
 			{
 				return null;
 			}
@@ -119,7 +119,7 @@ public class WallrunMechanic : BasePlayerControllerMechanic
 
 	public override bool ShouldBecomeActive()
 	{
-		if ( !PlayerSettings.WallrunEnable )
+		if ( !PlayerSettings.Wallrun )
 		{
 			return false;
 		}
@@ -165,6 +165,11 @@ public class WallrunMechanic : BasePlayerControllerMechanic
 
 	public override void Simulate()
 	{
+		if ( !PlayerSettings.Wallrun )
+		{
+			return;
+		}
+
 		if ( !IsActive && !Controller.IsGrounded )
 		{
 			PredictedWallNormal = PredictWallrun();
@@ -219,7 +224,7 @@ public class WallrunMechanic : BasePlayerControllerMechanic
 
 	public void OnWallTouch( Vector3 wallNormal )
 	{
-		if ( IsActive || !PlayerSettings.WallrunEnable )
+		if ( IsActive || !PlayerSettings.Wallrun )
 		{
 			return;
 		}
