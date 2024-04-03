@@ -1,3 +1,4 @@
+using Gauntlet.Player.Abilities;
 using Gauntlet.Player.Animation;
 using Gauntlet.Player.Mechanics;
 using Gauntlet.Utils;
@@ -21,7 +22,7 @@ public partial class PlayerController : Component
 	/// <summary>
 	/// The current camera controller for this player.
 	/// </summary>
-	[Property]
+	[RequireComponent]
 	public CameraController CameraController { get; set; }
 
 	/// <summary>
@@ -102,7 +103,7 @@ public partial class PlayerController : Component
 	public Vector3 Velocity { get; set; }
 	public Vector3 HorzVelocity => Velocity.WithZ( 0f );
 
-	public PlayerSettings PlayerSettings { get; set; } = PlayerSettings.Regular;
+	[Property] public PlayerSettings PlayerSettings { get; set; } = PlayerSettings.Regular;
 
 	/// <summary>
 	/// The current holdtype for the player.

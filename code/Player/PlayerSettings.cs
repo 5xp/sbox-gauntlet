@@ -8,7 +8,7 @@ public sealed class PlayerSettings
 		Faster
 	};
 
-	private PlayerSettings() { }
+	public PlayerSettings() { }
 
 	public static PlayerSettings Debug
 	{
