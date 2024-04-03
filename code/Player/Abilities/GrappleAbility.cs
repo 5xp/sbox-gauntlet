@@ -381,6 +381,14 @@ public class GrappleAbility : BaseAbility
 			return;
 		}
 
+		Vector3 midPoint = Controller.CameraPosition + (_grapplePoints[^2] - Controller.CameraPosition) / 2;
+		SceneTraceResult midTr = TraceWithBackoff( _grapplePoints.Last(), midPoint );
+
+		if ( midTr.Hit )
+		{
+			return;
+		}
+
 		_grapplePoints.RemoveAt( _grapplePoints.Count - 1 );
 	}
 
