@@ -37,4 +37,9 @@ public partial class PlayerController
 			}
 		}
 	}
+
+	public T GetAbility<T>() where T : BaseAbility
+	{
+		return Components.Get<T>( FindMode.EverythingInChildren );
+	}
 }

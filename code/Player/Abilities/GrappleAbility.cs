@@ -343,6 +343,21 @@ public class GrappleAbility : BaseAbility
 			.Run();
 	}
 
+	public bool ShouldClearGroundObject()
+	{
+		switch ( State )
+		{
+			case GrappleState.Attached:
+			case GrappleState.ForcedRetracting when CanAttach:
+				return true;
+			case GrappleState.Idle:
+			case GrappleState.Shooting:
+			case GrappleState.Retracting:
+			default:
+				return false;
+		}
+	}
+
 	/// <summary>
 	/// This is called when we have more than two grapple points.
 	/// For each point (starting with the player's eye position), we check if we can see the grapple point two points ahead.
