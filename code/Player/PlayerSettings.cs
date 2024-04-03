@@ -215,6 +215,7 @@ public sealed class PlayerSettings
 	public float GrapplePullDellay { get; private set; } = 0.2f;
 	public float GrappleExtraDetachLength { get; private set; } = 256f;
 	public int GrappleMaxGrapplePoints { get; private set; } = 3;
+	public float GrappleLift { get; private set; } = 25f;
 	public float GrappleAcceleration { get; private set; } = 1000f;
 	public float GrappleSpeedRampMin { get; private set; } = 50f;
 	public float GrappleSpeedRampMax { get; private set; } = 800f;

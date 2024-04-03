@@ -284,7 +284,7 @@ public class SlideMechanic : BasePlayerControllerMechanic
 	{
 		Vector3 inclineComponent = Vector3.Up.ProjectOnNormal( Controller.GroundNormal );
 		inclineComponent.z = 0f;
-		inclineComponent *= PlayerSettings.Gravity * PlayerSettings.GravityScale;
+		inclineComponent *= Controller.PlayerGravity;
 		Velocity += inclineComponent * Time.Delta;
 	}
 }

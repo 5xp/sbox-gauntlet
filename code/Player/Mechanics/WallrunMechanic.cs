@@ -241,7 +241,7 @@ public class WallrunMechanic : BasePlayerControllerMechanic
 	{
 		Vector3 wishDir = BuildWishDirection( wallNormal );
 
-		Vector3 halfGravity = 0.5f * Controller.GetPlayerGravity() * GetWallrunGravityScale() * Time.Delta;
+		Vector3 halfGravity = Vector3.Down * 0.5f * Controller.PlayerGravity * GetWallrunGravityScale() * Time.Delta;
 		Velocity += halfGravity;
 
 		Velocity = Vector3.VectorPlaneProject( Velocity, wallNormal );

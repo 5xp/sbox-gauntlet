@@ -2,7 +2,9 @@
 
 public class AirMoveMechanic : BasePlayerControllerMechanic
 {
-	public override bool ShouldBecomeActive() => !Controller.IsGrounded && !Controller.GetMechanic<WallrunMechanic>().WallNormal.HasValue;
+	public override bool ShouldBecomeActive() =>
+		!Controller.IsGrounded && !Controller.GetMechanic<WallrunMechanic>().WallNormal.HasValue;
+
 	public override float? GetSpeed() => PlayerSettings.AirSpeed;
 	public override int Priority => 7;
 
@@ -15,15 +17,16 @@ public class AirMoveMechanic : BasePlayerControllerMechanic
 	{
 		PlayerController ctrl = Controller;
 
-		Vector3 halfGravity = Vector3.Down * 0.5f * PlayerSettings.Gravity * PlayerSettings.GravityScale * Time.Delta;
-		Velocity += halfGravity;
+		Vector3 halfGravity = Vector3.Down * 0.5f * Controller.PlayerGravity;
+		Velocity += halfGravity * Time.Delta;
 
 		Vector3 wishDir = Controller.BuildWishDir();
-		float wishSpeed = GetSpeed().Value;
+		float wishSpeed = Controller.AbilitiesSpeedOverride ?? PlayerSettings.AirSpeed;
+		float acceleration = Controller.AbilitiesAccelerationOverride ?? PlayerSettings.AirAcceleration;
 
-		Accelerate( wishDir, wishSpeed, PlayerSettings.AirAcceleration, PlayerSettings.ExtraAirAcceleration );
+		Accelerate( wishDir, wishSpeed, acceleration, PlayerSettings.ExtraAirAcceleration );
 		ctrl.Move();
-		Velocity += halfGravity;
+		Velocity += halfGravity * Time.Delta;
 	}
 
 	private void Accelerate( Vector3 wishDir, float wishSpeed, float acceleration, float extraAcceleration = 0f )

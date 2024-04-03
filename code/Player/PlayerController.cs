@@ -415,11 +415,6 @@ public partial class PlayerController : Component
 		return IsFloor( Vector3.Up, normal, PlayerSettings.GroundAngle );
 	}
 
-	public Vector3 GetPlayerGravity()
-	{
-		return Vector3.Down * PlayerSettings.Gravity * PlayerSettings.GravityScale;
-	}
-
 	public float GetWishSpeed()
 	{
 		return CurrentSpeedOverride ?? PlayerSettings.WalkSpeed;
@@ -468,7 +463,7 @@ public partial class PlayerController : Component
 		bool movingUpRapidly = Velocity.z > PlayerSettings.MaxNonJumpVelocity;
 		bool moveToEndPos = false;
 
-		if ( movingUpRapidly || GetAbility<GrappleAbility>().ShouldClearGroundObject() )
+		if ( movingUpRapidly || GetAbility<GrappleAbility>().ShouldBeAttached() )
 		{
 			ClearGroundObject();
 			return;
@@ -554,6 +549,11 @@ public partial class PlayerController : Component
 	{
 		InputAngles = stream.Read<Angles>();
 	}
+
+	public float PlayerGravity =>
+		PlayerSettings.Gravity * PlayerSettings.GravityScale *
+		AbilitiesGravityScaleOverride.GetValueOrDefault( 1f );
+
 
 	protected override void DrawGizmos()
 	{

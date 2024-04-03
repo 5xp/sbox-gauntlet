@@ -4,18 +4,18 @@ namespace Gauntlet.Player.Abilities;
 
 public class GrappleAbility : BaseAbility
 {
+	private bool _canAttach;
+
 	/// <summary>
 	/// Generally, we can only attach when we're shooting or retracting, but in some cases we can attach when we're force
 	/// retracting.
 	/// </summary>
-	private bool _canAttach;
-
 	private bool CanAttach
 	{
 		get =>
 			State switch
 			{
-				GrappleState.Shooting or GrappleState.Retracting => true,
+				GrappleState.Shooting or GrappleState.Retracting or GrappleState.Attached => true,
 				GrappleState.ForcedRetracting => _canAttach,
 				_ => false
 			};
@@ -67,6 +67,10 @@ public class GrappleAbility : BaseAbility
 	/// </summary>
 	private TimeSince LowSpeedTime { get; set; }
 
+	private bool HasAttached { get; set; }
+
+	private TimeSince TimeSinceFirstAttach { get; set; }
+
 	/// <summary>
 	/// Our current state of the grapple.
 	/// </summary>
@@ -86,6 +90,22 @@ public class GrappleAbility : BaseAbility
 		base.OnAwake();
 
 		_grapplePoints = new List<Vector3>( PlayerSettings.GrappleMaxGrapplePoints );
+	}
+
+	public override float? GetAcceleration()
+	{
+		return ShouldBeAttached() ? PlayerSettings.GrappleAirAcceleration : null;
+	}
+
+	public override float? GetSpeed()
+	{
+		return ShouldBeAttached() ? PlayerSettings.GrappleAirMaxSpeed : null;
+	}
+
+	public override float? GetGravityScale()
+	{
+		// TODO
+		return null;
 	}
 
 	/// <summary>
@@ -111,6 +131,7 @@ public class GrappleAbility : BaseAbility
 	{
 		_grapplePoints.Clear();
 		LastSafeTraceResult = null;
+		HasAttached = false;
 
 		if ( !after )
 		{
@@ -148,12 +169,42 @@ public class GrappleAbility : BaseAbility
 		{
 			ForceRetractGrapple();
 		}
+
+		if ( ShouldBeAttached() )
+		{
+			GrappleAttachedUpdate();
+		}
 	}
 
 	public override void FrameSimulate()
 	{
 		ApplyTilt();
 		DrawGizmos();
+	}
+
+	private void GrappleAttachedUpdate()
+	{
+		Vector3 grapplePoint = _grapplePoints.Last() + Vector3.Up * PlayerSettings.GrappleLift;
+
+		Vector3 grappleDir = (grapplePoint - Controller.CameraPosition).Normal;
+
+		Accelerate( grappleDir, GetGrappleMaxSpeed(), PlayerSettings.GrappleAcceleration );
+	}
+
+	private void Accelerate( Vector3 wishDir, float wishSpeed, float acceleration )
+	{
+		float currentSpeed = Velocity.Dot( wishDir );
+		float addSpeed = MathF.Max( 0f, wishSpeed - currentSpeed );
+
+		float accelSpeed = MathF.Min( acceleration * Time.Delta, addSpeed );
+
+		Velocity += wishDir * accelSpeed;
+	}
+
+	private float GetGrappleMaxSpeed()
+	{
+		float t = ((float)TimeSinceFirstAttach).LerpInverse( 0f, PlayerSettings.GrappleSpeedRampTime );
+		return PlayerSettings.GrappleSpeedRampMin.LerpTo( PlayerSettings.GrappleSpeedRampMax, t );
 	}
 
 	/// <summary>
@@ -246,8 +297,30 @@ public class GrappleAbility : BaseAbility
 
 	private void SetAttached()
 	{
+		if ( State is GrappleState.Attached )
+		{
+			return;
+		}
+
 		State = GrappleState.Attached;
 		LowSpeedTime = 0;
+
+		if ( HasAttached )
+		{
+			return;
+		}
+
+		HasAttached = true;
+		OnFirstAttach();
+	}
+
+	private void OnFirstAttach()
+	{
+		TimeSinceFirstAttach = 0;
+		Controller.ClearGroundObject();
+
+		float newSpeed = MathF.Max( Velocity.z, PlayerSettings.GrappleAttachVerticalBoost );
+		Velocity = Velocity.WithZ( newSpeed );
 	}
 
 	private void ForceRetractGrapple()
@@ -343,19 +416,23 @@ public class GrappleAbility : BaseAbility
 			.Run();
 	}
 
-	public bool ShouldClearGroundObject()
+	/// <summary>
+	/// Determines if we "should be attached." Used for determining when we should be accelerating and not on the ground.
+	/// </summary>
+	public bool ShouldBeAttached()
 	{
-		switch ( State )
+		// return State is GrappleState.Attached || (State is GrappleState.ForcedRetracting && CanAttach);
+		if ( State is GrappleState.Idle or GrappleState.Retracting or GrappleState.Shooting )
 		{
-			case GrappleState.Attached:
-			case GrappleState.ForcedRetracting when CanAttach:
-				return true;
-			case GrappleState.Idle:
-			case GrappleState.Shooting:
-			case GrappleState.Retracting:
-			default:
-				return false;
+			return false;
 		}
+
+		if ( !CanAttach )
+		{
+			return false;
+		}
+
+		return TimeSinceFirstAttach >= PlayerSettings.GrapplePullDellay;
 	}
 
 	/// <summary>
