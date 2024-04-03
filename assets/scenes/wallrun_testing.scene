@@ -1,29 +1,31 @@
 {
-  "Id": "9d1463ac-a949-437a-9b83-e8507a1180a2",
+  "__guid": "9d1463ac-a949-437a-9b83-e8507a1180a2",
   "GameObjects": [
     {
-      "Id": "d9d3c335-f1c9-4c4a-9fd5-0d42c35785df",
+      "__guid": "d9d3c335-f1c9-4c4a-9fd5-0d42c35785df",
       "Name": "Map",
       "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "MapInstance",
+          "__guid": "8e231e8a-10f4-4bb4-b721-4d684d01e9a3",
           "MapName": "maps/test_walls1.vmap",
-          "OnMapLoaded": null,
-          "OnMapUnloaded": null,
           "UseMapFromLaunch": false
         }
       ],
       "Children": []
     },
     {
-      "Id": "0f04ee6a-6956-44a5-851e-aa6b5151fa34",
+      "__guid": "0f04ee6a-6956-44a5-851e-aa6b5151fa34",
       "Name": "GameManager",
-      "Position": "0,0,30",
+      "Position": "-377.0038,0,105.6018",
       "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
-          "__type": "GameNetworkManager",
+          "__type": "GameManager",
+          "__guid": "b7762e8a-ebf6-4313-a5dd-7a4ef6982141",
           "IsMultiplayer": false,
           "PlayerPrefab": {
             "_type": "gameobject",
@@ -37,15 +39,17 @@
       ]
     },
     {
-      "Id": "bfc59c12-1ed2-4f91-8956-a95a315eac3c",
+      "__guid": "bfc59c12-1ed2-4f91-8956-a95a315eac3c",
       "Name": "Sun",
       "Position": "718.0756,968.9534,1033.044",
       "Rotation": "-0.4335515,0.07918021,0.8830376,0.1612706",
       "Tags": "light,light_directional",
       "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "DirectionalLight",
+          "__guid": "0dbe7368-37bf-4250-8058-8718d701bcfe",
           "FogMode": "Enabled",
           "FogStrength": 1,
           "LightColor": "1.36634,0.9402,1.10213,1",
@@ -55,26 +59,30 @@
       ]
     },
     {
-      "Id": "00344a8c-fa5e-45ae-b12a-10bb781a1dc3",
+      "__guid": "00344a8c-fa5e-45ae-b12a-10bb781a1dc3",
       "Name": "2D Skybox",
       "Tags": "skybox",
       "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "SkyBox2D",
+          "__guid": "5dfb910b-7cb5-4f8d-8a4d-fa4448ef4ba3",
           "SkyMaterial": "materials/skybox/light_test_sky_sunset.vmat",
           "Tint": "1,1,1,1"
         }
       ]
     },
     {
-      "Id": "652d4e8d-a737-4d00-8e9b-78aa2cbec2ee",
+      "__guid": "652d4e8d-a737-4d00-8e9b-78aa2cbec2ee",
       "Name": "Probe",
       "Position": "0,0,100",
       "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "EnvmapProbe",
+          "__guid": "bfad5755-ccff-49d8-b30c-f19227fd8209",
           "Bounds": {
             "Mins": "-1024,-1024,-512",
             "Maxs": "1024,1024,512"
@@ -87,14 +95,16 @@
       ]
     },
     {
-      "Id": "b3bb2e4d-b5a9-4730-bc4d-38df6c74ac9d",
+      "__guid": "b3bb2e4d-b5a9-4730-bc4d-38df6c74ac9d",
       "Name": "Point Light",
       "Position": "466.6181,-121.6974,322.0147",
       "Tags": "light_point,light",
       "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "PointLight",
+          "__guid": "a431826e-fbe3-42cc-bbd5-bc1ca3811224",
           "Attenuation": 1,
           "FogMode": "Enabled",
           "FogStrength": 1,
@@ -105,14 +115,16 @@
       ]
     },
     {
-      "Id": "91623799-49c6-47bf-8d2a-c3248e160841",
+      "__guid": "91623799-49c6-47bf-8d2a-c3248e160841",
       "Name": "Point Light (2)",
       "Position": "176.8037,-432.2915,322.0149",
       "Tags": "light_point,light",
       "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "PointLight",
+          "__guid": "51fd99c9-776b-4a36-a6a5-b2a049d0e921",
           "Attenuation": 1,
           "FogMode": "Enabled",
           "FogStrength": 1,
@@ -123,14 +135,16 @@
       ]
     },
     {
-      "Id": "d0cde360-34a9-496d-8adc-9e5f4401d57c",
+      "__guid": "d0cde360-34a9-496d-8adc-9e5f4401d57c",
       "Name": "Point Light (1)",
       "Position": "-247.997,511.4682,322.0148",
       "Tags": "light_point,light",
       "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "PointLight",
+          "__guid": "1e12eb95-d350-4cd0-8067-6577240ee21d",
           "Attenuation": 1,
           "FogMode": "Enabled",
           "FogStrength": 1,
@@ -141,26 +155,176 @@
       ]
     },
     {
-      "Id": "0e3368eb-f4d2-4272-8242-67d143abf76e",
+      "__guid": "0e3368eb-f4d2-4272-8242-67d143abf76e",
       "Name": "Point Light (3)",
       "Position": "505.2809,155.2335,322.0149",
       "Tags": "light_point,light",
       "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "PointLight",
+          "__guid": "ee2653c0-674d-4e86-a3ef-60113c0ef336",
           "Attenuation": 1,
           "FogMode": "Enabled",
           "FogStrength": 1,
           "LightColor": "0.91373,0.98039,1,1",
           "Radius": 611.9999,
           "Shadows": true
+        }
+      ]
+    },
+    {
+      "__guid": "9338d907-df2d-4b7d-8d60-f5172b4cc6d1",
+      "Name": "Box",
+      "Position": "-200.4071,-101.7453,99.59167",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "MeshComponent",
+          "__guid": "5e8d9efb-5446-47d6-9e95-c0c784ca80ac",
+          "Collision": "Mesh",
+          "Color": "1,1,1,1",
+          "IsTrigger": false,
+          "Mesh": {
+            "Topology": "H4sIAAAAAAAACk3QCQ7CMBBD0bAUylp2uP9J8ZMmUkb6ysTjOGnn1tov7MI9rMI3TOEZDuEdLqHXunzTcEZta7YJr\u002BqVbJq5bP1YfI\u002BayzpWtr036OnnIetTPf0a9uXzVj19Ht50K11vVfy\u002BSx59KT/6nWanuqtrVno/x\u002B8/KXfKMaPx/wEMd\u002BZ5ZAEAAA==",
+            "TextureOrigin": "-200.4071,-101.7453,99.59167",
+            "Positions": [
+              "-57.19757,-58.62991,311.9486",
+              "57.19757,-58.62991,311.9486",
+              "57.19757,58.62991,311.9486",
+              "-57.19757,58.62991,311.9486",
+              "-57.19757,58.62991,-99.59319",
+              "57.19757,58.62991,-99.59319",
+              "57.19757,-58.62991,-99.59319",
+              "-57.19757,-58.62991,-99.59319"
+            ],
+            "TextureUAxis": [
+              "1,0,0",
+              "1,0,0",
+              "0,-1,0",
+              "0,1,0",
+              "-1,0,0",
+              "1,0,0"
+            ],
+            "TextureVAxis": [
+              "0,-1,0",
+              "0,-1,0",
+              "0,0,-1",
+              "0,0,-1",
+              "0,0,-1",
+              "0,0,-1"
+            ],
+            "TextureScale": [
+              "0.25,0.25",
+              "0.25,0.25",
+              "0.25,0.25",
+              "0.25,0.25",
+              "0.25,0.25",
+              "0.25,0.25"
+            ],
+            "TextureAngle": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "MaterialIndex": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "Materials": [
+              "materials/dev/reflectivity_30.vmat"
+            ]
+          },
+          "Static": true
+        }
+      ]
+    },
+    {
+      "__guid": "bfd1fa73-dacd-44ac-b639-a7918eb084d6",
+      "Name": "Box",
+      "Position": "-163.8878,-137.1458,116.7084",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "MeshComponent",
+          "__guid": "832ad0a0-dd8b-4c94-aad4-d0311d9589c7",
+          "Collision": "Mesh",
+          "Color": "1,1,1,1",
+          "IsTrigger": false,
+          "Mesh": {
+            "Topology": "H4sIAAAAAAAACk3QCQ7CMBBD0bAUylp2uP9J8ZMmUkb6ysTjOGnn1tov7MI9rMI3TOEZDuEdLqHXunzTcEZta7YJr\u002BqVbJq5bP1YfI\u002BayzpWtr036OnnIetTPf0a9uXzVj19Ht50K11vVfy\u002BSx59KT/6nWanuqtrVno/x\u002B8/KXfKMaPx/wEMd\u002BZ5ZAEAAA==",
+            "TextureOrigin": "-163.8878,-137.1458,116.7084",
+            "Positions": [
+              "-167.8919,-191.5888,-114.5704",
+              "167.8919,-191.5888,139.6461",
+              "167.8919,191.5888,139.6461",
+              "-167.8919,191.5888,-114.5704",
+              "-167.8919,191.5888,-139.6461",
+              "167.8919,191.5888,-139.6461",
+              "167.8919,-191.5888,-139.6461",
+              "-167.8919,-191.5888,-139.6461"
+            ],
+            "TextureUAxis": [
+              "1,0,0",
+              "1,0,0",
+              "0,-1,0",
+              "0,1,0",
+              "-1,0,0",
+              "1,0,0"
+            ],
+            "TextureVAxis": [
+              "0,-1,0",
+              "0,-1,0",
+              "0,0,-1",
+              "0,0,-1",
+              "0,0,-1",
+              "0,0,-1"
+            ],
+            "TextureScale": [
+              "0.25,0.25",
+              "0.25,0.25",
+              "0.25,0.25",
+              "0.25,0.25",
+              "0.25,0.25",
+              "0.25,0.25"
+            ],
+            "TextureAngle": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "MaterialIndex": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "Materials": [
+              "materials/dev/reflectivity_30.vmat"
+            ]
+          },
+          "Static": true
         }
       ]
     }
   ],
   "SceneProperties": {
-    "FixedUpdateFrequency": 128,
+    "FixedUpdateFrequency": 64,
     "Lerping": true,
     "MaxFixedUpdates": 5,
     "NetworkFrequency": 60,
@@ -182,6 +346,8 @@
   },
   "Title": "minimal",
   "Description": "",
-  "LastSaved": "2024-02-17T23:40:36.7328467-06:00",
+  "LastSaved": "2024-04-01T22:33:11.2831273-05:00",
+  "ResourceVersion": 1,
+  "__version": 1,
   "__references": []
 }
