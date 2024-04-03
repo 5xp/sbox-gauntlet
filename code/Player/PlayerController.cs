@@ -463,7 +463,7 @@ public partial class PlayerController : Component
 		bool movingUpRapidly = Velocity.z > PlayerSettings.MaxNonJumpVelocity;
 		bool moveToEndPos = false;
 
-		if ( movingUpRapidly || GetAbility<GrappleAbility>().ShouldBeAttached() )
+		if ( movingUpRapidly || GetAbility<GrappleAbility>().Pulling )
 		{
 			ClearGroundObject();
 			return;

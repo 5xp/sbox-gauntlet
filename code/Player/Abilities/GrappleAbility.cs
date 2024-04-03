@@ -28,7 +28,7 @@ public class GrappleAbility : BaseAbility
 	/// The first point is the grapple hook.
 	/// The last point is the only point that is in view of the player. It is also the point we accelerate towards.
 	/// </summary>
-	[Property] [ReadOnly] private List<Vector3> _grapplePoints;
+	[Property, ReadOnly] private List<Vector3> _grapplePoints;
 
 	/// <summary>
 	/// Where the grapple hook wants to go. If we're shooting, this is the player's target.
@@ -71,6 +71,8 @@ public class GrappleAbility : BaseAbility
 
 	private TimeSince TimeSinceFirstAttach { get; set; }
 
+	[Property, ReadOnly] public bool Pulling { get; set; }
+
 	/// <summary>
 	/// Our current state of the grapple.
 	/// </summary>
@@ -94,12 +96,12 @@ public class GrappleAbility : BaseAbility
 
 	public override float? GetAcceleration()
 	{
-		return ShouldBeAttached() ? PlayerSettings.GrappleAirAcceleration : null;
+		return Pulling ? PlayerSettings.GrappleAirAcceleration : null;
 	}
 
 	public override float? GetSpeed()
 	{
-		return ShouldBeAttached() ? PlayerSettings.GrappleAirMaxSpeed : null;
+		return Pulling ? PlayerSettings.GrappleAirMaxSpeed : null;
 	}
 
 	public override float? GetGravityScale()
@@ -132,6 +134,7 @@ public class GrappleAbility : BaseAbility
 		_grapplePoints.Clear();
 		LastSafeTraceResult = null;
 		HasAttached = false;
+		Pulling = false;
 
 		if ( !after )
 		{
@@ -169,8 +172,12 @@ public class GrappleAbility : BaseAbility
 		{
 			ForceRetractGrapple();
 		}
+		else
+		{
+			Pulling = HasAttached && TimeSinceFirstAttach >= PlayerSettings.GrapplePullDellay;
+		}
 
-		if ( ShouldBeAttached() )
+		if ( Pulling )
 		{
 			GrappleAttachedUpdate();
 		}
@@ -332,6 +339,7 @@ public class GrappleAbility : BaseAbility
 
 		State = GrappleState.ForcedRetracting;
 		CanAttach = false;
+		Pulling = false;
 	}
 
 	private void OnGrappleFinishedRetracting()
@@ -414,25 +422,6 @@ public class GrappleAbility : BaseAbility
 		return Scene.Trace.Ray( start, end )
 			.IgnoreGameObjectHierarchy( GameObject )
 			.Run();
-	}
-
-	/// <summary>
-	/// Determines if we "should be attached." Used for determining when we should be accelerating and not on the ground.
-	/// </summary>
-	public bool ShouldBeAttached()
-	{
-		// return State is GrappleState.Attached || (State is GrappleState.ForcedRetracting && CanAttach);
-		if ( State is GrappleState.Idle or GrappleState.Retracting or GrappleState.Shooting )
-		{
-			return false;
-		}
-
-		if ( !CanAttach )
-		{
-			return false;
-		}
-
-		return TimeSinceFirstAttach >= PlayerSettings.GrapplePullDellay;
 	}
 
 	/// <summary>
