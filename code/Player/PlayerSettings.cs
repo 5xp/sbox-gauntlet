@@ -228,7 +228,7 @@ public sealed class PlayerSettings
 	public float GrappleLetGravityHelpCosAngle { get; private set; } = 0.8f;
 	public float GrappleGravityFracMin { get; private set; } = 0.25f;
 	public float GrappleGravityFracMax { get; private set; } = 0.7f;
-	public float GrappleGravityPushUnderContribution { get; private set; } = 2f;
+	public float GrappleGravityPushUnderContributionScale { get; private set; } = 2f;
 	public float GrappleRollDistanceMin { get; private set; } = 0f;
 	public float GrappleRollDistanceMax { get; private set; } = 150f;
 	public float GrappleRollViewAngleMin { get; private set; } = 0f;

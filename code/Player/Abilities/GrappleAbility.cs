@@ -62,13 +62,29 @@ public class GrappleAbility : BaseAbility
 	private float DetachLength => PlayerSettings.GrappleLength + PlayerSettings.GrappleExtraDetachLength;
 
 	/// <summary>
+	/// The grapple point we are accelerating towards.
+	/// </summary>
+	private Vector3 GrapplePoint => _grapplePoints.Last() + Vector3.Up * PlayerSettings.GrappleLift;
+
+	/// <summary>
+	/// The direction towards the grapple point.
+	/// </summary>
+	private Vector3 GrappleDir => (GrapplePoint - Controller.CameraPosition).Normal;
+
+	/// <summary>
 	/// Tracks how long we've been moving under <see cref="PlayerSettings.GrappleDetachLowSpeedThreshold" />.
 	/// If this exceeds <see cref="PlayerSettings.GrappleDetachLowSpeedTime"/>, then we detach.
 	/// </summary>
 	private TimeSince LowSpeedTime { get; set; }
 
+	/// <summary>
+	/// Have we attached at least once?
+	/// </summary>
 	private bool HasAttached { get; set; }
 
+	/// <summary>
+	/// How long has it been since we first attached?
+	/// </summary>
 	private TimeSince TimeSinceFirstAttach { get; set; }
 
 	[Property, ReadOnly] public bool Pulling { get; set; }
@@ -81,7 +97,7 @@ public class GrappleAbility : BaseAbility
 	private GrappleState State { get; set; } = GrappleState.Idle;
 
 	/// <summary>
-	/// Our current tilt fraction. Our view tilts while we are attached.
+	/// Our current tilt fraction. Our view tilts while our grapple is out.
 	/// </summary>
 	private float TiltFraction { get; set; }
 
@@ -106,8 +122,36 @@ public class GrappleAbility : BaseAbility
 
 	public override float? GetGravityScale()
 	{
-		// TODO
-		return null;
+		if ( !Pulling )
+		{
+			// TODO: Gravity blending
+			return null;
+		}
+
+		Vector3 grappleDir = GrappleDir;
+
+		// If we're grappling straight down, don't scale down gravity.
+		if ( grappleDir.Dot( Vector3.Down ) > PlayerSettings.GrappleLetGravityHelpCosAngle )
+		{
+			return null;
+		}
+
+		Vector3 horzWishDir = Controller.BuildWishDir();
+
+		if ( horzWishDir.LengthSquared.AlmostEqual( 0f ) )
+		{
+			return PlayerSettings.GrappleGravityFracMin;
+		}
+
+		float gravityPushAwayContribution = GetPushAwayAmount( horzWishDir, grappleDir );
+		float gravityPushUnderContribution = GetPushUnderContribution( grappleDir ) *
+		                                     PlayerSettings.GrappleGravityPushUnderContributionScale;
+		float maxGravityContribution = MathF.Max( gravityPushAwayContribution + gravityPushUnderContribution, 1f );
+
+		float gravityScale = PlayerSettings.GrappleGravityFracMin.LerpTo( PlayerSettings.GrappleGravityFracMax,
+			maxGravityContribution );
+
+		return gravityScale;
 	}
 
 	/// <summary>
@@ -191,11 +235,12 @@ public class GrappleAbility : BaseAbility
 
 	private void GrappleAttachedUpdate()
 	{
-		Vector3 grapplePoint = _grapplePoints.Last() + Vector3.Up * PlayerSettings.GrappleLift;
+		Vector3 grappleDir = (GrapplePoint - Controller.CameraPosition).Normal;
 
-		Vector3 grappleDir = (grapplePoint - Controller.CameraPosition).Normal;
+		float wishSpeed = GetGrappleMaxSpeed();
 
-		Accelerate( grappleDir, GetGrappleMaxSpeed(), PlayerSettings.GrappleAcceleration );
+		Decelerate( grappleDir, wishSpeed, PlayerSettings.GrappleDeceleration );
+		Accelerate( grappleDir, wishSpeed, PlayerSettings.GrappleAcceleration );
 	}
 
 	private void Accelerate( Vector3 wishDir, float wishSpeed, float acceleration )
@@ -206,6 +251,22 @@ public class GrappleAbility : BaseAbility
 		float accelSpeed = MathF.Min( acceleration * Time.Delta, addSpeed );
 
 		Velocity += wishDir * accelSpeed;
+	}
+
+	private void Decelerate( Vector3 wishDir, float wishSpeed, float deceleration )
+	{
+		float projSpeed = MathF.Min( wishSpeed, Velocity.Dot( wishDir ) );
+		Vector3 proj = wishDir * projSpeed;
+		Vector3 decel = proj - Velocity;
+
+		if ( PlayerSettings.GrappleDontFightGravity )
+		{
+			decel.z = MathF.Max( 0f, decel.z );
+		}
+
+		decel = decel.ClampLength( deceleration * Time.Delta );
+
+		Velocity += decel;
 	}
 
 	private float GetGrappleMaxSpeed()
@@ -577,6 +638,52 @@ public class GrappleAbility : BaseAbility
 		grappleDistance += _grapplePoints.Last().Distance( Controller.CameraPosition );
 
 		return grappleDistance;
+	}
+
+	/// <summary>
+	/// Gets the amount the player is pushing away from the grapple point horizontally.
+	/// </summary>
+	/// <param name="horzWishDir">The player's wishdir with 0 pitch</param>
+	/// <param name="grappleDir">Direction to the grapple point</param>
+	/// <returns>A number from 0 to 1. 0 means we are not pushing away. 1 means we are pushing directly away.</returns>
+	private float GetPushAwayAmount( Vector3 horzWishDir, Vector3 grappleDir )
+	{
+		Vector3 horzGrappleDir = grappleDir.WithZ( 0 ).Normal;
+
+		if ( horzWishDir.LengthSquared.AlmostEqual( 0f ) )
+		{
+			return 0f;
+		}
+
+		float dot = horzWishDir.Dot( horzGrappleDir ).Clamp( -1f, 0f ) * -1;
+
+		return dot;
+	}
+
+	/// <summary>
+	/// When we are pushing forward under the grapple point, we apply more gravity
+	/// </summary>
+	/// <param name="grappleDir"></param>
+	/// <returns></returns>
+	private float GetPushUnderContribution( Vector3 grappleDir )
+	{
+		bool pushingForward = Controller.WishMove.x > 0f;
+
+		if ( !pushingForward )
+		{
+			return 0f;
+		}
+
+		float forwardZ = Controller.AimAngles.Forward.z;
+
+		if ( forwardZ >= 0f )
+		{
+			return 0f;
+		}
+
+		float pushingUnderAmount = MathF.Abs( forwardZ ) * grappleDir.Dot( Vector3.Up ).Remap( -1f, 0f, 0f, 1f, false );
+
+		return pushingUnderAmount;
 	}
 
 	private enum GrappleState
