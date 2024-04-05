@@ -595,22 +595,32 @@ public class GrappleAbility : BaseAbility
 		}
 
 		// We're moving too slow for too long
-		if ( LowSpeedTime > PlayerSettings.GrappleDetachLowSpeedTime )
 		if ( Pulling && LowSpeedTime > PlayerSettings.GrappleDetachLowSpeedTime )
 		{
 			return true;
 		}
 
-		// We looked more than 90 degrees away from the grapple point
-		Angles eyeAngles = Controller.AimAngles;
-		Angles toGrapplePoint = (_grapplePoints.Last() - Controller.CameraPosition).Normal.EulerAngles;
-		Angles diff = eyeAngles - toGrapplePoint;
-		if ( MathF.Abs( diff.Normal.yaw ) > 90 )
-		{
-			return true;
-		}
+		return IsGrappleTooFarFromAim();
+	}
 
-		return false;
+	/// <summary>
+	/// Determines if we have looked too far away from the grapple point and we should detach.
+	/// </summary>
+	private bool IsGrappleTooFarFromAim()
+	{
+		Angles eyeAngles = Controller.AimAngles;
+		Angles toGrapplePoint = GrappleDir.EulerAngles.Normal;
+		Angles angleDiff = eyeAngles - toGrapplePoint;
+
+		// If we look more up, we should have more tolerance for looking away from the grapple point.
+		float yawMax = 90f + 1.5f * MathF.Abs( toGrapplePoint.pitch ) * MathF.Abs( eyeAngles.pitch ) / 90f;
+		float pitchMax = 180f - MathF.Abs( angleDiff.Normal.yaw );
+
+		// We should always detach when we are looking more than 90 degrees above the grapple point.
+		const float pitchMin = -90f;
+
+		return MathF.Abs( angleDiff.Normal.yaw ) > yawMax || MathF.Abs( angleDiff.pitch ) > pitchMax ||
+		       angleDiff.pitch < pitchMin;
 	}
 
 	/// <summary>
