@@ -87,6 +87,11 @@ public class GrappleAbility : BaseAbility
 	/// </summary>
 	private TimeSince TimeSinceFirstAttach { get; set; }
 
+	/// <summary>
+	/// How long have we been pulling?
+	/// </summary>
+	private TimeSince TimeSincePulling { get; set; }
+
 	[Property, ReadOnly] public bool Pulling { get; set; }
 
 	/// <summary>
@@ -206,7 +211,7 @@ public class GrappleAbility : BaseAbility
 			return;
 		}
 
-		if ( Controller.Velocity.LengthSquared >= PlayerSettings.GrappleDetachLowSpeedThreshold *
+		if ( Pulling && Controller.Velocity.LengthSquared >= PlayerSettings.GrappleDetachLowSpeedThreshold *
 		    PlayerSettings.GrappleDetachLowSpeedThreshold )
 		{
 			LowSpeedTime = 0;
@@ -218,7 +223,10 @@ public class GrappleAbility : BaseAbility
 		}
 		else
 		{
-			Pulling = HasAttached && TimeSinceFirstAttach >= PlayerSettings.GrapplePullDellay;
+			if ( HasAttached && TimeSinceFirstAttach >= PlayerSettings.GrapplePullDellay )
+			{
+				StartPulling();
+			}
 		}
 
 		if ( Pulling )
@@ -271,7 +279,7 @@ public class GrappleAbility : BaseAbility
 
 	private float GetGrappleMaxSpeed()
 	{
-		float t = ((float)TimeSinceFirstAttach).LerpInverse( 0f, PlayerSettings.GrappleSpeedRampTime );
+		float t = ((float)TimeSincePulling).LerpInverse( 0f, PlayerSettings.GrappleSpeedRampTime );
 		return PlayerSettings.GrappleSpeedRampMin.LerpTo( PlayerSettings.GrappleSpeedRampMax, t );
 	}
 
@@ -545,6 +553,17 @@ public class GrappleAbility : BaseAbility
 		};
 	}
 
+	private void StartPulling()
+	{
+		if ( Pulling )
+		{
+			return;
+		}
+
+		Pulling = true;
+		TimeSincePulling = 0;
+	}
+
 	private bool ShouldDetach()
 	{
 		// Player wants to detach
@@ -577,6 +596,7 @@ public class GrappleAbility : BaseAbility
 
 		// We're moving too slow for too long
 		if ( LowSpeedTime > PlayerSettings.GrappleDetachLowSpeedTime )
+		if ( Pulling && LowSpeedTime > PlayerSettings.GrappleDetachLowSpeedTime )
 		{
 			return true;
 		}
@@ -646,7 +666,7 @@ public class GrappleAbility : BaseAbility
 	/// <param name="horzWishDir">The player's wishdir with 0 pitch</param>
 	/// <param name="grappleDir">Direction to the grapple point</param>
 	/// <returns>A number from 0 to 1. 0 means we are not pushing away. 1 means we are pushing directly away.</returns>
-	private float GetPushAwayAmount( Vector3 horzWishDir, Vector3 grappleDir )
+	private static float GetPushAwayAmount( Vector3 horzWishDir, Vector3 grappleDir )
 	{
 		Vector3 horzGrappleDir = grappleDir.WithZ( 0 ).Normal;
 
