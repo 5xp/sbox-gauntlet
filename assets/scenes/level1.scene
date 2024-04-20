@@ -22,7 +22,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "5da76275-f66f-41af-9077-aaa2fe035e49",
                   "Attenuation": 0,
                   "FogMode": "Enabled",
@@ -42,7 +42,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "f7ecc729-89bc-4c70-bd43-a69cd6981c3e",
                   "Attenuation": 0.36,
                   "FogMode": "Disabled",
@@ -62,7 +62,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "cf49a20f-e719-44d5-b21b-366b6fb824df",
                   "Attenuation": 0.04,
                   "FogMode": "Disabled",
@@ -82,7 +82,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "a142adf6-9911-4558-bc1e-de5300b06cd7",
                   "Attenuation": 0.36,
                   "FogMode": "Disabled",
@@ -102,7 +102,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "953af2d8-4fa0-4e1c-aa20-063925ace564",
                   "Attenuation": 0.36,
                   "FogMode": "Enabled",
@@ -122,7 +122,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "52c2aeea-9c2d-4873-81c4-3e6574997897",
                   "Attenuation": 0,
                   "FogMode": "Enabled",
@@ -142,7 +142,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "a6c3c693-3078-4ced-9497-cc678c76965e",
                   "Attenuation": 0.2,
                   "FogMode": "Enabled",
@@ -162,7 +162,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "80e58d78-cfc7-4fd7-9da3-73148225e56a",
                   "Attenuation": 0.2,
                   "FogMode": "Enabled",
@@ -182,7 +182,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "627e46e2-a115-4292-87da-ff7190a32abe",
                   "Attenuation": 0.2,
                   "FogMode": "Enabled",
@@ -202,7 +202,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "7947533b-86ef-4462-a701-b538cae7bd28",
                   "Attenuation": 0.2,
                   "FogMode": "Enabled",
@@ -222,7 +222,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "dc6ef932-0764-4011-b957-ff89f7737a7f",
                   "Attenuation": 0.2,
                   "FogMode": "Enabled",
@@ -242,7 +242,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "86fa08d7-a8f1-456d-8b21-f35098ce5f0f",
                   "Attenuation": 0.2,
                   "FogMode": "Enabled",
@@ -262,7 +262,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "95f79286-16d9-4196-8bef-5f05b9ef650a",
                   "Attenuation": 0.2,
                   "FogMode": "Enabled",
@@ -282,7 +282,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "0cb00e26-607a-406d-b3eb-15af1d9f544b",
                   "Attenuation": 0.2,
                   "FogMode": "Enabled",
@@ -302,7 +302,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "594a66f8-63b4-4ab4-ad46-38ba7a4872f2",
                   "Attenuation": 0.2,
                   "FogMode": "Enabled",
@@ -322,7 +322,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "9e9c9f76-4704-481f-b077-082fee76163d",
                   "Attenuation": 0.36,
                   "FogMode": "Enabled",
@@ -342,7 +342,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "b3ea8cc5-cb34-44d1-beec-b720b26a651f",
                   "Attenuation": 0.36,
                   "FogMode": "Enabled",
@@ -362,7 +362,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "PointLight",
+                  "__type": "Sandbox.PointLight",
                   "__guid": "fa1a6407-08a5-4cbf-be8e-2b219f69d907",
                   "Attenuation": 0.36,
                   "FogMode": "Enabled",
@@ -390,7 +390,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "WorldPanel",
+                  "__type": "Sandbox.WorldPanel",
                   "__guid": "559bfcf9-ca1e-49a8-9bb7-d60bb8f49224",
                   "HorizontalAlign": "Center",
                   "LookAtCamera": false,
@@ -399,7 +399,7 @@
                   "VerticalAlign": "Center"
                 },
                 {
-                  "__type": "RunPanel",
+                  "__type": "Gauntlet.UI.RunPanel",
                   "__guid": "b4018003-a90c-493f-84b0-e23fa53a3f40"
                 }
               ]
@@ -413,7 +413,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "WorldPanel",
+                  "__type": "Sandbox.WorldPanel",
                   "__guid": "73c36c17-c2d7-46ea-a974-ded7ffba1a41",
                   "HorizontalAlign": "Center",
                   "LookAtCamera": false,
@@ -422,7 +422,7 @@
                   "VerticalAlign": "Center"
                 },
                 {
-                  "__type": "RunPanel",
+                  "__type": "Gauntlet.UI.RunPanel",
                   "__guid": "e015b159-0437-4fba-9f7e-b89faa993456"
                 }
               ]
@@ -435,7 +435,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "WorldPanel",
+                  "__type": "Sandbox.WorldPanel",
                   "__guid": "322ae3c7-9b5b-4d88-85a6-45212bf78e85",
                   "HorizontalAlign": "Center",
                   "LookAtCamera": false,
@@ -444,7 +444,7 @@
                   "VerticalAlign": "Center"
                 },
                 {
-                  "__type": "StandaloneLeaderboardPanel",
+                  "__type": "Gauntlet.UI.StandaloneLeaderboardPanel",
                   "__guid": "6b9f2cfd-abea-4160-8d47-fce5903e17bf"
                 }
               ]
@@ -458,7 +458,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "WorldPanel",
+                  "__type": "Sandbox.WorldPanel",
                   "__guid": "e706f3a7-4be6-4bc1-803d-2f3dde268162",
                   "HorizontalAlign": "Center",
                   "LookAtCamera": false,
@@ -467,7 +467,7 @@
                   "VerticalAlign": "Center"
                 },
                 {
-                  "__type": "TextPanel",
+                  "__type": "Gauntlet.UI.TextPanel",
                   "__guid": "fd87eef8-30d4-41d8-b86c-2c01cb35cf40",
                   "FontSizePixels": 310,
                   "MyStringValue": "START"
@@ -483,7 +483,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "WorldPanel",
+                  "__type": "Sandbox.WorldPanel",
                   "__guid": "3d831bcf-7f37-40ef-86ce-f13abd6f7134",
                   "HorizontalAlign": "Center",
                   "LookAtCamera": false,
@@ -492,7 +492,7 @@
                   "VerticalAlign": "Center"
                 },
                 {
-                  "__type": "TextPanel",
+                  "__type": "Gauntlet.UI.TextPanel",
                   "__guid": "d1b13201-62a5-4958-97a3-1da64d8b821e",
                   "FontSizePixels": 310,
                   "MyStringValue": "END"
@@ -509,7 +509,7 @@
           "NetworkMode": 2,
           "Components": [
             {
-              "__type": "BoxCollider",
+              "__type": "Sandbox.BoxCollider",
               "__guid": "1b3de84f-35af-431e-a215-79cf4933aaa2",
               "Center": "0,0,0",
               "IsTrigger": true,
@@ -517,7 +517,7 @@
               "Static": false
             },
             {
-              "__type": "StartZone",
+              "__type": "Gauntlet.Timer.StartZone",
               "__guid": "5e878bd0-be9f-4e2e-b63f-dfbb5fa07a54"
             }
           ]
@@ -531,7 +531,7 @@
           "NetworkMode": 2,
           "Components": [
             {
-              "__type": "BoxCollider",
+              "__type": "Sandbox.BoxCollider",
               "__guid": "fe829511-782a-45a0-970e-2b6817f03b52",
               "Center": "0,0,0",
               "IsTrigger": true,
@@ -539,7 +539,7 @@
               "Static": false
             },
             {
-              "__type": "TeleportTrigger",
+              "__type": "Gauntlet.TeleportTrigger",
               "__guid": "543fe163-c1d3-433b-94db-da00d1860a03",
               "Destination": {
                 "_type": "gameobject",
@@ -547,7 +547,7 @@
               }
             },
             {
-              "__type": "EndZone",
+              "__type": "Gauntlet.Timer.EndZone",
               "__guid": "82064780-0feb-422d-bd16-32452fa70e09"
             }
           ]
@@ -561,7 +561,7 @@
           "NetworkMode": 2,
           "Components": [
             {
-              "__type": "BoxCollider",
+              "__type": "Sandbox.BoxCollider",
               "__guid": "18afb4a8-4e4e-4075-a753-bd2bac58df06",
               "Center": "0,0,0",
               "IsTrigger": true,
@@ -585,7 +585,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "BoxCollider",
+                  "__type": "Sandbox.BoxCollider",
                   "__guid": "ed4a7ae7-b5d1-4902-a811-f9fa1838d636",
                   "Center": "0,0,0",
                   "IsTrigger": false,
@@ -603,7 +603,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "BoxCollider",
+                  "__type": "Sandbox.BoxCollider",
                   "__guid": "1f7c1410-9633-4dad-b794-d00031d594b4",
                   "Center": "0,0,0",
                   "IsTrigger": false,
@@ -621,7 +621,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "BoxCollider",
+                  "__type": "Sandbox.BoxCollider",
                   "__guid": "22a64ec4-ab57-46c7-86ca-d04129ffb346",
                   "Center": "0,0,0",
                   "IsTrigger": false,
@@ -639,7 +639,7 @@
               "NetworkMode": 2,
               "Components": [
                 {
-                  "__type": "BoxCollider",
+                  "__type": "Sandbox.BoxCollider",
                   "__guid": "8f508591-fec4-4440-9ac2-f02b8f7ba2c4",
                   "Center": "0,0,0",
                   "IsTrigger": false,
@@ -659,7 +659,7 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "MapInstance",
+          "__type": "Sandbox.MapInstance",
           "__guid": "ccad0aef-fe3c-4973-b54a-78731b108986",
           "MapName": "maps/level1.vmap",
           "UseMapFromLaunch": false
@@ -675,12 +675,12 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "GameManager",
+          "__type": "Gauntlet.GameManager",
           "__guid": "59b7b1c0-347f-4af8-bc17-05cde915e7f5",
           "IsMultiplayer": false,
           "PlayerPrefab": {
             "_type": "gameobject",
-            "prefab": "assets/prefabs/player/player.prefab"
+            "prefab": "prefabs/player/player.prefab"
           }
         }
       ]
@@ -695,7 +695,7 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "DirectionalLight",
+          "__type": "Sandbox.DirectionalLight",
           "__guid": "6ef3a4f8-9582-4518-aaa4-76fbb2f275f9",
           "FogMode": "Disabled",
           "FogStrength": 0,
@@ -713,7 +713,7 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "SkyBox2D",
+          "__type": "Sandbox.SkyBox2D",
           "__guid": "3bf9fc59-47d9-4452-87b7-085f797ceb9d",
           "SkyMaterial": "materials/skybox/light_test_sky_sunny_basic.vmat",
           "Tint": "1,1,1,1"
@@ -728,16 +728,23 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "EnvmapProbe",
+          "__type": "Sandbox.EnvmapProbe",
           "__guid": "bd5b6fb6-ab70-400c-9142-117ca3b23d84",
+          "Texture": "textures/cubemaps/default2.vtex",
           "Bounds": {
             "Mins": "-1024,-1024,-512",
             "Maxs": "1024,1024,512"
           },
+          "DelayBetweenUpdates": 0.1,
           "Feathering": 0.02,
+          "FrameInterval": 5,
+          "MaxDistance": 512,
           "Projection": "Box",
-          "Texture": "textures/cubemaps/default2.vtex",
-          "TintColor": "1,0.66584,0.33168,1"
+          "RenderDynamically": false,
+          "TintColor": "1,0.66584,0.33168,1",
+          "UpdateStrategy": "OnEnabled",
+          "ZFar": 4096,
+          "ZNear": 16
         }
       ]
     }
@@ -765,7 +772,7 @@
   },
   "Title": "level1",
   "Description": "",
-  "LastSaved": "2024-03-23T18:50:11.3918403-05:00",
+  "LastSaved": "2024-04-19T18:20:36.1680311-05:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": []

@@ -10,7 +10,7 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "DirectionalLight",
+          "__type": "Sandbox.DirectionalLight",
           "__guid": "b77d32e8-1012-4b24-8aab-95efc72b06af",
           "FogMode": "Enabled",
           "FogStrength": 1,
@@ -27,7 +27,7 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "SkyBox2D",
+          "__type": "Sandbox.SkyBox2D",
           "__guid": "fc7c80e6-8faa-44d8-a21f-1daadec35f12",
           "SkyMaterial": "materials/skybox/light_test_sky_overcast.vmat",
           "Tint": "1,1,1,1"
@@ -42,7 +42,7 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "CameraComponent",
+          "__type": "Sandbox.CameraComponent",
           "__guid": "8080ba83-6221-4938-abd8-8fd5079730d0",
           "BackgroundColor": "0.33333,0.46275,0.52157,1",
           "ClearFlags": "All",
@@ -67,11 +67,11 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "ScreenPanel",
+          "__type": "Sandbox.ScreenPanel",
           "__guid": "7ccb385d-f602-47a2-b667-9f8084d2dfef",
           "AutoScreenScale": true,
           "OnComponentStart": {
-            "__version": 5,
+            "__version": 6,
             "__guid": "7e10dbd1-4230-466a-a306-3e60991a7884",
             "UserData": {
               "Title": "Load Player Preferences",
@@ -110,9 +110,9 @@
           "ZIndex": 100
         },
         {
-          "__type": "MenuPanel",
+          "__type": "Gauntlet.UI.MenuPanel",
           "__guid": "686582d0-5637-44a9-b5dc-ece8f253c10f",
-          "PlayScene": "assets/scenes/level1.scene"
+          "PlayScene": "scenes/level1.scene"
         }
       ]
     }
@@ -140,7 +140,7 @@
   },
   "Title": "mainmenu",
   "Description": "",
-  "LastSaved": "2024-03-22T18:35:40.6477331-05:00",
+  "LastSaved": "2024-04-19T18:26:06.8850999-05:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": []

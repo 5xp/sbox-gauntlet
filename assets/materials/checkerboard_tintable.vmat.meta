@@ -1,0 +1,20 @@
+{
+  "publish": {
+    "Allowed": true,
+    "Enabled": true,
+    "ProjectConfig": {
+      "Title": "checkerboard_tintable",
+      "Type": "material",
+      "Org": "cflo",
+      "Ident": "checkerboard_tintable",
+      "Tags": null,
+      "Schema": 0,
+      "Resources": null,
+      "PackageReferences": null,
+      "EditorReferences": null,
+      "Metadata": {
+        "SingleAssetSource": "materials/checkerboard_tintable.vmat"
+      }
+    }
+  }
+}

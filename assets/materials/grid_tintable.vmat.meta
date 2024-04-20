@@ -1,0 +1,20 @@
+{
+  "publish": {
+    "Allowed": true,
+    "Enabled": true,
+    "ProjectConfig": {
+      "Title": "grid_tintable",
+      "Type": "material",
+      "Org": "cflo",
+      "Ident": "grid_tintable",
+      "Tags": null,
+      "Schema": 0,
+      "Resources": null,
+      "PackageReferences": null,
+      "EditorReferences": null,
+      "Metadata": {
+        "SingleAssetSource": "materials/grid_tintable.vmat"
+      }
+    }
+  }
+}

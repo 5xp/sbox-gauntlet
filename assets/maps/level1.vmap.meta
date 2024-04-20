@@ -9,14 +9,12 @@
       "Ident": "level1",
       "Tags": null,
       "Schema": 0,
-      "HasAssets": false,
-      "AssetsPath": null,
       "Resources": null,
-      "MenuResources": "*",
-      "HasCode": false,
-      "CodePath": null,
       "PackageReferences": [],
-      "EditorReferences": [],
+      "EditorReferences": [
+        "cflo.grid_tintable#55400",
+        "cflo.checkerboard_tintable#55399"
+      ],
       "Metadata": {
         "SingleAssetSource": "maps/level1.vmap"
       }

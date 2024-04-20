@@ -7,9 +7,9 @@
     "NetworkMode": 2,
     "Components": [
       {
-        "__type": "PlayerController",
+        "__type": "Gauntlet.Player.PlayerController",
         "__guid": "d063ea22-14d8-48a9-84bb-b1d10e8a84a8",
-        "AirJumpSound": "assets/sounds/airjump.sound",
+        "AirJumpSound": "sounds/airjump.sound",
         "AnimationHelper": {
           "_type": "component",
           "component_id": "41e678b6-eef9-4519-a3c1-f25d8aa39aaf",
@@ -21,10 +21,10 @@
           "go": "5e89e028-b7ce-4bfe-8c05-9bebec04b8b7"
         },
         "CurrentHoldType": "None",
-        "FootStepSoundRun": "assets/sounds/footstep_generic_run.sound",
-        "FootStepSoundWalk": "assets/sounds/footstep_generic.sound",
-        "FootStepSoundWallrun": "assets/sounds/footstep_generic_light.sound",
-        "HardLandSound": "assets/sounds/hardlanding.sound",
+        "FootStepSoundRun": "sounds/footstep_generic_run.sound",
+        "FootStepSoundWalk": "sounds/footstep_generic.sound",
+        "FootStepSoundWallrun": "sounds/footstep_generic_light.sound",
+        "HardLandSound": "sounds/hardlanding.sound",
         "HullCollider": {
           "_type": "component",
           "component_id": "37d233f9-3b74-4a30-a44c-3715b21b0769",
@@ -32,8 +32,8 @@
           "component_type": "HullCollider"
         },
         "IsGrounded": false,
-        "JumpSound": "assets/sounds/jump.sound",
-        "LandSound": "assets/sounds/landing.sound",
+        "JumpSound": "sounds/jump.sound",
+        "LandSound": "sounds/landing.sound",
         "PlayerSettings": {
           "HullRadius": 16,
           "HullHeightStanding": 72,
@@ -133,7 +133,7 @@
           "ViewPunchWallrunStartRollMin": 6.2,
           "ViewPunchWallrunStartRollMax": 6.67,
           "StepSmoothingOffsetCorrectSpeed": 80,
-          "WallrunEnable": true,
+          "Wallrun": true,
           "WallrunTimeLimit": 1.75,
           "WallrunGravityRampUpTime": 1,
           "WallrunUpWallBoost": 250,
@@ -174,14 +174,14 @@
           "FootStepNormalRunSpeed": 220,
           "HardFallDist": 20
         },
-        "SlideBoostSound": "assets/sounds/slide_boost.sound",
-        "SlideEndSound": "assets/sounds/slide_end.sound",
-        "SlideSound": "assets/sounds/slide_start.sound",
-        "WallrunImpactSound": "assets/sounds/wallrun_impact.sound",
-        "WallrunStartSound": "assets/sounds/wallrun_start.sound"
+        "SlideBoostSound": "sounds/slide_boost.sound",
+        "SlideEndSound": "sounds/slide_end.sound",
+        "SlideSound": "sounds/slide_start.sound",
+        "WallrunImpactSound": "sounds/wallrun_impact.sound",
+        "WallrunStartSound": "sounds/wallrun_start.sound"
       },
       {
-        "__type": "CameraController",
+        "__type": "Gauntlet.Player.CameraController",
         "__guid": "ba543df8-bb67-4ac5-b62e-5168b2610b9d",
         "BaseFieldOfView": 90,
         "Camera": {
@@ -193,7 +193,7 @@
         "HideBody": true
       },
       {
-        "__type": "HullCollider",
+        "__type": "Sandbox.HullCollider",
         "__guid": "37d233f9-3b74-4a30-a44c-3715b21b0769",
         "BoxSize": "0,0,0",
         "Center": "0,0,0",
@@ -206,11 +206,11 @@
         "Type": "Box"
       },
       {
-        "__type": "Timer",
+        "__type": "Gauntlet.Timer.Timer",
         "__guid": "baf2bd0b-17d1-4195-9251-83ec7be54c39",
-        "EndSound": "assets/sounds/timer_complete.sound",
-        "NewBestTimeSound": "assets/sounds/timer_pb.sound",
-        "StartSound": "assets/sounds/timer_start.sound",
+        "EndSound": "sounds/timer_complete.sound",
+        "NewBestTimeSound": "sounds/timer_pb.sound",
+        "StartSound": "sounds/timer_start.sound",
         "Time": 0
       }
     ],
@@ -221,7 +221,7 @@
         "NetworkMode": 2,
         "Components": [
           {
-            "__type": "SkinnedModelRenderer",
+            "__type": "Sandbox.SkinnedModelRenderer",
             "__guid": "34497f3b-150a-40d2-906f-e28c437feae2",
             "BodyGroups": 18446744073709551274,
             "CreateBoneObjects": false,
@@ -231,7 +231,7 @@
             "Tint": "1,1,1,1"
           },
           {
-            "__type": "ModelHitboxes",
+            "__type": "Sandbox.ModelHitboxes",
             "__guid": "e7616c1d-9942-488c-9024-ac361104799f",
             "Renderer": {
               "_type": "component",
@@ -245,7 +245,7 @@
             }
           },
           {
-            "__type": "AnimationHelper",
+            "__type": "Gauntlet.Player.Animation.AnimationHelper",
             "__guid": "41e678b6-eef9-4519-a3c1-f25d8aa39aaf",
             "EyeSource": {
               "_type": "gameobject",
@@ -272,7 +272,7 @@
         "NetworkMode": 2,
         "Components": [
           {
-            "__type": "CrouchMechanic",
+            "__type": "Gauntlet.Player.Mechanics.CrouchMechanic",
             "__guid": "5545204a-0ec9-4326-bb33-a8584128cd52",
             "Controller": {
               "_type": "component",
@@ -282,11 +282,11 @@
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 3226.2483
+              "Relative": 370.3121
             }
           },
           {
-            "__type": "SprintMechanic",
+            "__type": "Gauntlet.Player.Mechanics.SprintMechanic",
             "__guid": "492f5e43-8691-4eec-8feb-d6aa58748149",
             "Controller": {
               "_type": "component",
@@ -296,11 +296,11 @@
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 3226.2483
+              "Relative": 370.3121
             }
           },
           {
-            "__type": "WalkMechanic",
+            "__type": "Gauntlet.Player.Mechanics.WalkMechanic",
             "__guid": "495dea92-84da-4b95-a0f3-e54daf2308a2",
             "Controller": {
               "_type": "component",
@@ -310,11 +310,11 @@
             },
             "IsActive": true,
             "TimeSinceActiveChanged": {
-              "Relative": 3226.2483
+              "Relative": 370.3121
             }
           },
           {
-            "__type": "AirMoveMechanic",
+            "__type": "Gauntlet.Player.Mechanics.AirMoveMechanic",
             "__guid": "a22a5c21-d20e-47d1-ad40-e62295633488",
             "Controller": {
               "_type": "component",
@@ -324,11 +324,11 @@
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 3226.2483
+              "Relative": 370.3121
             }
           },
           {
-            "__type": "JumpMechanic",
+            "__type": "Gauntlet.Player.Mechanics.JumpMechanic",
             "__guid": "dda60c60-69a8-4d12-b1b9-3871d59c4ca1",
             "Controller": {
               "_type": "component",
@@ -338,11 +338,11 @@
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 3226.2483
+              "Relative": 370.3121
             }
           },
           {
-            "__type": "SlideMechanic",
+            "__type": "Gauntlet.Player.Mechanics.SlideMechanic",
             "__guid": "32fed8e5-4d8e-4c65-a236-e111ef4fa9f4",
             "Controller": {
               "_type": "component",
@@ -352,31 +352,31 @@
             },
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 3226.2483
+              "Relative": 370.3121
             }
           },
           {
-            "__type": "ViewPunchMechanic",
+            "__type": "Gauntlet.Player.Mechanics.ViewPunchMechanic",
             "__guid": "258266d3-e5ae-4653-a008-b3a3c5a5d18a",
             "IsActive": true,
             "TimeSinceActiveChanged": {
-              "Relative": 3226.2483
+              "Relative": 370.3121
             }
           },
           {
-            "__type": "WallrunMechanic",
+            "__type": "Gauntlet.Player.Mechanics.WallrunMechanic",
             "__guid": "a89b958b-1768-4c4f-a33c-2bbdaf438c35",
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 3226.2483
+              "Relative": 370.3121
             }
           },
           {
-            "__type": "MoveMechanic",
+            "__type": "Gauntlet.Player.Mechanics.MoveMechanic",
             "__guid": "661f15fc-3b62-4882-8b88-7364ac1e602d",
             "IsActive": false,
             "TimeSinceActiveChanged": {
-              "Relative": 3226.2483
+              "Relative": 370.3121
             }
           }
         ]
@@ -389,7 +389,7 @@
         "NetworkMode": 2,
         "Components": [
           {
-            "__type": "CameraComponent",
+            "__type": "Sandbox.CameraComponent",
             "__guid": "2b6ce0dd-bcf9-4927-becf-acf880c0eec2",
             "BackgroundColor": "0.75478,0.83828,0.87624,1",
             "ClearFlags": "All",
@@ -406,7 +406,7 @@
             "ZNear": 0.5
           },
           {
-            "__type": "AudioListener",
+            "__type": "Sandbox.AudioListener",
             "__guid": "e02ae9b3-efca-4969-9971-59251d6ea520",
             "UseCameraDirection": true
           }
@@ -425,7 +425,7 @@
             "NetworkMode": 2,
             "Components": [
               {
-                "__type": "ScreenPanel",
+                "__type": "Sandbox.ScreenPanel",
                 "__guid": "e946952c-bbaa-4959-a414-f4702b0ab653",
                 "AutoScreenScale": true,
                 "Opacity": 1,
@@ -433,7 +433,7 @@
                 "ZIndex": 100
               },
               {
-                "__type": "HudPanel",
+                "__type": "Gauntlet.UI.HudPanel",
                 "__guid": "1311456f-a791-421e-bc0f-890c8c21e811",
                 "Controller": {
                   "_type": "component",
@@ -449,7 +449,7 @@
                 }
               },
               {
-                "__type": "CrosshairPanel",
+                "__type": "Gauntlet.UI.CrosshairPanel",
                 "__guid": "5dc0e5e3-74fa-440a-bcb9-2b086ad4a543",
                 "Controller": {
                   "_type": "component",
@@ -467,11 +467,11 @@
             "NetworkMode": 2,
             "Components": [
               {
-                "__type": "ScreenPanel",
+                "__type": "Sandbox.ScreenPanel",
                 "__guid": "1e513e79-4038-4f5b-abf1-1e27c997a2d4",
                 "AutoScreenScale": true,
                 "OnComponentUpdate": {
-                  "__version": 5,
+                  "__version": 6,
                   "__guid": "e38f1457-3965-40dc-a4fa-238f3ff8bd7d",
                   "UserData": {
                     "Title": "Enable/Disable Menu Panel",
@@ -495,7 +495,7 @@
                     },
                     {
                       "Id": 6,
-                      "Type": "property.set",
+                      "Type": "property",
                       "Properties": {
                         "_name": "Enabled",
                         "_type": "Sandbox.Game/Sandbox.Component"
@@ -513,7 +513,7 @@
                     },
                     {
                       "Id": 18,
-                      "Type": "property.get",
+                      "Type": "property",
                       "Properties": {
                         "_name": "Enabled",
                         "_type": "Sandbox.Game/Sandbox.Component"
@@ -534,7 +534,7 @@
                     },
                     {
                       "Id": 20,
-                      "Type": "property.get",
+                      "Type": "property",
                       "Properties": {
                         "_name": "EscapePressed",
                         "_type": "package.cflo.gauntlet/Gauntlet.Utils.Common"
@@ -600,7 +600,7 @@
                 "ZIndex": -100
               },
               {
-                "__type": "MenuPanel",
+                "__type": "Gauntlet.UI.MenuPanel",
                 "__guid": "a3c8ecee-bf1b-44e9-949b-aedb26048804",
                 "__enabled": false
               }

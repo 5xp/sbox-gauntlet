@@ -5,11 +5,7 @@
   "Ident": "gauntlet",
   "Tags": "parkour tech movement wallrunning",
   "Schema": 1,
-  "HasAssets": true,
-  "AssetsPath": "",
-  "Resources": "/fonts/*\n/assets/materials/*.png",
-  "HasCode": true,
-  "CodePath": "/code/",
+  "Resources": "materials/*.png",
   "PackageReferences": [],
   "EditorReferences": null,
   "Metadata": {
@@ -100,8 +96,8 @@
       ],
       "__guid": "38aed561-932a-47ce-b7f4-27e0de299259"
     },
-    "StartupScene": "assets/scenes/main_menu.scene",
-    "MapStartupScene": "assets/scenes/map_only.scene",
+    "StartupScene": "scenes/main_menu.scene",
+    "MapStartupScene": "scenes/map_only.scene",
     "LaunchMode": "Normal"
   }
 }

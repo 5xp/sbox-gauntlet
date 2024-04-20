@@ -8,7 +8,7 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "MapInstance",
+          "__type": "Sandbox.MapInstance",
           "__guid": "a662edcc-82ca-4b45-b609-0f59c47779a0",
           "MapName": "",
           "UseMapFromLaunch": true
@@ -22,12 +22,12 @@
       "NetworkMode": 2,
       "Components": [
         {
-          "__type": "GameManager",
+          "__type": "Gauntlet.GameManager",
           "__guid": "7e3fc432-0356-4d39-b19c-9a3219299e49",
           "IsMultiplayer": false,
           "PlayerPrefab": {
             "_type": "gameobject",
-            "prefab": "assets/prefabs/player/player.prefab"
+            "prefab": "prefabs/player/player.prefab"
           }
         }
       ]
@@ -56,7 +56,7 @@
   },
   "Title": "minimal",
   "Description": "",
-  "LastSaved": "2024-03-17T14:11:13.7874442-05:00",
+  "LastSaved": "2024-04-19T19:15:57.4893569-05:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": []
