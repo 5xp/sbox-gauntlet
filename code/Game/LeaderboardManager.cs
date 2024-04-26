@@ -45,6 +45,8 @@ public sealed class LeaderboardManager
 		76561198927823324,
 		76561198987213809,
 		76561198203150213,
+		76561198167838587,
+		76561199401217985,
 	};
 
 	/// <summary>
@@ -252,5 +254,35 @@ public sealed class LeaderboardManager
 
 		entries.RemoveWhere( e => e.SteamId == entry.SteamId );
 		entries.Add( entry );
+	}
+	
+	/// <summary>
+	/// Prints the leaderboard entries for the given identifier to the console.
+	/// </summary>
+	/// <param name="ident"></param>
+	[ConCmd("gauntlet_leaderboard_dump")]
+	public static void DumpLeaderboard( string ident )
+	{
+		if ( !Instance._leaderboardCache.TryGetValue( ident, out SortedSet<GauntletLeaderboardEntry> entries ) )
+		{
+			Log.Info( $"Leaderboard {ident} not found" );
+			return;
+		}
+		
+		Log.Info( $"Leaderboard {ident}:" );
+		foreach ( var entry in entries )
+		{
+			Log.Info( $"{entry.Rank}: {entry.DisplayName} ({entry.SteamId}) - {entry.TimeTicks}" );
+		}
+	}
+	
+	/// <summary>
+	/// Forces a refresh of the leaderboard entries for the given identifier.
+	/// </summary>
+	/// <param name="ident"></param>
+	[ConCmd("gauntlet_leaderboard_refresh")]
+	public static void RefreshLeaderboard( string ident )
+	{
+		_ = Instance.FetchLeaderboardEntries( ident, true );
 	}
 }

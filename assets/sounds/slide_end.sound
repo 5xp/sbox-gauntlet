@@ -5,15 +5,19 @@
   "Decibels": 70,
   "SelectionMode": "Random",
   "Sounds": [
-    "sounds/physics/footsteps/player/debris/scuff_01.vsnd",
-    "sounds/physics/footsteps/player/debris/scuff_02.vsnd",
-    "sounds/physics/footsteps/player/debris/scuff_03.vsnd",
-    "sounds/physics/footsteps/player/debris/scuff_04.vsnd",
-    "sounds/physics/footsteps/player/debris/scuff_05.vsnd"
+    "sounds/scuff_01.vsnd",
+    "sounds/scuff_02.vsnd",
+    "sounds/scuff_03.vsnd",
+    "sounds/scuff_04.vsnd",
+    "sounds/scuff_05.vsnd"
   ],
   "Occlusion": false,
   "Reflections": false,
+  "AirAbsorption": true,
+  "Transmission": true,
   "OcclusionRadius": 64,
   "DistanceAttenuation": false,
+  "ResourceVersion": 0,
+  "__version": 0,
   "__references": []
 }

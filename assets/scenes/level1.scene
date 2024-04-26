@@ -715,8 +715,8 @@
         {
           "__type": "Sandbox.SkyBox2D",
           "__guid": "3bf9fc59-47d9-4452-87b7-085f797ceb9d",
-          "SkyMaterial": "materials/skybox/light_test_sky_sunny_basic.vmat",
-          "Tint": "1,1,1,1"
+          "SkyMaterial": "materials/skybox/skybox_day_01.vmat",
+          "Tint": "0.1838,0.63142,0.82326,1"
         }
       ]
     },
@@ -772,7 +772,7 @@
   },
   "Title": "level1",
   "Description": "",
-  "LastSaved": "2024-04-19T18:20:36.1680311-05:00",
+  "LastSaved": "2024-04-25T22:26:25.785369-05:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": []

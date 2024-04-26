@@ -1,12 +1,14 @@
 {
   "UI": true,
-  "Volume": "0.15,1.00,0",
+  "Volume": "1.50,1.00,0",
   "Pitch": "1.00,1.00,0",
   "Decibels": 70,
   "SelectionMode": "Random",
   "Sounds": [
-    "sounds/physics/footsteps/player/concrete_plain/land_02.vsnd",
-    "sounds/physics/footsteps/player/concrete_plain/land_03.vsnd"
+    "sounds/footsteps/footstep-concrete-jump-land-001.vsnd",
+    "sounds/footsteps/footstep-concrete-jump-land-002.vsnd",
+    "sounds/footsteps/footstep-concrete-jump-land-003.vsnd",
+    "sounds/footsteps/footstep-concrete-jump-land-004.vsnd"
   ],
   "Occlusion": false,
   "Reflections": false,

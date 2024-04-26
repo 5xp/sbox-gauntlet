@@ -5,17 +5,21 @@
   "Decibels": 70,
   "SelectionMode": "Random",
   "Sounds": [
-    "sounds/physics/footsteps/player/concrete_plain/step_light_01.vsnd",
-    "sounds/physics/footsteps/player/concrete_plain/step_light_02.vsnd",
-    "sounds/physics/footsteps/player/concrete_plain/step_light_03.vsnd",
-    "sounds/physics/footsteps/player/concrete_plain/step_light_04.vsnd",
-    "sounds/physics/footsteps/player/concrete_plain/step_light_05.vsnd",
-    "sounds/physics/footsteps/player/concrete_plain/step_light_06.vsnd",
-    "sounds/physics/footsteps/player/concrete_plain/step_light_07.vsnd"
+    "sounds/step_light_01.vsnd",
+    "sounds/step_light_02.vsnd",
+    "sounds/step_light_03.vsnd",
+    "sounds/step_light_04.vsnd",
+    "sounds/step_light_05.vsnd",
+    "sounds/step_light_06.vsnd",
+    "sounds/step_light_07.vsnd"
   ],
   "Occlusion": false,
   "Reflections": false,
+  "AirAbsorption": true,
+  "Transmission": true,
   "OcclusionRadius": 64,
   "DistanceAttenuation": false,
+  "ResourceVersion": 0,
+  "__version": 0,
   "__references": []
 }
