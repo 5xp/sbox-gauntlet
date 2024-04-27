@@ -33,7 +33,7 @@ public class DampedSpring
 
 		Velocity *= damping;
 
-		Velocity += springForce * timeDelta;
+		Velocity += springForce * (1f - float.Exp( -timeDelta ));
 
 		Position += Velocity * timeDelta;
 	}

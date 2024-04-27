@@ -29,6 +29,11 @@ public static class MathUtils
 		return from + diff;
 	}
 
+	public static float LerpExp( this float from, float to, float delta, bool clamp = true )
+	{
+		return from.LerpTo( to, 1 - MathF.Exp( -delta ), clamp );
+	}
+
 	/// <summary>
 	/// Rotates the current unit vector closer to a target unit vector by a certain angle.
 	/// </summary>
