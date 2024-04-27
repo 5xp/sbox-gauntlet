@@ -16,5 +16,5 @@
 
 @code {
 	public Timer Timer { get; set; }
-	protected override int BuildHash() => System.HashCode.Combine( Timer.InStartZone, Timer.LastOrCurrentLoop );
+	protected override int BuildHash() => HashCode.Combine( Timer.InStartZone, Timer.LastOrCurrentLoop );
 }

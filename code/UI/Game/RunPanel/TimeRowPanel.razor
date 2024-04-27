@@ -20,7 +20,7 @@
 @code {
 	public Timer Timer { get; set; }
 
-	protected override int BuildHash() => System.HashCode.Combine( Timer.ToString(),
+	protected override int BuildHash() => HashCode.Combine( Timer.ToString(),
 		Timer.BestTimeString( Timer.LastOrCurrentLoop ), Timer.InStartZone );
 
 }

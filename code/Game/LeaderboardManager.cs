@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Gauntlet.Utils;
 using Sandbox.Services;
+
 namespace Gauntlet;
 
 public struct GauntletLeaderboardEntry
@@ -24,6 +25,7 @@ internal class TimeComparer : IComparer<GauntletLeaderboardEntry>
 public sealed class LeaderboardManager
 {
 	private static LeaderboardManager _instance;
+
 	public static LeaderboardManager Instance
 	{
 		get
@@ -131,7 +133,6 @@ public sealed class LeaderboardManager
 		OnLeaderboardRefresh?.Invoke();
 
 		return value;
-
 	}
 
 	public async Task<List<GauntletLeaderboardEntry>> GetTopTen( string key, bool force = false )
@@ -147,12 +148,13 @@ public sealed class LeaderboardManager
 		return entries;
 	}
 
-	public async Task<List<GauntletLeaderboardEntry>> GetAroundPlayer( string key, long steamId, int take = 10, bool force = false )
+	public async Task<List<GauntletLeaderboardEntry>> GetAroundPlayer( string key, long steamId, int take = 10,
+		bool force = false )
 	{
 		var entries = await FetchLeaderboardEntries( key, force );
 		var playerEntry = entries.FirstOrDefault( entry => entry.SteamId == steamId );
 
-		if ( playerEntry.Equals( default( GauntletLeaderboardEntry ) ) )
+		if ( playerEntry.Equals( default(GauntletLeaderboardEntry) ) )
 		{
 			return new List<GauntletLeaderboardEntry>();
 		}
@@ -217,9 +219,7 @@ public sealed class LeaderboardManager
 	{
 		return new GauntletLeaderboardEntry
 		{
-			DisplayName = entry.DisplayName,
-			SteamId = entry.SteamId,
-			TimeTicks = Convert.ToInt32( entry.Value )
+			DisplayName = entry.DisplayName, SteamId = entry.SteamId, TimeTicks = Convert.ToInt32( entry.Value )
 		};
 	}
 
@@ -255,12 +255,12 @@ public sealed class LeaderboardManager
 		entries.RemoveWhere( e => e.SteamId == entry.SteamId );
 		entries.Add( entry );
 	}
-	
+
 	/// <summary>
 	/// Prints the leaderboard entries for the given identifier to the console.
 	/// </summary>
 	/// <param name="ident"></param>
-	[ConCmd("gauntlet_leaderboard_dump")]
+	[ConCmd( "gauntlet_leaderboard_dump" )]
 	public static void DumpLeaderboard( string ident )
 	{
 		if ( !Instance._leaderboardCache.TryGetValue( ident, out SortedSet<GauntletLeaderboardEntry> entries ) )
@@ -268,19 +268,19 @@ public sealed class LeaderboardManager
 			Log.Info( $"Leaderboard {ident} not found" );
 			return;
 		}
-		
+
 		Log.Info( $"Leaderboard {ident}:" );
 		foreach ( var entry in entries )
 		{
 			Log.Info( $"{entry.Rank}: {entry.DisplayName} ({entry.SteamId}) - {entry.TimeTicks}" );
 		}
 	}
-	
+
 	/// <summary>
 	/// Forces a refresh of the leaderboard entries for the given identifier.
 	/// </summary>
 	/// <param name="ident"></param>
-	[ConCmd("gauntlet_leaderboard_refresh")]
+	[ConCmd( "gauntlet_leaderboard_refresh" )]
 	public static void RefreshLeaderboard( string ident )
 	{
 		_ = Instance.FetchLeaderboardEntries( ident, true );

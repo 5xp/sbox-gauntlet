@@ -68,22 +68,22 @@ WallJumpPanel.compact {
 	}
 
 	.gain {
-		text-shadow: 0 0 1.5px rgba(25, 113, 140, 0.73);
+		text-shadow: 1px 1px 0.5px rgba(25, 113, 140, 0.73);
 		color: #4bd2ff;
 	}
 
 	.loss {
-		text-shadow: 0 0 1.5px rgba(114, 6, 15, 0.8);
+		text-shadow: 1px 1px 0.5px rgba(114, 6, 15, 0.8);
 		color: #ff7171;
 	}
 
 	.perfect {
-		text-shadow: 0 0 3px #a19200;
+		text-shadow: 1px 1px 2px #a19200;
 		color: #ffd700;
 	}
 
 	.crouch-kick {
-		text-shadow: 0 0 3px #9c00b177;
+		text-shadow: 1px 1px 2px #9c00b177;
 		color: #e51fff;
 	}
 

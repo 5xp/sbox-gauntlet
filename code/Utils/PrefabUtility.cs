@@ -47,7 +47,7 @@ public static class PrefabUtility
 		// Find all guids with "Id" as their name. Add them to translate 
 		// with a new target value.
 		//
-		Sandbox.Json.WalkJsonTree( json, ( k, v ) =>
+		Json.WalkJsonTree( json, ( k, v ) =>
 		{
 			if ( k != "Id" ) return v;
 
@@ -63,7 +63,7 @@ public static class PrefabUtility
 		// Find every guid and translate them, but only if they're in our
 		// guid dictionary.
 		//
-		Sandbox.Json.WalkJsonTree( json, ( k, v ) =>
+		Json.WalkJsonTree( json, ( k, v ) =>
 		{
 			if ( !v.TryGetValue<Guid>( out var guid ) ) return v;
 			if ( !translate.TryGetValue( guid, out var updatedGuid ) ) return v;

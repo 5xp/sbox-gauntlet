@@ -10,5 +10,5 @@
 	[Property, TextArea] public string MyStringValue { get; set; } = "Hello World!";
 	[Property] public int FontSizePixels { get; set; } = 20;
 
-	protected override int BuildHash() => System.HashCode.Combine( MyStringValue, FontSizePixels );
+	protected override int BuildHash() => HashCode.Combine( MyStringValue, FontSizePixels );
 }

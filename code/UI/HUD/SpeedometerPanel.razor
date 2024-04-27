@@ -20,7 +20,7 @@
 	public bool Compact { get; set; }
 
 	protected override int BuildHash() =>
-		System.HashCode.Combine( Common.HupsToKph( Controller.HorzVelocity.Length ).ToString( "F1" ) );
+		HashCode.Combine( Common.HupsToKph( Controller.HorzVelocity.Length ).ToString( "F1" ) );
 
 	protected override void OnAfterTreeRender( bool firstTime )
 	{

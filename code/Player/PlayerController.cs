@@ -35,8 +35,6 @@ public partial class PlayerController : Component
 	[Property]
 	public HullCollider HullCollider { get; set; }
 
-	private SoundHandle LandSoundHandle { get; set; }
-
 	/// <summary>
 	/// Get a quick reference to the real Camera GameObject.
 	/// </summary>
@@ -507,7 +505,7 @@ public partial class PlayerController : Component
 
 		FallSpeed = LastVelocity.z;
 
-		LandSoundHandle = Sound.Play( FallHeight >= PlayerSettings.HardFallDist ? HardLandSound : LandSound );
+		Sound.Play( FallHeight >= PlayerSettings.HardFallDist ? HardLandSound : LandSound );
 		TimeSinceLastLanding = 0;
 		OnLanded?.Invoke();
 	}
