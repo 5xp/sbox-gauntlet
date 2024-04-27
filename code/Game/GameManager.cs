@@ -6,6 +6,8 @@ namespace Gauntlet;
 
 public sealed class GameManager : Component, Component.INetworkListener
 {
+	public static GameManager Instance { get; private set; }
+
 	[Property] public GameObject PlayerPrefab { get; set; }
 
 	/// <summary>
@@ -20,15 +22,10 @@ public sealed class GameManager : Component, Component.INetworkListener
 	[Property]
 	private bool IsMultiplayer { get; } = false;
 
-	public bool ShouldRespawn { get; set; }
+	private bool ShouldRespawn { get; set; }
 
 	public void OnActive( Connection channel )
 	{
-		if ( !IsMultiplayer )
-		{
-			return;
-		}
-
 		Log.Info( $"Player '{channel.DisplayName}' is becoming active" );
 
 		GameObject player = SpawnPlayer();
@@ -41,6 +38,8 @@ public sealed class GameManager : Component, Component.INetworkListener
 
 	protected override void OnStart()
 	{
+		Instance = this;
+
 		LeaderboardManager.Instance.StopPolling();
 		LeaderboardManager.Instance.ResetSubscriptions();
 
@@ -58,7 +57,7 @@ public sealed class GameManager : Component, Component.INetworkListener
 
 		if ( !IsMultiplayer )
 		{
-			SpawnPlayer();
+			OnActive( Connection.Local );
 			return;
 		}
 
@@ -73,13 +72,18 @@ public sealed class GameManager : Component, Component.INetworkListener
 
 	protected override void OnFixedUpdate()
 	{
-		if ( !ShouldRespawn )
+		if ( !ShouldRespawn && !Input.Pressed( "Restart" ) )
 		{
 			return;
 		}
 
 		RespawnPlayer();
 		ShouldRespawn = false;
+	}
+
+	public void Respawn()
+	{
+		ShouldRespawn = true;
 	}
 
 	private GameObject SpawnPlayer()
@@ -111,11 +115,12 @@ public sealed class GameManager : Component, Component.INetworkListener
 		}
 
 		SetPlayerTransform( player, spawnPoint.Transform.World );
+		player.Transform.ClearLerp();
 	}
 
 	private void RespawnPlayer()
 	{
-		GameObject player = Scene.Directory.FindByName( Connection.Local.DisplayName ).First();
+		GameObject player = Client.Local.GameObject;
 
 		if ( player is null )
 		{

@@ -2,6 +2,24 @@
   "__guid": "9d1463ac-a949-437a-9b83-e8507a1180a2",
   "GameObjects": [
     {
+      "__guid": "0f04ee6a-6956-44a5-851e-aa6b5151fa34",
+      "Name": "GameManager",
+      "Position": "0.0003538796,-611.6824,64.27141",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "Gauntlet.GameManager",
+          "__guid": "59b7b1c0-347f-4af8-bc17-05cde915e7f5",
+          "IsMultiplayer": false,
+          "PlayerPrefab": {
+            "_type": "gameobject",
+            "prefab": "prefabs/player/player.prefab"
+          }
+        }
+      ]
+    },
+    {
       "__guid": "f068ac2b-fc5b-44c6-93e2-9fb9dfb1ddc9",
       "Name": "Map Objects",
       "Enabled": true,
@@ -668,24 +686,6 @@
       "Children": []
     },
     {
-      "__guid": "0f04ee6a-6956-44a5-851e-aa6b5151fa34",
-      "Name": "GameManager",
-      "Position": "0.0003538796,-611.6824,64.27141",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "Components": [
-        {
-          "__type": "Gauntlet.GameManager",
-          "__guid": "59b7b1c0-347f-4af8-bc17-05cde915e7f5",
-          "IsMultiplayer": false,
-          "PlayerPrefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/player/player.prefab"
-          }
-        }
-      ]
-    },
-    {
       "__guid": "bfc59c12-1ed2-4f91-8956-a95a315eac3c",
       "Name": "Sun",
       "Position": "718.0756,968.9534,1033.044",
@@ -772,7 +772,7 @@
   },
   "Title": "level1",
   "Description": "",
-  "LastSaved": "2024-04-25T22:26:25.785369-05:00",
+  "LastSaved": "2024-04-26T18:40:49.3992446-05:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": []

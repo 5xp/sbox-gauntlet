@@ -155,12 +155,7 @@
 	{
 		if ( IsInGame() )
 		{
-			GameManager gameManager = Scene.Components.Get<GameManager>( FindMode.InChildren );
-
-			if ( gameManager is not null )
-			{
-				gameManager.ShouldRespawn = true;
-			}
+			GameManager.Instance?.Respawn();
 
 			BackButton();
 		}

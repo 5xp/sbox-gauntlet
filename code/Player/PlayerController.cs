@@ -7,6 +7,11 @@ namespace Gauntlet.Player;
 public partial class PlayerController : Component
 {
 	/// <summary>
+	/// A reference to the local player.
+	/// </summary>
+	public static PlayerController Local { get; private set; }
+
+	/// <summary>
 	/// A reference to the player's body (the GameObject)
 	/// </summary>
 	[Property]
@@ -126,6 +131,11 @@ public partial class PlayerController : Component
 
 	protected override void OnStart()
 	{
+		if ( !IsProxy )
+		{
+			Local = this;
+		}
+
 		if ( HullCollider is not null )
 		{
 			HullCollider.Center = Vector3.Up * PlayerSettings.HullHeightStanding * 0.5f;
@@ -146,11 +156,6 @@ public partial class PlayerController : Component
 
 		BuildWishInput();
 		OnUpdateMechanics();
-
-		if ( Input.Pressed( "Restart" ) )
-		{
-			Restart();
-		}
 	}
 
 	protected override void OnUpdate()
@@ -193,16 +198,6 @@ public partial class PlayerController : Component
 		foreach ( var mechanic in Mechanics )
 		{
 			mechanic.FrameSimulate();
-		}
-	}
-
-	private void Restart()
-	{
-		GameManager gameManager = Scene.Components.Get<GameManager>( FindMode.InChildren );
-
-		if ( gameManager is not null )
-		{
-			gameManager.ShouldRespawn = true;
 		}
 	}
 
