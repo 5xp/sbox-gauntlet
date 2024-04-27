@@ -192,7 +192,8 @@ public sealed class LeaderboardManager
 
 					if ( timer.InStartZone && timer.Scene is not null )
 					{
-						await FetchLeaderboardEntries( Common.ParseLeaderboardIdent( timer.Scene.Title, timer.CurrentLoop ), true );
+						string stat = GameManager.Instance.LevelData.GetStatId( timer.CurrentLoop );
+						await FetchLeaderboardEntries( stat, true );
 					}
 					else
 					{

@@ -5,7 +5,7 @@
 
 <root class="pk">
 	@{
-		Common.TryGetLeaderboardIdent( Scene.Title, Timer.LastOrCurrentLoop, out string ident );
+		string ident = GameManager.Instance.LevelData.GetStatId( Timer.LastOrCurrentLoop );
 
 		if ( ident is null )
 		{
@@ -59,7 +59,7 @@
 	public bool AroundPlayer { get; set; }
 	public Timer Timer { get; set; }
 
-	protected override int BuildHash() => System.HashCode.Combine( Timer.LastOrCurrentLoop );
+	protected override int BuildHash() => HashCode.Combine( Timer.LastOrCurrentLoop );
 
 	private string GetLoopLabel() => Timer.LastOrCurrentLoop == 1 ? "1st Loop" : "2+ Loops";
 

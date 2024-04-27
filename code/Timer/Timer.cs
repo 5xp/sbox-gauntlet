@@ -53,6 +53,12 @@ public sealed partial class Timer : Component
 
 	protected override void OnStart()
 	{
+		if ( GameManager.Instance.LevelData is null )
+		{
+			Enabled = false;
+			return;
+		}
+
 		_ = GetStats();
 	}
 

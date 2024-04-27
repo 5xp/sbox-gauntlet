@@ -10,6 +10,8 @@ public sealed class GameManager : Component, Component.INetworkListener
 
 	[Property] public GameObject PlayerPrefab { get; set; }
 
+	[Property] public LevelDataResource LevelData { get; set; }
+
 	/// <summary>
 	/// The spawn point to use for the player. If this is null, we try to get a random spawn point from the scene.
 	/// </summary>
@@ -40,19 +42,6 @@ public sealed class GameManager : Component, Component.INetworkListener
 	{
 		Instance = this;
 
-		LeaderboardManager.Instance.StopPolling();
-		LeaderboardManager.Instance.ResetSubscriptions();
-
-		if ( Common.TryGetLeaderboardIdent( Scene.Title, 1, out string stat1 ) )
-		{
-			_ = LeaderboardManager.Instance.FetchLeaderboardEntries( stat1, true );
-		}
-
-		if ( Common.TryGetLeaderboardIdent( Scene.Title, 2, out string stat2 ) )
-		{
-			_ = LeaderboardManager.Instance.FetchLeaderboardEntries( stat2, true );
-		}
-
 		PlayerPreferences.Load();
 
 		if ( !IsMultiplayer )
@@ -68,6 +57,14 @@ public sealed class GameManager : Component, Component.INetworkListener
 		{
 			GameNetworkSystem.CreateLobby();
 		}
+	}
+
+	private void InitializeLeaderboard()
+	{
+		LeaderboardManager.Instance.StopPolling();
+		LeaderboardManager.Instance.ResetSubscriptions();
+		_ = LeaderboardManager.Instance.FetchLeaderboardEntries( LevelData.GetStatId( 1 ) );
+		_ = LeaderboardManager.Instance.FetchLeaderboardEntries( LevelData.GetStatId( 2 ) );
 	}
 
 	protected override void OnFixedUpdate()

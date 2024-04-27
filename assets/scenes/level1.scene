@@ -1,5 +1,5 @@
 {
-  "__guid": "9d1463ac-a949-437a-9b83-e8507a1180a2",
+  "__guid": "13bee9a1-cdc9-4a36-86e2-d19349734d6a",
   "GameObjects": [
     {
       "__guid": "0f04ee6a-6956-44a5-851e-aa6b5151fa34",
@@ -12,6 +12,7 @@
           "__type": "Gauntlet.GameManager",
           "__guid": "59b7b1c0-347f-4af8-bc17-05cde915e7f5",
           "IsMultiplayer": false,
+          "LevelData": "resources/levels/level1.lvl",
           "PlayerPrefab": {
             "_type": "gameobject",
             "prefab": "prefabs/player/player.prefab"
@@ -772,7 +773,7 @@
   },
   "Title": "level1",
   "Description": "",
-  "LastSaved": "2024-04-26T18:40:49.3992446-05:00",
+  "LastSaved": "2024-04-26T20:57:39.6724294-05:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": []

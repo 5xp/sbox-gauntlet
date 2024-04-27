@@ -46,37 +46,6 @@ public static class Common
 		return TimeToString( ticks * timeDelta, includeUnit );
 	}
 
-	public static string ParseLeaderboardIdent( string title, int loopNum )
-	{
-		string levelNumber;
-		Match match = Regex.Match( title, @"\d+" );
-		if ( match.Success )
-		{
-			levelNumber = match.Value;
-		}
-		else
-		{
-			throw new Exception( "Could not parse level number from scene title" );
-		}
-
-		return $"{Timer.Timer.StatVersion}-{levelNumber}.{(loopNum > 1 ? 2 : 1)}.time";
-	}
-
-	public static bool TryGetLeaderboardIdent( string title, int loopNum, out string ident )
-	{
-		ident = null;
-
-		try
-		{
-			ident = ParseLeaderboardIdent( title, loopNum );
-			return true;
-		}
-		catch
-		{
-			return false;
-		}
-	}
-
 	/// <summary>
 	/// Fades the volume of a sound handle linearly. Stops the sound if the volume reaches 0.
 	/// </summary>
