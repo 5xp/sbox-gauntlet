@@ -11,10 +11,11 @@
 	public PlayerController Controller { get; set; }
 	private Panel LeftArrow { get; set; }
 	private Panel RightArrow { get; set; }
+	private float LastSpeedSquared { get; set; }
 
 	private const int BufferCapacity = 10;
 
-	private readonly Queue<float> _angleRatioBuffer = new Queue<float>( BufferCapacity );
+	private readonly Queue<float> _angleRatioBuffer = new(BufferCapacity);
 
 	public void OnFixedUpdate()
 	{
@@ -33,13 +34,15 @@
 		RemoveClass( "hidden" );
 
 		float angleDelta = PlayerController.GetInputDelta().yaw;
-		float optimalDelta = OptimalDelta( Controller.HorzVelocity.LengthSquared );
+		float optimalDelta = OptimalDelta( LastSpeedSquared );
 		float angleRatio = float.IsFinite( optimalDelta ) ? angleDelta / optimalDelta.RadianToDegree() : 0f;
 
 		AddToQueue( angleRatio );
 
 		float averageAngleRatio = MathF.Abs( _angleRatioBuffer.Average() );
-		UpdateArrowPositions( averageAngleRatio );
+		UpdateArrowStyle( averageAngleRatio );
+
+		LastSpeedSquared = Controller.HorzVelocity.LengthSquared;
 	}
 
 	protected override void OnAfterTreeRender( bool firstTime )
@@ -65,7 +68,7 @@
 		_angleRatioBuffer.Enqueue( delta );
 	}
 
-	private void UpdateArrowPositions( float angleRatio )
+	private void UpdateArrowStyle( float angleRatio )
 	{
 		angleRatio = angleRatio.Clamp( 0f, 2f );
 		float fraction = 0.5f * angleRatio;
